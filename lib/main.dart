@@ -1,4 +1,4 @@
-import 'package:bibliotek/pages/home_page.dart';
+import 'package:bibliotek/pages/authorization.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -10,9 +10,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bibliotek',
       theme: ThemeData(
-        accentColor: Colors.redAccent,
+        primaryColor: Colors.red,
+        accentColor: Colors.pinkAccent,
       ),
-      home: HomePage(),
+      home: Authorization(),
     );
   }
 }
