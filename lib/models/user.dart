@@ -37,12 +37,11 @@ class User {
 
   factory User.formJson(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
+        id: map['id'],
         password: map['password'],
-      name: map['name'],
+        name: map['name'],
         isAdmin: map['is_admin'],
-        details: map['details']
-    );
+        details: map['details']);
   }
 
   Map<String, dynamic> toJson() {
