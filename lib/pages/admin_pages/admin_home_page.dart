@@ -26,7 +26,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   @override
   void dispose() {
-    _loginBloc.close();
     super.dispose();
   }
 

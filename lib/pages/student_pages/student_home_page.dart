@@ -36,7 +36,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   @override
   void dispose() {
-    _loginBloc.close();
+//    _loginBloc.close();
     super.dispose();
   }
 

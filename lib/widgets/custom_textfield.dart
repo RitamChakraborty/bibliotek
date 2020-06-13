@@ -8,7 +8,7 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField(
       {@required TextEditingController controller,
       @required String labelText,
-      @required String errorText})
+      String errorText})
       : this._textEditingController = controller,
         this._labelText = labelText,
         this._errorText = errorText,
