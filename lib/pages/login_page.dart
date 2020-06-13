@@ -34,26 +34,6 @@ class LoginPage extends StatelessWidget {
       ),
     );
 
-    Widget form = Container(
-      padding: EdgeInsets.all(32),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            CustomTextField(
-              controller: _idController,
-              labelText: "id",
-            ),
-            SizedBox(height: 16),
-            CustomTextField(
-              controller: _passwordController,
-              labelText: "password",
-            ),
-          ],
-        ),
-      ),
-    );
-
     return Material(
       child: Scaffold(
         body: BlocBuilder<LoginBloc, AbstractLoginState>(
@@ -61,10 +41,10 @@ class LoginPage extends StatelessWidget {
           builder: (BuildContext context, AbstractLoginState loginState) {
             if (loginState is LoadingState) {
               print('loading');
-            } else if (loginState is ErrorIdState) {
-              print('errorid');
-            } else if (loginState is ErrorPasswordState) {
-              print('errorpassword');
+            } else if (loginState is ErrorState) {
+              print('errorstate');
+              print("iderror: ${loginState.idErrorMessage}");
+              print("pderror: ${loginState.passwordErrorMessage}");
             } else if (loginState is LoginSuccessState) {
               print('loginsuccess');
             } else if (loginState is InitialState) {
@@ -83,16 +63,37 @@ class LoginPage extends StatelessWidget {
                       appLogo,
                       appNameText,
                       SizedBox(height: 48),
-                      form,
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 32),
+                        child: Column(
+                          children: <Widget>[
+                            CustomTextField(
+                              controller: _idController,
+                              labelText: "id",
+                              errorText: loginState is ErrorState
+                                  ? loginState.idErrorMessage
+                                  : null,
+                            ),
+                            SizedBox(height: 16),
+                            CustomTextField(
+                              controller: _passwordController,
+                              labelText: "password",
+                              errorText: loginState is ErrorState
+                                  ? loginState.passwordErrorMessage
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 48),
                       CustomButton(
                         label: loginState is LoadingState ? "Loading" : "Login",
                         onPressed: () {
+                          print('adding event');
                           loginBloc.add(
                             LoginEvent(
-                              id: _idController.text,
-                              password: _passwordController.text,
-                            ),
+                                id: _idController.text,
+                                password: _passwordController.text),
                           );
                         },
                       ),

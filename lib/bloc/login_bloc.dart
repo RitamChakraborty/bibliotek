@@ -27,55 +27,73 @@ class InitialState extends AbstractLoginState {}
 
 class LoadingState extends AbstractLoginState {}
 
-class ErrorIdState extends AbstractLoginState {}
+class ErrorState extends AbstractLoginState {
+  String idErrorMessage;
+  String passwordErrorMessage;
 
-class ErrorPasswordState extends AbstractLoginState {}
+  ErrorState({this.idErrorMessage, this.passwordErrorMessage});
+}
 
 class LoginSuccessState extends AbstractLoginState {}
 
 class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
-  final FirestoreServices _firestoreServices = FirestoreServices();
-
   @override
   AbstractLoginState get initialState => InitialState();
 
   @override
   Stream<AbstractLoginState> mapEventToState(AbstractLoginEvent event) async* {
+    print('mapping');
+
     if (event is LoginEvent) {
       String id = event.id;
       String password = event.password;
 
-      Stream<List<DocumentSnapshot>> userDocumentSnapshotListStream =
-          FirestoreServices().getUserDocuments(id: event.id);
+      print('id: $id');
+      print('password: $password');
 
-      yield LoadingState();
-      await Future.delayed(Duration(seconds: 5));
+      if (id.isEmpty && password.isEmpty) {
+        yield ErrorState(
+          idErrorMessage: "Id can not be empty",
+          passwordErrorMessage: "Password can not be empty",
+        );
+      } else if (id.isEmpty) {
+        yield ErrorState(idErrorMessage: "Id can not be empty");
+      } else if (password.isEmpty) {
+        yield ErrorState(passwordErrorMessage: "Password can not be empty");
+      } else {
+        Stream<List<DocumentSnapshot>> userDocumentSnapshotListStream =
+            FirestoreServices().getUserDocuments(id: event.id);
 
-      await for (List<DocumentSnapshot> userDocumentSnapshotList
-          in userDocumentSnapshotListStream) {
-        if (userDocumentSnapshotList.isNotEmpty) {
-          bool correctPassword = false;
-          User user;
+        yield LoadingState();
+        await Future.delayed(Duration(seconds: 5));
 
-          for (DocumentSnapshot userDocumentSnapshot
-              in userDocumentSnapshotList) {
-            Map<String, dynamic> data = userDocumentSnapshot.data;
-            print(data);
-            print(password);
-            if (data['password'] == password) {
-              user = User.formJson(data);
-              correctPassword = true;
-              break;
+        await for (List<DocumentSnapshot> userDocumentSnapshotList
+            in userDocumentSnapshotListStream) {
+          if (userDocumentSnapshotList.isNotEmpty) {
+            bool correctPassword = false;
+            User user;
+
+            for (DocumentSnapshot userDocumentSnapshot
+                in userDocumentSnapshotList) {
+              Map<String, dynamic> data = userDocumentSnapshot.data;
+
+              if (data['password'] == password) {
+                user = User.formJson(data);
+                correctPassword = true;
+                break;
+              }
             }
+
+            if (correctPassword) {
+              yield LoginSuccessState();
+            } else {
+              yield ErrorState(passwordErrorMessage: "Incorrect password");
+            }
+          } else {
+            yield ErrorState(idErrorMessage: "Id does not exits");
           }
 
-          if (correctPassword) {
-            yield LoginSuccessState();
-          } else {
-            yield ErrorPasswordState();
-          }
-        } else {
-          yield ErrorIdState();
+          break;
         }
       }
     }
