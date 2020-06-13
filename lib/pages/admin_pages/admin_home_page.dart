@@ -17,8 +17,11 @@ class AdminHomePage extends StatelessWidget {
         ),
         drawer: CustomDrawer(
           user: User(
-            name: "Some Random Librarian",
-            id: "161001001000",
+            id: "1001",
+            password: "admin",
+            name: "Librarian",
+            isAdmin: true,
+            details: {},
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(

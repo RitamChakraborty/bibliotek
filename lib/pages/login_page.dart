@@ -1,19 +1,38 @@
-import 'package:bibliotek/bloc/login_bloc.dart';
+import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
+import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
+import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginPage extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  LoginBloc _loginBloc;
+
   final TextEditingController _idController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+  void initState() {
+    super.initState();
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
+  }
 
+  @override
+  void dispose() {
+    _loginBloc.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     Widget appLogo = Container(
       padding: EdgeInsets.all(8),
       child: Icon(
@@ -37,22 +56,8 @@ class LoginPage extends StatelessWidget {
     return Material(
       child: Scaffold(
         body: BlocBuilder<LoginBloc, AbstractLoginState>(
-          bloc: loginBloc,
+          bloc: _loginBloc,
           builder: (BuildContext context, AbstractLoginState loginState) {
-            if (loginState is LoadingState) {
-              print('loading');
-            } else if (loginState is ErrorState) {
-              print('errorstate');
-              print("iderror: ${loginState.idErrorMessage}");
-              print("pderror: ${loginState.passwordErrorMessage}");
-            } else if (loginState is LoginSuccessState) {
-              print('loginsuccess');
-            } else if (loginState is InitialState) {
-              print('initial');
-            } else {
-              print('somethingelse');
-            }
-
             return Container(
               alignment: Alignment.center,
               child: SafeArea(
@@ -89,11 +94,11 @@ class LoginPage extends StatelessWidget {
                       CustomButton(
                         label: loginState is LoadingState ? "Loading" : "Login",
                         onPressed: () {
-                          print('adding event');
-                          loginBloc.add(
+                          _loginBloc.add(
                             LoginEvent(
-                                id: _idController.text,
-                                password: _passwordController.text),
+                              id: _idController.text,
+                              password: _passwordController.text,
+                            ),
                           );
                         },
                       ),

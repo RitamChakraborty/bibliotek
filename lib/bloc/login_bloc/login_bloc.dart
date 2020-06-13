@@ -1,40 +1,9 @@
+import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
+import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
-
-abstract class AbstractLoginEvent {}
-
-class LoginEvent extends AbstractLoginEvent {
-  final String _id;
-  final String _password;
-
-  LoginEvent({@required String id, @required String password})
-      : this._id = id,
-        this._password = password,
-        assert(id != null),
-        assert(password != null);
-
-  String get password => _password;
-
-  String get id => _id;
-}
-
-abstract class AbstractLoginState {}
-
-class InitialState extends AbstractLoginState {}
-
-class LoadingState extends AbstractLoginState {}
-
-class ErrorState extends AbstractLoginState {
-  String idErrorMessage;
-  String passwordErrorMessage;
-
-  ErrorState({this.idErrorMessage, this.passwordErrorMessage});
-}
-
-class LoginSuccessState extends AbstractLoginState {}
 
 class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
   @override
@@ -42,14 +11,9 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
 
   @override
   Stream<AbstractLoginState> mapEventToState(AbstractLoginEvent event) async* {
-    print('mapping');
-
     if (event is LoginEvent) {
       String id = event.id;
       String password = event.password;
-
-      print('id: $id');
-      print('password: $password');
 
       if (id.isEmpty && password.isEmpty) {
         yield ErrorState(
@@ -65,7 +29,6 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
             FirestoreServices().getUserDocuments(id: event.id);
 
         yield LoadingState();
-        await Future.delayed(Duration(seconds: 5));
 
         await for (List<DocumentSnapshot> userDocumentSnapshotList
             in userDocumentSnapshotListStream) {
@@ -82,10 +45,11 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
                 correctPassword = true;
                 break;
               }
+              break;
             }
 
             if (correctPassword) {
-              yield LoginSuccessState();
+              yield LoginSuccessState(user: user);
             } else {
               yield ErrorState(passwordErrorMessage: "Incorrect password");
             }

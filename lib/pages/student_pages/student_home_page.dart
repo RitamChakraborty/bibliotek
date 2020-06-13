@@ -22,8 +22,11 @@ class StudentHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget drawer = CustomDrawer(
       user: User(
-        name: "Ritam Chakraborty",
-        id: "161001001070",
+        id: "1001",
+        password: "admin",
+        name: "Librarian",
+        isAdmin: true,
+        details: {},
       ),
     );
 
