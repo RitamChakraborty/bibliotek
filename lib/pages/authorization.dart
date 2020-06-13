@@ -21,7 +21,7 @@ class _AuthorizationState extends State<Authorization> {
 
   @override
   void dispose() {
-    _loginBloc.close();
+//    _loginBloc.close();
     super.dispose();
   }
 

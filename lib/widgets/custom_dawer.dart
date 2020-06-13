@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
   final User _user;
+  final VoidCallback _logOut;
 
-  const CustomDrawer({@required User user})
+  const CustomDrawer({@required User user, @required VoidCallback logOut})
       : this._user = user,
-        assert(user != null);
+        this._logOut = logOut,
+        assert(user != null),
+        assert(logOut != null);
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,7 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.power_settings_new),
             title: Text("Logout"),
+            onTap: _logOut,
           )
         ],
       ),

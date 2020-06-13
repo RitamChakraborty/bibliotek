@@ -22,7 +22,7 @@ class _RoleBasedAuthorizationState extends State<RoleBasedAuthorization> {
 
   @override
   void dispose() {
-    _loginBloc.close();
+//    _loginBloc.close();
     super.dispose();
   }
 

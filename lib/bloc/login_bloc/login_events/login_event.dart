@@ -16,3 +16,5 @@ class LoginEvent extends AbstractLoginEvent {
 
   String get id => _id;
 }
+
+class LogoutEvent extends AbstractLoginEvent {}

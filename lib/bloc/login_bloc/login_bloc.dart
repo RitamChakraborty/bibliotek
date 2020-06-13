@@ -60,6 +60,8 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
           break;
         }
       }
+    } else if (event is LogoutEvent) {
+      yield InitialState();
     }
   }
 }
