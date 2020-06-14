@@ -18,12 +18,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
   final List<Book> books = [
     Book(
       bookName: "Programming in C",
-      author: "Reema Tharesa",
+      authorName: "Reema Tharesa",
       subject: "Computer Science Engineering",
     ),
     Book(
       bookName: "Gravitation",
-      author: "Kip Thron",
+      authorName: "Kip Thron",
       subject: "General Relativty",
     ),
   ];

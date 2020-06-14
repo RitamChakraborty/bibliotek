@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 class AddBooksPage extends StatelessWidget {
   final TextEditingController _bookNameController = TextEditingController();
   final TextEditingController _authorNameController = TextEditingController();
+  final TextEditingController _subjectNameController = TextEditingController();
   final TextEditingController _numberOfCopiesController =
       TextEditingController();
 
@@ -33,6 +34,13 @@ class AddBooksPage extends StatelessWidget {
                   CustomTextField(
                     labelText: "author name",
                     controller: _authorNameController,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  CustomTextField(
+                    labelText: "subject",
+                    controller: _subjectNameController,
                   ),
                   SizedBox(
                     height: 16,
