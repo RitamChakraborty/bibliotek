@@ -3,38 +3,29 @@ import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
   final User _user;
-  final VoidCallback _logOut;
+  final List<Widget> _children;
 
-  const CustomDrawer({@required User user, @required VoidCallback logOut})
+  const CustomDrawer({@required User user, @required List<Widget> children})
       : this._user = user,
-        this._logOut = logOut,
+        this._children = children,
         assert(user != null),
-        assert(logOut != null);
+        assert(children != null);
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> drawerChildren = [
+      UserAccountsDrawerHeader(
+        accountName: Text("${_user.name}"),
+        accountEmail: Text("${_user.id}"),
+      ),
+    ];
+
+    drawerChildren.addAll(_children);
+
     return Drawer(
       elevation: 0,
       child: ListView(
-        children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountName: Text("${_user.name}"),
-            accountEmail: Text("${_user.id}"),
-          ),
-          ListTile(
-            leading: Icon(Icons.lock),
-            title: Text("Change password"),
-          ),
-          Divider(
-            indent: 16,
-            endIndent: 16,
-          ),
-          ListTile(
-            leading: Icon(Icons.power_settings_new),
-            title: Text("Logout"),
-            onTap: _logOut,
-          )
-        ],
+        children: drawerChildren,
       ),
     );
   }

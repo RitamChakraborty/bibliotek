@@ -48,9 +48,23 @@ class _StudentHomePageState extends State<StudentHomePage> {
         if (loginState is LoginSuccessState) {
           Widget drawer = CustomDrawer(
             user: loginState.user,
-            logOut: () {
-              _loginBloc.add(LogoutEvent());
-            },
+            children: [
+              ListTile(
+                leading: Icon(Icons.lock),
+                title: Text("Change Password"),
+              ),
+              Divider(
+                indent: 16,
+                endIndent: 16,
+              ),
+              ListTile(
+                leading: Icon(Icons.power_settings_new),
+                title: Text("Logout"),
+                onTap: () {
+                  _loginBloc.add(LogoutEvent());
+                },
+              )
+            ],
           );
 
           Widget bookTile({@required Book book, @required bool isAvailable}) {

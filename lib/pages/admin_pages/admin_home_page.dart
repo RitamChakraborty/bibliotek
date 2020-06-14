@@ -3,6 +3,7 @@ import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
 import 'package:bibliotek/pages/admin_pages/add_books_page.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page.dart';
+import 'package:bibliotek/pages/admin_pages/show_all_books_page.dart';
 import 'package:bibliotek/pages/admin_pages/submit_book_page.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_dawer.dart';
@@ -42,9 +43,35 @@ class _AdminHomePageState extends State<AdminHomePage> {
               ),
               drawer: CustomDrawer(
                 user: loginState.user,
-                logOut: () {
-                  _loginBloc.add(LogoutEvent());
-                },
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.book),
+                    title: Text("All Books"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                          return ShowAllBooksPage();
+                        }),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.lock),
+                    title: Text("Change Password"),
+                  ),
+                  Divider(
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.power_settings_new),
+                    title: Text("Logout"),
+                    onTap: () {
+                      _loginBloc.add(LogoutEvent());
+                    },
+                  )
+                ],
               ),
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () {

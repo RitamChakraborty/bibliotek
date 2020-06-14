@@ -29,4 +29,10 @@ class FirestoreServices {
       'number_of_copies': numberOfCopies,
     });
   }
+
+  Stream<QuerySnapshot> getBooks() {
+    CollectionReference booksCollectionReference =
+        _firestore.collection('books');
+    return booksCollectionReference.snapshots();
+  }
 }
