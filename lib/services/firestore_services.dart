@@ -25,7 +25,7 @@ class FirestoreServices {
     return booksDocumentReference.setData({
       'book_name': book.bookName,
       'author_name': book.authorName,
-      'suject_name': book.subject,
+      'subject_name': book.subject,
       'number_of_copies': numberOfCopies,
     });
   }
