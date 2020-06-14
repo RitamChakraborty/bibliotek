@@ -41,7 +41,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
               Map<String, dynamic> data = userDocumentSnapshot.data;
 
               if (data['password'] == password) {
-                user = User.formJson(data);
+                user = User.fromJson(data);
                 correctPassword = true;
                 break;
               }

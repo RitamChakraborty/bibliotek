@@ -35,7 +35,7 @@ class User {
 
   Map<String, dynamic> get details => _details;
 
-  factory User.formJson(Map<String, dynamic> map) {
+  factory User.fromJson(Map<String, dynamic> map) {
     return User(
         id: map['id'],
         password: map['password'],
