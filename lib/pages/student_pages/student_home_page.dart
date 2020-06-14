@@ -19,12 +19,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
     Book(
       bookName: "Programming in C",
       authorName: "Reema Tharesa",
-      subject: "Computer Science Engineering",
+      subjectName: "Computer Science Engineering",
     ),
     Book(
       bookName: "Gravitation",
       authorName: "Kip Thron",
-      subject: "General Relativty",
+      subjectName: "General Relativty",
     ),
   ];
 
@@ -56,7 +56,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           Widget bookTile({@required Book book, @required bool isAvailable}) {
             return ListTile(
               title: Text("${book.bookName}"),
-              subtitle: Text("${book.author}"),
+              subtitle: Text("${book.authorName}"),
               trailing: Text(
                 isAvailable ? "Available" : "Unavailable",
               ),

@@ -85,7 +85,7 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
         Book book = Book(
           bookName: bookName,
           authorName: authorName,
-          subject: subjectName,
+          subjectName: subjectName,
         );
       }
     }

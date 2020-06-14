@@ -5,24 +5,24 @@ import 'package:meta/meta.dart';
 class Book {
   final String _bookName;
   final String _authorName;
-  final String _subject;
+  final String _subjectName;
 
   const Book({
     @required String bookName,
     @required String authorName,
-    @required String subject,
+    @required String subjectName,
   })  : this._bookName = bookName,
         this._authorName = authorName,
-        this._subject = subject,
+        this._subjectName = subjectName,
         assert(bookName != null),
         assert(authorName != null),
-        assert(subject != null);
+        assert(subjectName != null);
 
   String get subject {
-    return _subject;
+    return _subjectName;
   }
 
-  String get author {
+  String get authorName {
     return _authorName;
   }
 
@@ -32,17 +32,17 @@ class Book {
 
   factory Book.fromJson(Map<String, dynamic> map) {
     return Book(
-      bookName: map['bookName'],
-      authorName: map['author'],
-      subject: map['subject'],
+      bookName: map['book_name'],
+      authorName: map['author_name'],
+      subjectName: map['subject_name'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'bookName': bookName,
-      'author': author,
-      'subject': subject,
+      'book_name': bookName,
+      'author_name': authorName,
+      'subject_name': subject,
     };
   }
 
