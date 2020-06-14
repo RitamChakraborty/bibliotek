@@ -1,4 +1,5 @@
 import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -54,6 +55,8 @@ class BookBlocErrorState extends AbstractBookBlocState {
 class BookBlocLoadingState extends AbstractBookBlocState {}
 
 class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
+  final FirestoreServices _firestoreServices = FirestoreServices();
+
   @override
   AbstractBookBlocState get initialState => BookBlocInitialState();
 
@@ -87,6 +90,13 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
           authorName: authorName,
           subjectName: subjectName,
         );
+
+        yield BookBlocLoadingState();
+
+        await _firestoreServices.addBook(
+            book: book, numberOfCopies: numberOfCopies);
+
+        yield BookBlocInitialState();
       }
     }
   }
