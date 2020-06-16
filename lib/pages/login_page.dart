@@ -86,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                               errorText: loginState is ErrorState
                                   ? loginState.passwordErrorMessage
                                   : null,
+                              isPassword: true,
                             ),
                           ],
                         ),
