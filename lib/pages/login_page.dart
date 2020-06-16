@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                               errorText: loginState is ErrorState
                                   ? loginState.idErrorMessage
                                   : null,
+                              textInputType: TextInputType.number,
                             ),
                             SizedBox(height: 16),
                             CustomTextField(

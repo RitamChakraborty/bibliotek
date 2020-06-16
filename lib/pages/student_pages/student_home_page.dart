@@ -2,6 +2,7 @@ import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
 import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/pages/admin_pages/show_all_books_page.dart';
 import 'package:bibliotek/pages/student_pages/search_book_page.dart';
 import 'package:bibliotek/widgets/custom_dawer.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,18 @@ class _StudentHomePageState extends State<StudentHomePage> {
               ListTile(
                 leading: Icon(Icons.lock),
                 title: Text("Change Password"),
+              ),
+              ListTile(
+                leading: Icon(Icons.book),
+                title: Text("All Books"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => ShowAllBooksPage(),
+                    ),
+                  );
+                },
               ),
               Divider(
                 indent: 16,
