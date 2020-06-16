@@ -35,4 +35,12 @@ class FirestoreServices {
         _firestore.collection('books');
     return booksCollectionReference.snapshots();
   }
+
+  Stream<QuerySnapshot> getStudents() {
+    CollectionReference usersCollectionReference =
+        _firestore.collection('users');
+    return usersCollectionReference
+        .where('is_admin', isEqualTo: false)
+        .snapshots();
+  }
 }

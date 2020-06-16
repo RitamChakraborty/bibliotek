@@ -1,4 +1,6 @@
+import 'package:bibliotek/providers/students_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum Filter { Name, ID }
 
@@ -13,6 +15,8 @@ class _StudentPickerPageState extends State<StudentPickerPage> {
 
   @override
   Widget build(BuildContext context) {
+    StudentsProvider studentsProvider = Provider.of<StudentsProvider>(context);
+
     Widget leadingButton() {
       if (_controller.text.isEmpty) {
         return BackButton();
@@ -87,6 +91,34 @@ class _StudentPickerPageState extends State<StudentPickerPage> {
             filterListIcon,
           ],
           title: searchBookField(setState: setState),
+        ),
+        body: SafeArea(
+          child: StreamBuilder(
+            stream: studentsProvider.getStudents(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return ListView.separated(
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text("${snapshot.data[index].data['id']}"),
+                      subtitle: Text("${snapshot.data[index].data['name']}"),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider();
+                  },
+                  itemCount: snapshot.data.length,
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                );
+              } else if (snapshot.hasError) {
+                print('Error: ${snapshot.error}');
+              }
+
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ),
       ),
     );

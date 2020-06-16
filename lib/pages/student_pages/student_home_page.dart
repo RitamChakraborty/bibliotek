@@ -51,10 +51,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
             user: loginState.user,
             children: [
               ListTile(
-                leading: Icon(Icons.lock),
-                title: Text("Change Password"),
-              ),
-              ListTile(
                 leading: Icon(Icons.book),
                 title: Text("All Books"),
                 onTap: () {
@@ -65,6 +61,10 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
                   );
                 },
+              ),
+              ListTile(
+                leading: Icon(Icons.lock),
+                title: Text("Change Password"),
               ),
               Divider(
                 indent: 16,

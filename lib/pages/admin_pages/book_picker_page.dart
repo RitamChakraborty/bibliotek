@@ -1,4 +1,6 @@
+import 'package:bibliotek/providers/books_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum Filter {
   Name,
@@ -18,6 +20,8 @@ class _BookPickerPageState extends State<BookPickerPage> {
 
   @override
   Widget build(BuildContext context) {
+    BooksProvider booksProvider = Provider.of<BooksProvider>(context);
+
     Widget leadingButton() {
       if (_controller.text.isEmpty) {
         return BackButton();
@@ -92,6 +96,35 @@ class _BookPickerPageState extends State<BookPickerPage> {
             filterListIcon,
           ],
           title: searchBookField(setState: setState),
+        ),
+        body: SafeArea(
+          child: StreamBuilder(
+            stream: booksProvider.getBooks(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return ListView.separated(
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text("${snapshot.data[index].data['book_name']}"),
+                      subtitle: Text(
+                          "by ${snapshot.data[index].data['author_name']}\n Subject: ${snapshot.data[index].data['subject_name']}"),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider();
+                  },
+                  itemCount: snapshot.data.length,
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                );
+              } else if (snapshot.hasError) {
+                print("Error: ${snapshot.error}");
+              }
+
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ),
       ),
     );
