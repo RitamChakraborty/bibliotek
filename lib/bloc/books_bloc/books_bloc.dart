@@ -1,58 +1,8 @@
+import 'package:bibliotek/bloc/books_bloc/book_bloc_events/book_bloc_event.dart';
+import 'package:bibliotek/bloc/books_bloc/book_bloc_states/book_bloc_state.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-
-abstract class AbstractBookBlocEvent {}
-
-class BookBlocAddBookEvent extends AbstractBookBlocEvent {
-  final String _bookName;
-  final String _authorName;
-  final String _subjectName;
-  final int _numberOfCopies;
-
-  BookBlocAddBookEvent({
-    @required String bookName,
-    @required String authorName,
-    @required String subjectName,
-    @required int numberOfCopies,
-  })  : this._bookName = bookName,
-        this._authorName = authorName,
-        this._subjectName = subjectName,
-        this._numberOfCopies = numberOfCopies,
-        assert(bookName != null),
-        assert(authorName != null),
-        assert(subjectName != null),
-        assert(numberOfCopies != null);
-
-  int get numberOfCopies => _numberOfCopies;
-
-  String get subjectName => _subjectName;
-
-  String get authorName => _authorName;
-
-  String get bookName => _bookName;
-}
-
-abstract class AbstractBookBlocState {}
-
-class BookBlocInitialState extends AbstractBookBlocState {}
-
-class BookBlocErrorState extends AbstractBookBlocState {
-  String bookNameErrorMessage;
-  String authorNameErrorMessage;
-  String subjectNameErrorMessage;
-  String numberOfCopiesErrorMessage;
-
-  BookBlocErrorState({
-    this.bookNameErrorMessage,
-    this.authorNameErrorMessage,
-    this.subjectNameErrorMessage,
-    this.numberOfCopiesErrorMessage,
-  });
-}
-
-class BookBlocLoadingState extends AbstractBookBlocState {}
 
 class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
   final FirestoreServices _firestoreServices = FirestoreServices();
