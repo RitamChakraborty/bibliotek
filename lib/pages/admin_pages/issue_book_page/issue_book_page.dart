@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class IssueBookPage extends StatefulWidget {
   @override
@@ -18,11 +19,13 @@ class IssueBookPage extends StatefulWidget {
 class _IssueBookPageState extends State<IssueBookPage> {
   User student;
   Book book;
-  Timestamp timestamp;
+  Timestamp timestamp = Timestamp.now();
 
   @override
   Widget build(BuildContext context) {
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
+
+    print(timestamp);
 
     return Material(
       child: Scaffold(
@@ -31,14 +34,24 @@ class _IssueBookPageState extends State<IssueBookPage> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return IssueBookConfirmationPage();
-                },
-              ),
-            );
+            if (student == null) {
+              Fluttertoast.showToast(msg: "Please pick a student first");
+            } else if (book == null) {
+              Fluttertoast.showToast(msg: "Please pick a book first");
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return IssueBookConfirmationPage(
+                      student: student,
+                      book: book,
+                      timestamp: timestamp,
+                    );
+                  },
+                ),
+              );
+            }
           },
           label: Text("Next"),
         ),
