@@ -1,9 +1,7 @@
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/models/user.dart';
-import 'package:bibliotek/providers/students_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 enum Filter { Name, ID }
 
@@ -18,7 +16,6 @@ class _StudentPickerPageState extends State<StudentPickerPage> {
 
   @override
   Widget build(BuildContext context) {
-    StudentsProvider studentsProvider = Provider.of<StudentsProvider>(context);
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
 
     Widget leadingButton() {
@@ -101,7 +98,7 @@ class _StudentPickerPageState extends State<StudentPickerPage> {
               bloc: issueBookBloc,
               builder: (context, AbstractIssueBookState issueBookState) {
                 return StreamBuilder(
-                  stream: studentsProvider.getStudents(),
+                  stream: issueBookState.getStudents(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       return ListView.separated(

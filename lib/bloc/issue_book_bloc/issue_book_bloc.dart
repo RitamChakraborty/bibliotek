@@ -1,5 +1,6 @@
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/user.dart';
+import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
@@ -36,7 +37,21 @@ class DatePickedEvent extends AbstractIssueBookEvent {
   Timestamp get timestamp => Timestamp.fromDate(_dateTime);
 }
 
-class AbstractIssueBookState {}
+class AbstractIssueBookState {
+  FirestoreServices _firestoreServices = FirestoreServices();
+
+  Stream<List<DocumentSnapshot>> getBooks() {
+    return _firestoreServices
+        .getBooks()
+        .map((QuerySnapshot event) => event.documents);
+  }
+
+  Stream<List<DocumentSnapshot>> getStudents() {
+    return _firestoreServices
+        .getStudents()
+        .map((QuerySnapshot event) => event.documents);
+  }
+}
 
 class IssueBookInitialState extends AbstractIssueBookState {}
 
