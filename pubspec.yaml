@@ -14,6 +14,7 @@ dependencies:
   provider: any
   shared_preferences: any
   fluttertoast: any
+  intl: any
 
 dev_dependencies:
   flutter_test:

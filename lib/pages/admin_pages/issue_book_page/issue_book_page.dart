@@ -1,4 +1,5 @@
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
+import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/book_picker_page.dart';
@@ -142,7 +143,8 @@ class _IssueBookPageState extends State<IssueBookPage> {
                               height: 16,
                             )
                           : ListTile(
-                              title: Text("${timestamp.toDate()}"),
+                              title: Text(
+                                  "${DATE_FORMAT.format(timestamp.toDate())}"),
                             ),
                     ),
                   ],

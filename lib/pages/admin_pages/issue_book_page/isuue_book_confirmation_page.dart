@@ -1,3 +1,4 @@
+import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
@@ -60,7 +61,8 @@ class IssueBookConfirmationPage extends StatelessWidget {
                             labelText("    Title: ${_book.bookName}"),
                             labelText("    Author: ${_book.authorName}"),
                             labelText("Information"),
-                            labelText("    Issue Date: ${_timestamp.toDate()}"),
+                            labelText(
+                                "    Issue Date: ${DATE_FORMAT.format(_timestamp.toDate())}"),
                           ],
                         ),
                       ),
