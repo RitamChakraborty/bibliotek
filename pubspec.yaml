@@ -13,6 +13,7 @@ dependencies:
   flutter_bloc: any
   provider: any
   shared_preferences: any
+  fluttertoast: any
 
 dev_dependencies:
   flutter_test:

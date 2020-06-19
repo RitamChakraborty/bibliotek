@@ -1,10 +1,10 @@
 import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
-import 'package:bibliotek/pages/admin_pages/add_books_page.dart';
-import 'package:bibliotek/pages/admin_pages/issue_book_page.dart';
-import 'package:bibliotek/pages/admin_pages/show_all_books_page.dart';
-import 'package:bibliotek/pages/admin_pages/submit_book_page.dart';
+import 'package:bibliotek/pages/admin_pages/add_book_page/add_books_page.dart';
+import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
+import 'package:bibliotek/pages/admin_pages/issue_book_page/issue_book_page.dart';
+import 'package:bibliotek/pages/admin_pages/submit_book_page/submit_book_page.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_dawer.dart';
 import 'package:flutter/material.dart';

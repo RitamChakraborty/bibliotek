@@ -1,9 +1,9 @@
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/user.dart';
-import 'package:bibliotek/pages/admin_pages/book_picker_page.dart';
-import 'package:bibliotek/pages/admin_pages/isuue_book_confirmation_page.dart';
-import 'package:bibliotek/pages/admin_pages/student_picker_page.dart';
+import 'package:bibliotek/pages/admin_pages/issue_book_page/book_picker_page.dart';
+import 'package:bibliotek/pages/admin_pages/issue_book_page/isuue_book_confirmation_page.dart';
+import 'package:bibliotek/pages/admin_pages/issue_book_page/student_picker_page.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
