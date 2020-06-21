@@ -1,4 +1,5 @@
-import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
+import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
+import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
 import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/user.dart';
@@ -26,8 +27,6 @@ class _IssueBookPageState extends State<IssueBookPage> {
   @override
   Widget build(BuildContext context) {
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
-
-    print(timestamp);
 
     return Material(
       child: Scaffold(
