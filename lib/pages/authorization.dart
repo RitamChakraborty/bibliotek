@@ -5,28 +5,10 @@ import 'package:bibliotek/pages/role_based_authorization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Authorization extends StatefulWidget {
-  @override
-  _AuthorizationState createState() => _AuthorizationState();
-}
-
-class _AuthorizationState extends State<Authorization> {
-  LoginBloc _loginBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _loginBloc = BlocProvider.of<LoginBloc>(context);
-  }
-
-  @override
-  void dispose() {
-//    _loginBloc.close();
-    super.dispose();
-  }
-
-  @override
+class Authorization extends StatelessWidget {
   Widget build(BuildContext context) {
+    LoginBloc _loginBloc = BlocProvider.of<LoginBloc>(context);
+
     return BlocBuilder<LoginBloc, AbstractLoginState>(
       bloc: _loginBloc,
       builder: (BuildContext context, AbstractLoginState loginState) {

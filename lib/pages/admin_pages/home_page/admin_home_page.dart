@@ -11,27 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AdminHomePage extends StatefulWidget {
-  @override
-  _AdminHomePageState createState() => _AdminHomePageState();
-}
-
-class _AdminHomePageState extends State<AdminHomePage> {
-  LoginBloc _loginBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _loginBloc = BlocProvider.of<LoginBloc>(context);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+class AdminHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    LoginBloc _loginBloc = BlocProvider.of<LoginBloc>(context);
+
     return BlocBuilder<LoginBloc, AbstractLoginState>(
       bloc: _loginBloc,
       builder: (BuildContext context, AbstractLoginState loginState) {

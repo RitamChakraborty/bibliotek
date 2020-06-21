@@ -15,12 +15,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class IssueBookPage extends StatefulWidget {
-  @override
-  _IssueBookPageState createState() => _IssueBookPageState();
-}
-
-class _IssueBookPageState extends State<IssueBookPage> {
+class IssueBookPage extends StatelessWidget {
   User student;
   Book book;
   Timestamp timestamp = Timestamp.now();

@@ -76,8 +76,8 @@ class IssueBookConfirmationPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CustomButton(
-                      label: "Confirm",
                       onPressed: () {},
+                      label: "Confirm",
                     ),
                     CustomButton(
                       label: "Edit",

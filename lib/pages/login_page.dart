@@ -7,32 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  LoginBloc _loginBloc;
-
+class LoginPage extends StatelessWidget {
   final TextEditingController _idController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    _loginBloc = BlocProvider.of<LoginBloc>(context);
-  }
-
-  @override
-  void dispose() {
-//    _loginBloc.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    LoginBloc _loginBloc = BlocProvider.of<LoginBloc>(context);
+
     Widget appLogo = Container(
       padding: EdgeInsets.all(8),
       child: Icon(
