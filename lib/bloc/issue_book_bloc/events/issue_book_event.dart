@@ -34,3 +34,9 @@ class DatePickedEvent extends AbstractIssueBookEvent {
 
   Timestamp get timestamp => Timestamp.fromDate(_dateTime);
 }
+
+class CloseSelectedStudentEvent extends AbstractIssueBookEvent {}
+
+class CloseSelectedBookEvent extends AbstractIssueBookEvent {}
+
+class CloseSelectedDateEvent extends AbstractIssueBookEvent {}

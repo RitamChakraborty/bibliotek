@@ -16,6 +16,12 @@ class IssueBookBloc
       yield BookPickedState(book: event.book);
     } else if (event is DatePickedEvent) {
       yield DatePickedState(timestamp: event.timestamp);
+    } else if (event is CloseSelectedStudentEvent) {
+      yield CloseSelectedStudentState();
+    } else if (event is CloseSelectedBookEvent) {
+      yield CloseSelectedBookState();
+    } else if (event is CloseSelectedDateEvent) {
+      yield CloseSelectedDateState();
     }
   }
 }

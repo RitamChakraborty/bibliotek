@@ -53,3 +53,9 @@ class DatePickedState extends AbstractIssueBookState {
 
   Timestamp get timestamp => _timestamp;
 }
+
+class CloseSelectedStudentState extends AbstractIssueBookState {}
+
+class CloseSelectedBookState extends AbstractIssueBookState {}
+
+class CloseSelectedDateState extends AbstractIssueBookState {}

@@ -1,4 +1,5 @@
 import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
+import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
 import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
@@ -39,6 +40,8 @@ class _IssueBookPageState extends State<IssueBookPage> {
               Fluttertoast.showToast(msg: "Please pick a student first");
             } else if (book == null) {
               Fluttertoast.showToast(msg: "Please pick a book first");
+            } else if (timestamp == null) {
+              Fluttertoast.showToast(msg: "Please select a date first");
             } else {
               Navigator.push(
                 context,
@@ -70,6 +73,15 @@ class _IssueBookPageState extends State<IssueBookPage> {
               if (issueBookState is DatePickedState) {
                 timestamp = issueBookState.timestamp;
               }
+              if (issueBookState is CloseSelectedStudentState) {
+                student = null;
+              }
+              if (issueBookState is CloseSelectedBookState) {
+                book = null;
+              }
+              if (issueBookState is CloseSelectedDateState) {
+                timestamp = null;
+              }
 
               return Container(
                 alignment: Alignment.center,
@@ -100,7 +112,10 @@ class _IssueBookPageState extends State<IssueBookPage> {
                                 title: Text("ID: ${student.id}"),
                                 subtitle: Text("Name: ${student.name}"),
                                 trailing: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    issueBookBloc
+                                        .add(CloseSelectedStudentEvent());
+                                  },
                                   icon: Icon(Icons.close),
                                 ),
                               ),
@@ -130,7 +145,9 @@ class _IssueBookPageState extends State<IssueBookPage> {
                                 title: Text("${book.bookName}"),
                                 subtitle: Text("by ${book.authorName}"),
                                 trailing: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    issueBookBloc.add(CloseSelectedBookEvent());
+                                  },
                                   icon: Icon(Icons.close),
                                 ),
                               ),
@@ -160,7 +177,9 @@ class _IssueBookPageState extends State<IssueBookPage> {
                                   "${DATE_FORMAT.format(timestamp.toDate())}",
                                 ),
                                 trailing: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    issueBookBloc.add(CloseSelectedDateEvent());
+                                  },
                                   icon: Icon(Icons.close),
                                 ),
                               ),
