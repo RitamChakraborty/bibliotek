@@ -6,6 +6,7 @@ import 'package:bibliotek/pages/admin_pages/issue_book_page/book_picker_page.dar
 import 'package:bibliotek/pages/admin_pages/issue_book_page/isuue_book_confirmation_page.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/student_picker_page.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
+import 'package:bibliotek/widgets/custom_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -95,9 +96,15 @@ class _IssueBookPageState extends State<IssueBookPage> {
                           ? SizedBox(
                               height: 16,
                             )
-                          : ListTile(
-                              title: Text("ID: ${student.id}"),
-                              subtitle: Text("Name: ${student.name}"),
+                          : CustomCard(
+                              child: ListTile(
+                                title: Text("ID: ${student.id}"),
+                                subtitle: Text("Name: ${student.name}"),
+                                trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.close),
+                                ),
+                              ),
                             ),
                     ),
                     CustomButton(
@@ -119,9 +126,15 @@ class _IssueBookPageState extends State<IssueBookPage> {
                           ? SizedBox(
                               height: 16,
                             )
-                          : ListTile(
-                              title: Text("${book.bookName}"),
-                              subtitle: Text("by ${book.authorName}"),
+                          : CustomCard(
+                              child: ListTile(
+                                title: Text("${book.bookName}"),
+                                subtitle: Text("by ${book.authorName}"),
+                                trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.close),
+                                ),
+                              ),
                             ),
                     ),
                     CustomButton(
@@ -142,9 +155,16 @@ class _IssueBookPageState extends State<IssueBookPage> {
                           ? SizedBox(
                               height: 16,
                             )
-                          : ListTile(
-                              title: Text(
-                                  "${DATE_FORMAT.format(timestamp.toDate())}"),
+                          : CustomCard(
+                              child: ListTile(
+                                title: Text(
+                                  "${DATE_FORMAT.format(timestamp.toDate())}",
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.close),
+                                ),
+                              ),
                             ),
                     ),
                   ],
