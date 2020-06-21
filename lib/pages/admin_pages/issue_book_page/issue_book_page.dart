@@ -161,8 +161,11 @@ class _IssueBookPageState extends State<IssueBookPage> {
                           firstDate: DateTime(2016),
                           initialDate: DateTime.now(),
                           lastDate: DateTime(2021),
-                        ).then((value) => issueBookBloc
-                            .add(DatePickedEvent(dateTime: value)));
+                        ).then((value) {
+                          if (value != null) {
+                            issueBookBloc.add(DatePickedEvent(dateTime: value));
+                          }
+                        });
                       },
                     ),
                     Container(
