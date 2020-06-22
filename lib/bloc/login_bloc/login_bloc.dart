@@ -2,6 +2,7 @@ import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/services/firestore_services.dart';
+import 'package:bibliotek/utils/Sha256.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,6 +26,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
       } else if (password.isEmpty) {
         yield ErrorState(passwordErrorMessage: "Password can not be empty");
       } else {
+        String hash = Sha256.convert(string: password);
         Stream<List<DocumentSnapshot>> userDocumentSnapshotListStream =
             FirestoreServices().getUserDocuments(id: event.id);
 
