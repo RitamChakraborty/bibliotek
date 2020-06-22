@@ -1,6 +1,7 @@
 import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
+import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoginBloc _loginBloc = BlocProvider.of<LoginBloc>(context);
+    _idController.text = ID;
+    _passwordController.text = PASSWORD;
 
     Widget appLogo = Container(
       padding: EdgeInsets.all(8),
@@ -82,6 +85,9 @@ class LoginPage extends StatelessWidget {
                         onPressed: loginState is LoginLoadingState
                             ? null
                             : () {
+                                ID = _idController.text;
+                                PASSWORD = _passwordController.text;
+
                                 _loginBloc.add(
                                   LoginEvent(
                                     id: _idController.text,

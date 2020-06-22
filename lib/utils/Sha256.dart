@@ -4,7 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:meta/meta.dart';
 
 class Sha256 {
-  static String convert({@required String string}) {
+  String convert({@required String string}) {
     List<int> bytes = utf8.encode(string);
     String hash = sha256.convert(bytes).toString();
     return hash;

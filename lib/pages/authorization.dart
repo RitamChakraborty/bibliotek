@@ -20,13 +20,11 @@ class Authorization extends StatelessWidget {
 
         if (loginState is LoginLoadingState) {
           return LoadingPage();
-        } else if (loginState is UserNotFoundState) {
-          return LoginPage();
         } else if (loginState is LoginSuccessState) {
           return RoleBasedAuthorization();
-        } else {
-          return Container();
         }
+
+        return LoginPage();
       },
     );
   }

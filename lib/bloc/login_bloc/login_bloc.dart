@@ -26,6 +26,27 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
         User user = User.fromJson(jsonDecode(userRawJson));
         yield LoginSuccessState(user: user);
       }
+    } else if (event is LoginEvent) {
+      String id = event.id;
+      String password = event.password;
+
+      if (id.isEmpty && password.isEmpty) {
+        yield LoginErrorState(
+          idErrorMessage: "ID can not be empty",
+          passwordErrorMessage: "Password can not be empty",
+        );
+      } else if (id.isEmpty) {
+        yield LoginErrorState(
+          idErrorMessage: "ID can not be empty",
+        );
+      } else if (password.isEmpty) {
+        yield LoginErrorState(
+          passwordErrorMessage: "Password can not be empty",
+        );
+      } else {
+        print(id);
+        print(password);
+      }
     }
 //    if (event is LoginEvent) {
 //      String id = event.id;
