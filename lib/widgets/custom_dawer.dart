@@ -1,22 +1,27 @@
-import 'package:bibliotek/models/user.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
-  final User _user;
+  final String _name;
+  final String _id;
   final List<Widget> _children;
 
-  const CustomDrawer({@required User user, @required List<Widget> children})
-      : this._user = user,
+  const CustomDrawer(
+      {@required String name,
+      @required String id,
+      @required List<Widget> children})
+      : this._name = name,
+        this._id = id,
         this._children = children,
-        assert(user != null),
+        assert(id != null),
+        assert(name != null),
         assert(children != null);
 
   @override
   Widget build(BuildContext context) {
     List<Widget> drawerChildren = [
       UserAccountsDrawerHeader(
-        accountName: Text("${_user.name}"),
-        accountEmail: Text("${_user.id}"),
+        accountName: Text("${_name}"),
+        accountEmail: Text("${_id}"),
       ),
     ];
 

@@ -104,8 +104,9 @@ class IssueBookPage extends StatelessWidget {
                             )
                           : CustomCard(
                               child: ListTile(
-                                title: Text("ID: ${student.id}"),
-                                subtitle: Text("Name: ${student.name}"),
+                                // Todo: fix
+//                                title: Text("ID: ${student.id}"),
+//                                subtitle: Text("Name: ${student.name}"),
                                 trailing: IconButton(
                                   onPressed: () {
                                     issueBookBloc
@@ -137,8 +138,9 @@ class IssueBookPage extends StatelessWidget {
                             )
                           : CustomCard(
                               child: ListTile(
-                                title: Text("${book.bookName}"),
-                                subtitle: Text("by ${book.authorName}"),
+                                // Todo: fix
+//                                title: Text("${book.bookName}"),
+//                                subtitle: Text("by ${book.authorName}"),
                                 trailing: IconButton(
                                   onPressed: () {
                                     issueBookBloc.add(CloseSelectedBookEvent());

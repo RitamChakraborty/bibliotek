@@ -6,21 +6,19 @@ class User {
   final String _id;
   final String _password;
   final bool _isAdmin;
-  final Map<String, dynamic> _details;
+  final String _detail;
 
   const User({
     @required String id,
     @required String password,
-    @required String name,
     @required bool isAdmin,
-    @required Map<String, dynamic> details,
+    @required String details,
   })  : this._id = id,
         this._password = password,
         this._isAdmin = isAdmin,
-        this._details = details,
+        this._detail = details,
         assert(id != null),
         assert(password != null),
-        assert(name != null),
         assert(isAdmin != null);
 
   String get id => _id;
@@ -29,14 +27,14 @@ class User {
 
   bool get isAdmin => _isAdmin;
 
-  Map<String, dynamic> get details => _details;
+  String get detail => _detail;
 
   factory User.fromJson(Map<String, dynamic> map) {
     return User(
         id: map['id'],
         password: map['password'],
         isAdmin: map['is_admin'],
-        details: map['details']);
+        details: map['detail']);
   }
 
   Map<String, dynamic> toJson() {
@@ -44,7 +42,7 @@ class User {
       'id': id,
       'password': password,
       'is_admin': isAdmin,
-      'details': details
+      'detail': detail
     };
   }
 

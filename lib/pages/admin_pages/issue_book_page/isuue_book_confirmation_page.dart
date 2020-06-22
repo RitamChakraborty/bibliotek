@@ -54,12 +54,13 @@ class IssueBookConfirmationPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            // Todo: fix
                             labelText("Student"),
-                            labelText("    ID: ${_student.id}"),
-                            labelText("    Name: ${_student.name}"),
+//                            labelText("    ID: ${_student.id}"),
+//                            labelText("    Name: ${_student.name}"),
                             labelText("Book"),
-                            labelText("    Title: ${_book.bookName}"),
-                            labelText("    Author: ${_book.authorName}"),
+//                            labelText("    Title: ${_book.bookName}"),
+//                            labelText("    Author: ${_book.authorName}"),
                             labelText("Information"),
                             labelText(
                                 "    Issue Date: ${DATE_FORMAT.format(_timestamp.toDate())}"),

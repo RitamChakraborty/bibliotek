@@ -43,8 +43,9 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
 
         yield BookBlocLoadingState();
 
-        await _firestoreServices.addBook(
-            book: book, numberOfCopies: numberOfCopies);
+        // Todo: fix
+//        await _firestoreServices.addBook(
+//            book: book, numberOfCopies: numberOfCopies);
 
         yield BookBlocInitialState();
       }

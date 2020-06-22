@@ -109,10 +109,11 @@ class _StudentPickerPageState extends State<StudentPickerPage> {
 
                           return ListTile(
                             onTap: () {
+                              // Todo: fix
                               User student = User(
                                 id: data['id'],
                                 password: data['password'],
-                                name: data['name'],
+//                                name: data['name'],
                                 isAdmin: data['is_admin'],
                                 details: data['details'],
                               );

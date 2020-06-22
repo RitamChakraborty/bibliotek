@@ -26,7 +26,9 @@ class AdminHomePage extends StatelessWidget {
                 title: Text("Home"),
               ),
               drawer: CustomDrawer(
-                user: loginState.user,
+                // Todo: name, id
+                name: "",
+                id: "",
                 children: [
                   ListTile(
                     leading: Icon(Icons.book),

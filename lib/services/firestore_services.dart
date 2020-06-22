@@ -17,17 +17,13 @@ class FirestoreServices {
     return userDocumentSnapshotListStream;
   }
 
-  Future<void> addBook({@required Book book, @required int numberOfCopies}) {
+  Future<void> addBook({@required Book book}) {
     CollectionReference booksCollectionReference =
         _firestore.collection('books');
     DocumentReference booksDocumentReference =
         booksCollectionReference.document();
-    return booksDocumentReference.setData({
-      'book_name': book.bookName,
-      'author_name': book.authorName,
-      'subject_name': book.subject,
-      'number_of_copies': numberOfCopies,
-    });
+
+    return booksDocumentReference.setData(book.toJson());
   }
 
   Stream<QuerySnapshot> getBooks() {
