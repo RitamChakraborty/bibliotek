@@ -1,4 +1,5 @@
 import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
@@ -15,6 +16,19 @@ class FirestoreServices {
             .map((event) => event.documents);
 
     return userDocumentSnapshotListStream;
+  }
+
+  Future<void> changePassword(
+      {@required User user, @required String password}) async {
+    CollectionReference userCollectionReference =
+        _firestore.collection('users');
+    return userCollectionReference
+        .where('id', isEqualTo: user.id)
+        .snapshots()
+        .map((event) => event.documents)
+        .listen((event) {
+      event[0].reference.updateData({'password': password});
+    });
   }
 
   Future<void> addBook({@required Book book, @required int copies}) async {
