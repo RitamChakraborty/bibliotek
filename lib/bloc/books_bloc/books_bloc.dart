@@ -36,9 +36,9 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
         );
       } else {
         Book book = Book(
-          bookName: bookName,
-          authorName: authorName,
-          subjectName: subjectName,
+          title: bookName,
+          author: authorName,
+          subject: subjectName,
         );
 
         yield BookBlocLoadingState();

@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 class User {
   final String _id;
   final String _password;
-  final String _name;
   final bool _isAdmin;
   final Map<String, dynamic> _details;
 
@@ -17,7 +16,6 @@ class User {
     @required Map<String, dynamic> details,
   })  : this._id = id,
         this._password = password,
-        this._name = name,
         this._isAdmin = isAdmin,
         this._details = details,
         assert(id != null),
@@ -29,8 +27,6 @@ class User {
 
   String get password => _password;
 
-  String get name => _name;
-
   bool get isAdmin => _isAdmin;
 
   Map<String, dynamic> get details => _details;
@@ -39,7 +35,6 @@ class User {
     return User(
         id: map['id'],
         password: map['password'],
-        name: map['name'],
         isAdmin: map['is_admin'],
         details: map['details']);
   }
@@ -48,7 +43,6 @@ class User {
     return {
       'id': id,
       'password': password,
-      'name': name,
       'is_admin': isAdmin,
       'details': details
     };

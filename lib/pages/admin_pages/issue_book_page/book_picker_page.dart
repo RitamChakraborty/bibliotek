@@ -115,9 +115,9 @@ class _BookPickerPageState extends State<BookPickerPage> {
                         return ListTile(
                           onTap: () {
                             Book book = Book(
-                              bookName: data['book_name'],
-                              authorName: data['author_name'],
-                              subjectName: data['subject_name'],
+                              title: data['book_name'],
+                              author: data['author_name'],
+                              subject: data['subject_name'],
                             );
 
                             issueBookBloc.add(BookPickedEvent(book: book));
