@@ -7,6 +7,7 @@ import 'package:bibliotek/pages/admin_pages/add_book_page/add_books_page.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/issue_book_page.dart';
 import 'package:bibliotek/pages/admin_pages/submit_book_page/submit_book_page.dart';
+import 'package:bibliotek/pages/change_password_page.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_dawer.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,14 @@ class AdminHomePage extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.lock),
                     title: Text("Change Password"),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                          return ChangePasswordPage();
+                        }),
+                      );
+                    },
                   ),
                   Divider(
                     indent: 16,
