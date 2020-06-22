@@ -17,13 +17,42 @@ class FirestoreServices {
     return userDocumentSnapshotListStream;
   }
 
-  Future<void> addBook({@required Book book, @required int copies}) {
+  Future<void> addBook({@required Book book, @required int copies}) async {
     CollectionReference booksCollectionReference =
         _firestore.collection('books');
-    DocumentReference booksDocumentReference =
-        booksCollectionReference.document();
 
-    return booksDocumentReference.setData(book.toJson());
+    Stream<QuerySnapshot> booksQuerySnapshotStream = booksCollectionReference
+        .where('title', isEqualTo: book.title)
+        .snapshots();
+
+    bool bookFound = false;
+    DocumentReference bookDocumentReference;
+
+    await for (QuerySnapshot bookQuerySnapshot in booksQuerySnapshotStream) {
+      List<DocumentSnapshot> bookDocumentReferenceList =
+          bookQuerySnapshot.documents;
+      if (bookDocumentReferenceList.isNotEmpty) {
+        bookFound = true;
+
+        for (DocumentSnapshot bookDocumentSnapshot
+            in bookDocumentReferenceList) {
+          copies += bookDocumentSnapshot.data['copies'];
+          bookDocumentReference = bookDocumentSnapshot.reference;
+
+          break;
+        }
+      }
+
+      break;
+    }
+
+    if (bookFound) {
+      bookDocumentReference.updateData({'copies': copies});
+    } else {
+      Map<String, dynamic> bookData = book.toJson();
+      bookData.putIfAbsent('copies', () => copies);
+      await booksCollectionReference.document().setData(bookData);
+    }
   }
 
   Stream<QuerySnapshot> getBooks() {
