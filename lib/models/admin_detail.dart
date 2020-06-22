@@ -4,19 +4,19 @@ import 'package:bibliotek/models/detail.dart';
 import 'package:meta/meta.dart';
 
 class AdminDetail extends Detail {
-  final List<String> _addedBooks;
+  final List<dynamic> _addedBooks;
 
   const AdminDetail({
     @required String name,
     @required String phNo,
-    @required List<String> addedBooks,
+    @required List<dynamic> addedBooks,
   })  : this._addedBooks = addedBooks,
         assert(name != null),
         assert(phNo != null),
         assert(addedBooks != null),
         super(name: name, phNo: phNo);
 
-  List<String> get addedBooks => _addedBooks;
+  List<dynamic> get addedBooks => _addedBooks;
 
   factory AdminDetail.fromJson(Map<String, dynamic> data) {
     return AdminDetail(

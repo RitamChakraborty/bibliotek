@@ -1,6 +1,7 @@
 import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
+import 'package:bibliotek/models/admin_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/add_book_page/add_books_page.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
@@ -24,6 +25,7 @@ class AdminHomePage extends StatelessWidget {
       builder: (BuildContext context, AbstractLoginState loginState) {
         if (loginState is LoginSuccessState) {
           User admin = loginState.user;
+          AdminDetail adminDetail = AdminDetail.fromJson(admin.detail);
 
           return Material(
             child: Scaffold(
@@ -31,8 +33,8 @@ class AdminHomePage extends StatelessWidget {
                 title: Text("Home"),
               ),
               drawer: CustomDrawer(
-                name: "",
-                id: "",
+                name: adminDetail.name,
+                id: admin.id,
                 children: [
                   ListTile(
                     leading: Icon(Icons.book),
@@ -49,6 +51,7 @@ class AdminHomePage extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.lock),
                     title: Text("Change Password"),
+                    onTap: () {},
                   ),
                   Divider(
                     indent: 16,
