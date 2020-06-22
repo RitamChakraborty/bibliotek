@@ -3,15 +3,17 @@ import 'package:meta/meta.dart';
 
 abstract class AbstractLoginState {}
 
-class InitialState extends AbstractLoginState {}
+class LoginInitialState extends AbstractLoginState {}
 
-class LoadingState extends AbstractLoginState {}
+class LoginLoadingState extends AbstractLoginState {}
 
-class ErrorState extends AbstractLoginState {
+class UserNotFoundState extends AbstractLoginState {}
+
+class LoginErrorState extends AbstractLoginState {
   String idErrorMessage;
   String passwordErrorMessage;
 
-  ErrorState({this.idErrorMessage, this.passwordErrorMessage});
+  LoginErrorState({this.idErrorMessage, this.passwordErrorMessage});
 }
 
 class LoginSuccessState extends AbstractLoginState {

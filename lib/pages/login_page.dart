@@ -57,7 +57,7 @@ class LoginPage extends StatelessWidget {
                             CustomTextField(
                               controller: _idController,
                               labelText: "ID",
-                              errorText: loginState is ErrorState
+                              errorText: loginState is LoginErrorState
                                   ? loginState.idErrorMessage
                                   : null,
                               textInputType: TextInputType.number,
@@ -66,7 +66,7 @@ class LoginPage extends StatelessWidget {
                             CustomTextField(
                               controller: _passwordController,
                               labelText: "Password",
-                              errorText: loginState is ErrorState
+                              errorText: loginState is LoginErrorState
                                   ? loginState.passwordErrorMessage
                                   : null,
                               isPassword: true,
@@ -76,8 +76,10 @@ class LoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: 48),
                       CustomButton(
-                        label: loginState is LoadingState ? "Loading" : "Login",
-                        onPressed: loginState is LoadingState
+                        label: loginState is LoginLoadingState
+                            ? "Loading"
+                            : "Login",
+                        onPressed: loginState is LoginLoadingState
                             ? null
                             : () {
                                 _loginBloc.add(

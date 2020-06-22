@@ -2,6 +2,8 @@ import 'package:meta/meta.dart';
 
 abstract class AbstractLoginEvent {}
 
+class CheckLocalStorageEvent extends AbstractLoginEvent {}
+
 class LoginEvent extends AbstractLoginEvent {
   final String _id;
   final String _password;

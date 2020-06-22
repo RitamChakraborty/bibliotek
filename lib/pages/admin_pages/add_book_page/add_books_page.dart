@@ -34,7 +34,7 @@ class AddBooksPage extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       CustomTextField(
-                        labelText: "book name",
+                        labelText: "Book Name",
                         controller: _bookNameController,
                         errorText: bookBlocState is BookBlocErrorState
                             ? bookBlocState.bookNameErrorMessage
@@ -44,7 +44,7 @@ class AddBooksPage extends StatelessWidget {
                         height: 16,
                       ),
                       CustomTextField(
-                        labelText: "author name",
+                        labelText: "Author Name",
                         controller: _authorNameController,
                         errorText: bookBlocState is BookBlocErrorState
                             ? bookBlocState.authorNameErrorMessage
@@ -54,7 +54,7 @@ class AddBooksPage extends StatelessWidget {
                         height: 16,
                       ),
                       CustomTextField(
-                        labelText: "subject",
+                        labelText: "Subject",
                         controller: _subjectNameController,
                         errorText: bookBlocState is BookBlocErrorState
                             ? bookBlocState.subjectNameErrorMessage
@@ -64,7 +64,7 @@ class AddBooksPage extends StatelessWidget {
                         height: 16,
                       ),
                       CustomTextField(
-                        labelText: "number of copies",
+                        labelText: "Number of copies",
                         controller: _numberOfCopiesController,
                         errorText: bookBlocState is BookBlocErrorState
                             ? bookBlocState.numberOfCopiesErrorMessage
