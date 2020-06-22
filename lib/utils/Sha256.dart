@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 class Sha256 {
   static String convert({@required String string}) {
     List<int> bytes = utf8.encode(string);
-    String hash = sha1.convert(bytes).toString();
+    String hash = sha256.convert(bytes).toString();
     return hash;
   }
 }

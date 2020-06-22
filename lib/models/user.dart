@@ -6,13 +6,13 @@ class User {
   final String _id;
   final String _password;
   final bool _isAdmin;
-  final String _detail;
+  final Map<String, dynamic> _detail;
 
   const User({
     @required String id,
     @required String password,
     @required bool isAdmin,
-    @required String details,
+    @required Map<String, dynamic> details,
   })  : this._id = id,
         this._password = password,
         this._isAdmin = isAdmin,
@@ -27,7 +27,7 @@ class User {
 
   bool get isAdmin => _isAdmin;
 
-  String get detail => _detail;
+  Map<String, dynamic> get detail => _detail;
 
   factory User.fromJson(Map<String, dynamic> map) {
     return User(

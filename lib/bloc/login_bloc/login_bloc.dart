@@ -26,7 +26,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
       } else if (password.isEmpty) {
         yield ErrorState(passwordErrorMessage: "Password can not be empty");
       } else {
-        String hash = Sha256.convert(string: password);
+        String hashPassword = Sha256.convert(string: password);
         Stream<List<DocumentSnapshot>> userDocumentSnapshotListStream =
             FirestoreServices().getUserDocuments(id: event.id);
 
@@ -42,7 +42,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
                 in userDocumentSnapshotList) {
               Map<String, dynamic> data = userDocumentSnapshot.data;
 
-              if (data['password'] == password) {
+              if (data['password'] == hashPassword) {
                 user = User.fromJson(data);
                 correctPassword = true;
                 break;
