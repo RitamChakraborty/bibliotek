@@ -46,7 +46,7 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
           copies: copies,
         );
 
-        yield BookBlocInitialState();
+        yield BookAddedState();
       }
     }
   }

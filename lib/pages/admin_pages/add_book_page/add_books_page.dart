@@ -6,6 +6,7 @@ import 'package:bibliotek/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddBooksPage extends StatelessWidget {
   final TextEditingController _titleController = TextEditingController();
@@ -20,7 +21,12 @@ class AddBooksPage extends StatelessWidget {
 
     return BlocBuilder<BookBloc, AbstractBookBlocState>(
       bloc: bookBloc,
-      builder: (BuildContext context, AbstractBookBlocState bookBlocState) {
+      builder:
+          (BuildContext buildContext, AbstractBookBlocState bookBlocState) {
+        if (bookBlocState is BookAddedState) {
+          Fluttertoast.showToast(msg: "Book added successfully");
+        }
+
         return Material(
           child: Scaffold(
             appBar: AppBar(
@@ -76,6 +82,7 @@ class AddBooksPage extends StatelessWidget {
                       CustomTextField(
                         labelText: "Number of copies",
                         controller: _copiesController,
+                        textInputType: TextInputType.number,
                         errorText: bookBlocState is BookBlocErrorState
                             ? bookBlocState.copiesErrorMessage
                             : null,
@@ -87,18 +94,21 @@ class AddBooksPage extends StatelessWidget {
                         label: bookBloc is BookBlocLoadingState
                             ? "Loading"
                             : "Add",
-                        onPressed: () {
-                          bookBloc.add(
-                            BookBlocAddBookEvent(
-                              title: _titleController.text,
-                              author: _authorController.text,
-                              subject: _subjectController.text,
-                              copies: _copiesController.text.isEmpty
-                                  ? 0
-                                  : int.parse(_copiesController.text),
-                            ),
-                          );
-                        },
+                        onPressed: bookBlocState is BookBlocLoadingState
+                            ? null
+                            : () {
+                                bookBloc.add(
+                                  BookBlocAddBookEvent(
+                                    title: _titleController.text,
+                                    author: _authorController.text,
+                                    subject: _subjectController.text,
+                                    publisher: _publisherController.text,
+                                    copies: _copiesController.text.isEmpty
+                                        ? 0
+                                        : int.parse(_copiesController.text),
+                                  ),
+                                );
+                              },
                       )
                     ],
                   ),

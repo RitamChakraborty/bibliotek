@@ -2,6 +2,8 @@ abstract class AbstractBookBlocState {}
 
 class BookBlocInitialState extends AbstractBookBlocState {}
 
+class BookBlocLoadingState extends AbstractBookBlocState {}
+
 class BookBlocErrorState extends AbstractBookBlocState {
   String bookErrorMessage;
   String authorErrorMessage;
@@ -18,4 +20,4 @@ class BookBlocErrorState extends AbstractBookBlocState {
   });
 }
 
-class BookBlocLoadingState extends AbstractBookBlocState {}
+class BookAddedState extends AbstractBookBlocState {}
