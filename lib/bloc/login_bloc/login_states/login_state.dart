@@ -5,6 +5,8 @@ abstract class AbstractLoginState {}
 
 class LoginInitialState extends AbstractLoginState {}
 
+class CheckingLocalStorageState extends AbstractLoginState {}
+
 class LoginLoadingState extends AbstractLoginState {}
 
 class UserNotFoundState extends AbstractLoginState {}

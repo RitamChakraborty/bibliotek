@@ -2,6 +2,8 @@ import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
 import 'package:bibliotek/data/constants.dart';
+import 'package:bibliotek/widgets/app_logo.dart';
+import 'package:bibliotek/widgets/app_name.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -18,26 +20,6 @@ class LoginPage extends StatelessWidget {
     _idController.text = ID;
     _passwordController.text = PASSWORD;
 
-    Widget appLogo = Container(
-      padding: EdgeInsets.all(8),
-      child: Icon(
-        Icons.book,
-        color: Theme.of(context).primaryColor,
-        size: 100,
-      ),
-    );
-
-    Widget appNameText = Container(
-      padding: EdgeInsets.all(8),
-      child: Text(
-        "Bibliotek",
-        style: TextStyle(
-          fontSize: 32.0,
-          color: Theme.of(context).accentColor,
-        ),
-      ),
-    );
-
     return Material(
       child: Scaffold(
         body: BlocBuilder<LoginBloc, AbstractLoginState>(
@@ -50,8 +32,9 @@ class LoginPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      appLogo,
-                      appNameText,
+                      AppLogo(),
+                      SizedBox(height: 16),
+                      AppName(),
                       SizedBox(height: 48),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 32),
