@@ -1,3 +1,4 @@
+import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/utils/Sha256.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -5,21 +6,21 @@ import 'package:meta/meta.dart';
 abstract class AbstractChangePasswordEvent {}
 
 class ChangePasswordEvent extends AbstractChangePasswordEvent {
-  final String _originalPassword;
+  final User _user;
   final String _currentPassword;
   final String _newPassword;
   final String _reenteredPassword;
 
   ChangePasswordEvent({
-    @required String originalPassword,
+    @required User user,
     @required String currentPassword,
     @required String newPassword,
     @required String reenteredPassword,
-  })  : this._originalPassword = originalPassword,
+  })  : this._user = user,
         this._currentPassword = currentPassword,
         this._newPassword = newPassword,
         this._reenteredPassword = reenteredPassword,
-        assert(originalPassword != null),
+        assert(user != null),
         assert(currentPassword != null),
         assert(newPassword != null),
         assert(reenteredPassword != null);
@@ -30,7 +31,7 @@ class ChangePasswordEvent extends AbstractChangePasswordEvent {
 
   String get currentPassword => _currentPassword;
 
-  String get originalPassword => _originalPassword;
+  User get user => _user;
 }
 
 abstract class AbstractChangePasswordState {}
@@ -70,8 +71,8 @@ class ChangePasswordBloc
   Stream<AbstractChangePasswordState> mapEventToState(
       AbstractChangePasswordEvent event) async* {
     if (event is ChangePasswordEvent) {
-      String originalPassword =
-          Sha256().convert(string: event.originalPassword);
+      User user = event.user;
+      String originalPassword = Sha256().convert(string: user.password);
       String currentPassword = Sha256().convert(string: event.currentPassword);
       String newPassword = event.newPassword;
       String reenteredNewPassword = event.newPassword;
@@ -100,8 +101,6 @@ class ChangePasswordBloc
         );
       } else {
         yield ChangePasswordLoadingState();
-
-        // Todo: Add firebase function
 
         yield ChangePasswordSuccessState();
       }
