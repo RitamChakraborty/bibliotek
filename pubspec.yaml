@@ -15,6 +15,7 @@ dependencies:
   shared_preferences: any
   fluttertoast: any
   intl: any
+  crypto: any
 
 dev_dependencies:
   flutter_test:
