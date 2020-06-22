@@ -56,7 +56,7 @@ class LoginPage extends StatelessWidget {
                           children: <Widget>[
                             CustomTextField(
                               controller: _idController,
-                              labelText: "id",
+                              labelText: "ID",
                               errorText: loginState is ErrorState
                                   ? loginState.idErrorMessage
                                   : null,
@@ -65,7 +65,7 @@ class LoginPage extends StatelessWidget {
                             SizedBox(height: 16),
                             CustomTextField(
                               controller: _passwordController,
-                              labelText: "password",
+                              labelText: "Password",
                               errorText: loginState is ErrorState
                                   ? loginState.passwordErrorMessage
                                   : null,
