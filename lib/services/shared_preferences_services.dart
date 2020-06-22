@@ -12,4 +12,8 @@ class SharedPreferencesService {
   Future<String> getUser() async {
     return (await _sharedPreference).getString('user');
   }
+
+  Future<void> clearUser() async {
+    return (await _sharedPreference).remove('user');
+  }
 }

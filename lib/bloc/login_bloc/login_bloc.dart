@@ -67,6 +67,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
 
               if (data['password'] == passwordHash) {
                 User user = User.fromJson(data);
+                await _sharedPreferenceServices.setUser(user: user);
                 yield LoginSuccessState(user: user);
               } else {
                 yield LoginErrorState(
@@ -81,6 +82,9 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
           break;
         }
       }
+    } else if (event is LogoutEvent) {
+      await _sharedPreferenceServices.clearUser();
+      yield LoginInitialState();
     }
   }
 }
