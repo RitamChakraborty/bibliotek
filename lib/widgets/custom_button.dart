@@ -7,8 +7,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({@required String label, @required VoidCallback onPressed})
       : this._label = label,
         this._onPressed = onPressed,
-        assert(label != null),
-        assert(onPressed != null);
+        assert(label != null);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +17,7 @@ class CustomButton extends StatelessWidget {
         onPressed: _onPressed,
         shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(10)),
         color: Theme.of(context).accentColor,
+        disabledColor: Theme.of(context).disabledColor,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           child: Text(

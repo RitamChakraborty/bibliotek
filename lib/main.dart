@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Bibliotek',
           theme: ThemeData(
-            primaryColor: Colors.red,
-            accentColor: Colors.pinkAccent,
-          ),
+              primaryColor: Colors.red,
+              accentColor: Colors.pinkAccent,
+              disabledColor: Colors.red[200]),
           home: Authorization(),
         ),
       ),

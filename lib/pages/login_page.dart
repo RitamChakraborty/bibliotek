@@ -77,14 +77,16 @@ class LoginPage extends StatelessWidget {
                       SizedBox(height: 48),
                       CustomButton(
                         label: loginState is LoadingState ? "Loading" : "Login",
-                        onPressed: () {
-                          _loginBloc.add(
-                            LoginEvent(
-                              id: _idController.text,
-                              password: _passwordController.text,
-                            ),
-                          );
-                        },
+                        onPressed: loginState is LoadingState
+                            ? null
+                            : () {
+                                _loginBloc.add(
+                                  LoginEvent(
+                                    id: _idController.text,
+                                    password: _passwordController.text,
+                                  ),
+                                );
+                              },
                       ),
                     ],
                   ),
