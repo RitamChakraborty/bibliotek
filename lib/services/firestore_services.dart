@@ -17,7 +17,7 @@ class FirestoreServices {
     return userDocumentSnapshotListStream;
   }
 
-  Future<void> addBook({@required Book book}) {
+  Future<void> addBook({@required Book book, @required int copies}) {
     CollectionReference booksCollectionReference =
         _firestore.collection('books');
     DocumentReference booksDocumentReference =

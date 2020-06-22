@@ -8,11 +8,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddBooksPage extends StatelessWidget {
-  final TextEditingController _bookNameController = TextEditingController();
-  final TextEditingController _authorNameController = TextEditingController();
-  final TextEditingController _subjectNameController = TextEditingController();
-  final TextEditingController _numberOfCopiesController =
-      TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _authorController = TextEditingController();
+  final TextEditingController _subjectController = TextEditingController();
+  final TextEditingController _publisherController = TextEditingController();
+  final TextEditingController _copiesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,9 @@ class AddBooksPage extends StatelessWidget {
                     children: <Widget>[
                       CustomTextField(
                         labelText: "Book Name",
-                        controller: _bookNameController,
+                        controller: _titleController,
                         errorText: bookBlocState is BookBlocErrorState
-                            ? bookBlocState.bookNameErrorMessage
+                            ? bookBlocState.bookErrorMessage
                             : null,
                       ),
                       SizedBox(
@@ -45,9 +45,9 @@ class AddBooksPage extends StatelessWidget {
                       ),
                       CustomTextField(
                         labelText: "Author Name",
-                        controller: _authorNameController,
+                        controller: _authorController,
                         errorText: bookBlocState is BookBlocErrorState
-                            ? bookBlocState.authorNameErrorMessage
+                            ? bookBlocState.authorErrorMessage
                             : null,
                       ),
                       SizedBox(
@@ -55,9 +55,19 @@ class AddBooksPage extends StatelessWidget {
                       ),
                       CustomTextField(
                         labelText: "Subject",
-                        controller: _subjectNameController,
+                        controller: _subjectController,
                         errorText: bookBlocState is BookBlocErrorState
-                            ? bookBlocState.subjectNameErrorMessage
+                            ? bookBlocState.subjectErrorMessage
+                            : null,
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      CustomTextField(
+                        labelText: "Publisher",
+                        controller: _publisherController,
+                        errorText: bookBlocState is BookBlocErrorState
+                            ? bookBlocState.publisherErrorMessage
                             : null,
                       ),
                       SizedBox(
@@ -65,9 +75,9 @@ class AddBooksPage extends StatelessWidget {
                       ),
                       CustomTextField(
                         labelText: "Number of copies",
-                        controller: _numberOfCopiesController,
+                        controller: _copiesController,
                         errorText: bookBlocState is BookBlocErrorState
-                            ? bookBlocState.numberOfCopiesErrorMessage
+                            ? bookBlocState.copiesErrorMessage
                             : null,
                       ),
                       SizedBox(
@@ -80,13 +90,12 @@ class AddBooksPage extends StatelessWidget {
                         onPressed: () {
                           bookBloc.add(
                             BookBlocAddBookEvent(
-                              bookName: _bookNameController.text,
-                              authorName: _authorNameController.text,
-                              subjectName: _subjectNameController.text,
-                              numberOfCopies: _numberOfCopiesController
-                                      .text.isEmpty
+                              title: _titleController.text,
+                              author: _authorController.text,
+                              subject: _subjectController.text,
+                              copies: _copiesController.text.isEmpty
                                   ? 0
-                                  : int.parse(_numberOfCopiesController.text),
+                                  : int.parse(_copiesController.text),
                             ),
                           );
                         },

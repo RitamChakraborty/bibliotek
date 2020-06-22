@@ -14,38 +14,37 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
   Stream<AbstractBookBlocState> mapEventToState(
       AbstractBookBlocEvent event) async* {
     if (event is BookBlocAddBookEvent) {
-      String bookName = event.bookName;
-      String authorName = event.authorName;
-      String subjectName = event.subjectName;
-      int numberOfCopies = event.numberOfCopies;
+      String title = event.title;
+      String author = event.author;
+      String subject = event.subject;
+      String publisher = event.publisher;
+      int copies = event.copies;
 
-      if (bookName.isEmpty ||
-          authorName.isEmpty ||
-          subjectName.isEmpty ||
-          numberOfCopies < 1) {
+      if (title.isEmpty || author.isEmpty || subject.isEmpty || copies < 1) {
         yield BookBlocErrorState(
-          bookNameErrorMessage:
-              bookName.isEmpty ? "Book name can not be empty" : null,
-          authorNameErrorMessage:
-              authorName.isEmpty ? "Author's name can not be empty" : null,
-          subjectNameErrorMessage:
-              subjectName.isEmpty ? "Suject can not be empty" : null,
-          numberOfCopiesErrorMessage: numberOfCopies < 1
-              ? "Number of copies has to be greater an 1"
-              : null,
+          bookErrorMessage: title.isEmpty ? "Book name can not be empty" : null,
+          authorErrorMessage:
+              author.isEmpty ? "Author's name can not be empty" : null,
+          subjectErrorMessage:
+              subject.isEmpty ? "Subject can not be empty" : null,
+          publisherErrorMessage:
+              publisher.isEmpty ? "Publisher can not be empty" : null,
+          copiesErrorMessage:
+              copies < 1 ? "Number of copies has to be greater an 1" : null,
         );
       } else {
         Book book = Book(
-          title: bookName,
-          author: authorName,
-          subject: subjectName,
-        );
+            title: title,
+            author: author,
+            subject: subject,
+            publisher: publisher);
 
         yield BookBlocLoadingState();
 
-        // Todo: fix
-//        await _firestoreServices.addBook(
-//            book: book, numberOfCopies: numberOfCopies);
+        await _firestoreServices.addBook(
+          book: book,
+          copies: copies,
+        );
 
         yield BookBlocInitialState();
       }

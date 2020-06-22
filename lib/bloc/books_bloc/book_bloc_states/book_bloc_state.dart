@@ -3,16 +3,18 @@ abstract class AbstractBookBlocState {}
 class BookBlocInitialState extends AbstractBookBlocState {}
 
 class BookBlocErrorState extends AbstractBookBlocState {
-  String bookNameErrorMessage;
-  String authorNameErrorMessage;
-  String subjectNameErrorMessage;
-  String numberOfCopiesErrorMessage;
+  String bookErrorMessage;
+  String authorErrorMessage;
+  String subjectErrorMessage;
+  String publisherErrorMessage;
+  String copiesErrorMessage;
 
   BookBlocErrorState({
-    this.bookNameErrorMessage,
-    this.authorNameErrorMessage,
-    this.subjectNameErrorMessage,
-    this.numberOfCopiesErrorMessage,
+    this.bookErrorMessage,
+    this.authorErrorMessage,
+    this.subjectErrorMessage,
+    this.publisherErrorMessage,
+    this.copiesErrorMessage,
   });
 }
 

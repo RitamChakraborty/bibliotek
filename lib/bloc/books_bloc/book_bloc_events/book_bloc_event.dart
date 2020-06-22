@@ -3,30 +3,36 @@ import 'package:meta/meta.dart';
 abstract class AbstractBookBlocEvent {}
 
 class BookBlocAddBookEvent extends AbstractBookBlocEvent {
-  final String _bookName;
-  final String _authorName;
-  final String _subjectName;
-  final int _numberOfCopies;
+  final String _title;
+  final String _author;
+  final String _subject;
+  final String _publisher;
+  final int _copies;
 
   BookBlocAddBookEvent({
-    @required String bookName,
-    @required String authorName,
-    @required String subjectName,
-    @required int numberOfCopies,
-  })  : this._bookName = bookName,
-        this._authorName = authorName,
-        this._subjectName = subjectName,
-        this._numberOfCopies = numberOfCopies,
-        assert(bookName != null),
-        assert(authorName != null),
-        assert(subjectName != null),
-        assert(numberOfCopies != null);
+    @required String title,
+    @required String author,
+    @required String subject,
+    @required String publisher,
+    @required int copies,
+  })  : this._title = title,
+        this._author = author,
+        this._subject = subject,
+        this._publisher = publisher,
+        this._copies = copies,
+        assert(title != null),
+        assert(author != null),
+        assert(subject != null),
+        assert(publisher != null),
+        assert(copies != null);
 
-  int get numberOfCopies => _numberOfCopies;
+  int get copies => _copies;
 
-  String get subjectName => _subjectName;
+  String get subject => _subject;
 
-  String get authorName => _authorName;
+  String get author => _author;
 
-  String get bookName => _bookName;
+  String get title => _title;
+
+  String get publisher => _publisher;
 }
