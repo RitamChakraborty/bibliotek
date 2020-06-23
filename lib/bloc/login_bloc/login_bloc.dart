@@ -22,6 +22,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
     if (event is CheckLocalStorageEvent) {
       yield LoginLoadingState();
 
+      await Future.delayed(Duration(seconds: 3));
       String userRawJson = await _sharedPreferenceServices.getUser();
 
       if (userRawJson == null || userRawJson.isEmpty) {

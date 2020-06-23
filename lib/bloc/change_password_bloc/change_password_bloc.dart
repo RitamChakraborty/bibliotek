@@ -1,4 +1,5 @@
 import 'package:bibliotek/models/user.dart';
+import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bibliotek/utils/Sha256.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -64,6 +65,8 @@ class ChangePasswordSuccessState extends AbstractChangePasswordState {}
 
 class ChangePasswordBloc
     extends Bloc<AbstractChangePasswordEvent, AbstractChangePasswordState> {
+  final FirestoreServices _firestoreServices = FirestoreServices();
+
   @override
   AbstractChangePasswordState get initialState => ChangePasswordInitialState();
 
@@ -72,16 +75,17 @@ class ChangePasswordBloc
       AbstractChangePasswordEvent event) async* {
     if (event is ChangePasswordEvent) {
       User user = event.user;
-      String originalPassword = Sha256().convert(string: user.password);
-      String currentPassword = Sha256().convert(string: event.currentPassword);
+      String currentPassword = event.currentPassword;
       String newPassword = event.newPassword;
-      String reenteredNewPassword = event.newPassword;
+      String reenteredNewPassword = event.reenteredPassword;
+      String originalPassword = user.password;
+      String currentPasswordHash =
+          Sha256().convert(string: event.currentPassword);
 
-      if (originalPassword.isEmpty ||
-          currentPassword.isEmpty ||
+      if (currentPassword.isEmpty ||
           newPassword.isEmpty ||
           reenteredNewPassword.isEmpty) {
-        ChangePasswordErrorState(
+        yield ChangePasswordErrorState(
           currentPasswordErrorMessage: currentPassword.isEmpty
               ? "Current Password can not be empty"
               : null,
@@ -91,16 +95,22 @@ class ChangePasswordBloc
               ? "Reentered Password can not be empty"
               : null,
         );
-      } else if (originalPassword != currentPassword) {
-        ChangePasswordErrorState(
+      } else if (originalPassword != currentPasswordHash) {
+        yield ChangePasswordErrorState(
             currentPasswordErrorMessage: "Current Password did not match");
       } else if (newPassword != reenteredNewPassword) {
-        ChangePasswordErrorState(
+        yield ChangePasswordErrorState(
           reenteredPasswordErrorMessage:
               "Reentered Password did not match with New Password",
         );
       } else {
         yield ChangePasswordLoadingState();
+
+        String newPasswordHash = Sha256().convert(string: newPassword);
+        print("Change password in database");
+        print("Change password from $currentPassword to $newPassword");
+//        await _firestoreServices.changePassword(
+//            user: user, password: newPasswordHash);
 
         yield ChangePasswordSuccessState();
       }
