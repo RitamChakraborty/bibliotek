@@ -42,8 +42,9 @@ class IssueBookPage extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text("Title"),
-                    content: Text("Content"),
+                    title: Text("Confirm"),
+                    content: Text(
+                        "Book\n\t\tTitle: ${book.title}\n\t\tAuthor: ${book.author}\n\nStudent\n\t\tID: ${student.id}\n\t\tName: ${studentDetail.name}\n\nDate: ${DATE_FORMAT.format(timestamp.toDate())}"),
                     actions: [
                       FlatButton(
                         onPressed: () {},
