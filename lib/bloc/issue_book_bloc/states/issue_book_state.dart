@@ -66,3 +66,5 @@ class CloseSelectedStudentState extends AbstractIssueBookState {}
 class CloseSelectedBookState extends AbstractIssueBookState {}
 
 class CloseSelectedDateState extends AbstractIssueBookState {}
+
+class IssueBookSuccessState extends AbstractIssueBookState {}

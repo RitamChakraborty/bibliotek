@@ -1,4 +1,5 @@
 import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
@@ -83,7 +84,7 @@ class FirestoreServices {
         .snapshots();
   }
 
-  issueBook(
+  Future<void> issueBook(
       {@required Book book,
       @required User user,
       @required Timestamp timestamp}) async {
@@ -110,13 +111,15 @@ class FirestoreServices {
         .where('id', isEqualTo: user.id)
         .snapshots();
 
+    StudentDetail studentDetail = StudentDetail.fromJson(user.detail);
+    studentDetail.issuedBooks.add(bookReference.documentID);
+
     await for (QuerySnapshot snapshot in userStream) {
       List<DocumentSnapshot> documents = snapshot.documents;
 
       for (DocumentSnapshot documentSnapshot in documents) {
-        documentSnapshot.reference.updateData({
-          'issued_books': FieldValue.arrayUnion([bookReference.documentID])
-        });
+        await documentSnapshot.reference
+            .updateData({'detail': studentDetail.toJson()});
 
         break;
       }

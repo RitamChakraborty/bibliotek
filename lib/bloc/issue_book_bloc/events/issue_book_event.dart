@@ -47,3 +47,26 @@ class CloseSelectedStudentEvent extends AbstractIssueBookEvent {}
 class CloseSelectedBookEvent extends AbstractIssueBookEvent {}
 
 class CloseSelectedDateEvent extends AbstractIssueBookEvent {}
+
+class IssueBookEvent extends AbstractIssueBookEvent {
+  final User _student;
+  final Book _book;
+  final Timestamp _timestamp;
+
+  IssueBookEvent(
+      {@required User student,
+      @required Book book,
+      @required Timestamp timestamp})
+      : this._student = student,
+        this._book = book,
+        this._timestamp = timestamp,
+        assert(student != null),
+        assert(book != null),
+        assert(timestamp != null);
+
+  Timestamp get timestamp => _timestamp;
+
+  Book get book => _book;
+
+  User get student => _student;
+}

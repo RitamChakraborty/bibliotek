@@ -1,9 +1,15 @@
 import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
+import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/models/user.dart';
+import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class IssueBookBloc
     extends Bloc<AbstractIssueBookEvent, AbstractIssueBookState> {
+  final FirestoreServices _firestoreServices = FirestoreServices();
+
   @override
   AbstractIssueBookState get initialState => IssueBookInitialState();
 
@@ -23,6 +29,17 @@ class IssueBookBloc
       yield CloseSelectedBookState();
     } else if (event is CloseSelectedDateEvent) {
       yield CloseSelectedDateState();
+    } else if (event is IssueBookEvent) {
+      User student = event.student;
+      Book book = event.book;
+      Timestamp timestamp = event.timestamp;
+
+      yield IssueBookLoadingState();
+
+      await _firestoreServices.issueBook(
+          book: book, user: student, timestamp: timestamp);
+
+      yield IssueBookSuccessState();
     }
   }
 }
