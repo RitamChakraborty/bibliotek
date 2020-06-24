@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<BookBloc>.value(value: BookBloc()),
         BlocProvider<IssueBookBloc>.value(value: IssueBookBloc()),
+        BlocProvider<BookBloc>.value(value: BookBloc()),
       ],
       child: MultiProvider(
         providers: [

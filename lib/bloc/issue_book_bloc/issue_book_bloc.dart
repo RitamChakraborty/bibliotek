@@ -16,7 +16,9 @@ class IssueBookBloc
   @override
   Stream<AbstractIssueBookState> mapEventToState(
       AbstractIssueBookEvent event) async* {
-    if (event is StudentPickedEvent) {
+    if (event is IssueBookInvokeInitialEvent) {
+      yield IssueBookInitialState();
+    } else if (event is StudentPickedEvent) {
       yield StudentPickedState(
           student: event.student, studentDetail: event.studentDetail);
     } else if (event is BookPickedEvent) {

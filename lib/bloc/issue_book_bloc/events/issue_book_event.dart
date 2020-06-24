@@ -6,6 +6,8 @@ import 'package:meta/meta.dart';
 
 class AbstractIssueBookEvent {}
 
+class IssueBookInvokeInitialEvent extends AbstractIssueBookEvent {}
+
 class StudentPickedEvent extends AbstractIssueBookEvent {
   final User _student;
   final StudentDetail _studentDetail;

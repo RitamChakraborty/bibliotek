@@ -50,11 +50,11 @@ class StudentDetail extends Detail {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'phNo': phNo,
+      'ph_no': phNo,
       'stream': stream,
       'sem': sem,
       'issued_books': issuedBooks,
-      'passedIssuedBooks': passedIssuedBooks,
+      'passed_issued_books': passedIssuedBooks,
     };
   }
 

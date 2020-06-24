@@ -11,14 +11,27 @@ import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class IssueBookPage extends StatelessWidget {
+class IssueBookPage extends StatefulWidget {
+  @override
+  _IssueBookPageState createState() => _IssueBookPageState();
+}
+
+class _IssueBookPageState extends State<IssueBookPage> {
+  IssueBookBloc issueBookBloc;
+  @override
+  void initState() {
+    super.initState();
+    issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
+    issueBookBloc.add(IssueBookInvokeInitialEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
-    IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
     User student;
     StudentDetail studentDetail;
     Book book;
@@ -27,10 +40,19 @@ class IssueBookPage extends StatelessWidget {
     return BlocBuilder<IssueBookBloc, AbstractIssueBookState>(
       bloc: issueBookBloc,
       builder: (BuildContext context, AbstractIssueBookState issueBookState) {
-        if (issueBookState is IssueBookLoadingState) {
-          print('loading');
-        } else if (issueBookState is IssueBookSuccessState) {
-          print('success');
+        if (issueBookState is IssueBookSuccessState) {
+          Fluttertoast.showToast(msg: "Book issued successfully");
+
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+            Navigator.pop(context);
+          });
+
+          student = null;
+          studentDetail = null;
+          book = null;
+          timestamp = null;
+
+          issueBookBloc.add(IssueBookInvokeInitialEvent());
         }
 
         return Material(
