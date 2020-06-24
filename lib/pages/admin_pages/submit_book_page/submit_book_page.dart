@@ -48,6 +48,18 @@ class SubmitBookPage extends StatelessWidget {
                                       child: ListTile(
                                         title: Text("${book.title}"),
                                         subtitle: Text("by ${book.author}"),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.assignment_returned),
+                                          onPressed: () async {
+                                            String id = student.id;
+                                            String bookRef = e;
+
+                                            await _firestoreServices.submitBook(
+                                              id: id,
+                                              bookRef: bookRef,
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ),

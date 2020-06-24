@@ -151,4 +151,26 @@ class FirestoreServices {
             .where((element) => element.detail['issued_books'].isNotEmpty)
             .toList());
   }
+
+  Future<void> submitBook(
+      {@required String id, @required String bookRef}) async {
+    Stream<List<DocumentSnapshot>> stream = _firestore
+        .collection('users')
+        .where('id', isEqualTo: id)
+        .snapshots()
+        .map((event) => event.documents);
+
+    await for (List<DocumentSnapshot> list in stream) {
+      for (DocumentSnapshot snapshot in list) {
+        User student = User.fromJson(snapshot.data);
+        (student.detail['issued_books'] as List<dynamic>).remove(bookRef);
+
+        await snapshot.reference.updateData(student.toJson());
+
+        break;
+      }
+
+      break;
+    }
+  }
 }
