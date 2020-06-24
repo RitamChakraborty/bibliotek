@@ -1,17 +1,22 @@
 import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
+import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
 import 'package:bibliotek/pages/change_password_page.dart';
 import 'package:bibliotek/pages/student_pages/search_book_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
+import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bibliotek/widgets/custom_drawer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class StudentHomePage extends StatelessWidget {
+  final FirestoreServices _firestoreServices = FirestoreServices();
+
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -100,7 +105,45 @@ class StudentHomePage extends StatelessWidget {
           label: Text("Find Books"),
         ),
         body: SafeArea(
-          child: Container(),
+          child: StreamBuilder<List<DocumentSnapshot>>(
+            stream: _firestoreServices.getUser(user: student),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                DocumentSnapshot studentDocumentSnapshot = snapshot.data[0];
+                StudentDetail modifiedDetail = StudentDetail.fromJson(
+                    studentDocumentSnapshot.data['detail']);
+                List<dynamic> bookRefs = modifiedDetail.issuedBooks;
+
+                return ListView.separated(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: bookRefs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return StreamBuilder<DocumentSnapshot>(
+                      stream:
+                          _firestoreServices.getBook(refId: bookRefs[index]),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          Book book = Book.fromJson(snapshot.data.data);
+
+                          return ListTile(
+                            title: Text("${book.title}"),
+                            subtitle: Text("${book.author}"),
+                          );
+                        }
+
+                        return ListTile();
+                      },
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider();
+                  },
+                );
+              }
+
+              return CircularProgressIndicator();
+            },
+          ),
         ),
       ),
     );

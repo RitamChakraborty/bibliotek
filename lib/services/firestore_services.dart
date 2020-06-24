@@ -127,4 +127,16 @@ class FirestoreServices {
       break;
     }
   }
+
+  Stream<List<DocumentSnapshot>> getUser({@required User user}) {
+    return _firestore
+        .collection('users')
+        .where('id', isEqualTo: user.id)
+        .snapshots()
+        .map((event) => event.documents);
+  }
+
+  Stream<DocumentSnapshot> getBook({@required String refId}) {
+    return _firestore.collection('books').document(refId).snapshots();
+  }
 }
