@@ -1,3 +1,4 @@
+import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/models/admin_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/add_book_page/add_books_page.dart';
@@ -12,6 +13,7 @@ import 'package:bibliotek/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class AdminHomePage extends StatelessWidget {
@@ -52,7 +54,10 @@ class AdminHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return ChangePasswordPage();
+                    return BlocProvider.value(
+                      value: ChangePasswordBloc(),
+                      child: ChangePasswordPage(userProvider),
+                    );
                   }),
                 );
               },

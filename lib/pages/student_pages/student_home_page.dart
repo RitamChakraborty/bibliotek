@@ -1,11 +1,14 @@
+import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
+import 'package:bibliotek/pages/change_password_page.dart';
 import 'package:bibliotek/pages/student_pages/search_book_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class StudentHomePage extends StatelessWidget {
@@ -34,6 +37,17 @@ class StudentHomePage extends StatelessWidget {
         ListTile(
           leading: Icon(Icons.lock),
           title: Text("Change Password"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (BuildContext context) {
+                return BlocProvider.value(
+                  value: ChangePasswordBloc(),
+                  child: ChangePasswordPage(userProvider),
+                );
+              }),
+            );
+          },
         ),
         Divider(
           indent: 16,

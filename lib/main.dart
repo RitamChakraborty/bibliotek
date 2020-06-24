@@ -1,5 +1,4 @@
 import 'package:bibliotek/bloc/books_bloc/books_bloc.dart';
-import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/pages/home_page.dart';
 import 'package:bibliotek/providers/books_provider.dart';
@@ -20,7 +19,6 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<BookBloc>.value(value: BookBloc()),
         BlocProvider<IssueBookBloc>.value(value: IssueBookBloc()),
-        BlocProvider<ChangePasswordBloc>.value(value: ChangePasswordBloc()),
       ],
       child: MultiProvider(
         providers: [

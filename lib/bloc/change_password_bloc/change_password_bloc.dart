@@ -107,10 +107,8 @@ class ChangePasswordBloc
         yield ChangePasswordLoadingState();
 
         String newPasswordHash = Sha256().convert(string: newPassword);
-        print("Change password in database");
-        print("Change password from $currentPassword to $newPassword");
-//        await _firestoreServices.changePassword(
-//            user: user, password: newPasswordHash);
+        await _firestoreServices.changePassword(
+            user: user, password: newPasswordHash);
 
         yield ChangePasswordSuccessState();
       }

@@ -4,11 +4,15 @@ import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
 class ChangePasswordPage extends StatefulWidget {
+  final UserProvider userProvider;
+
+  const ChangePasswordPage(this.userProvider);
+
   @override
   _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
@@ -37,7 +41,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider = Provider.of<UserProvider>(context);
+    UserProvider userProvider = widget.userProvider;
     User user = userProvider.user;
 
     return BlocBuilder<ChangePasswordBloc, AbstractChangePasswordState>(
@@ -46,8 +50,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           AbstractChangePasswordState changePasswordState) {
         if (changePasswordState is ChangePasswordSuccessState) {
           Fluttertoast.showToast(msg: "Password changed successfully");
-          userProvider.logOut();
-          Navigator.pop(context);
+
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+            await userProvider.logOut();
+            Navigator.pop(context);
+          });
         }
 
         return Material(
