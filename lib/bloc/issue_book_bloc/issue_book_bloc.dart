@@ -11,7 +11,8 @@ class IssueBookBloc
   Stream<AbstractIssueBookState> mapEventToState(
       AbstractIssueBookEvent event) async* {
     if (event is StudentPickedEvent) {
-      yield StudentPickedState(student: event.student);
+      yield StudentPickedState(
+          student: event.student, studentDetail: event.studentDetail);
     } else if (event is BookPickedEvent) {
       yield BookPickedState(book: event.book);
     } else if (event is DatePickedEvent) {

@@ -3,9 +3,9 @@ import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
 import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/book_picker_page.dart';
-import 'package:bibliotek/pages/admin_pages/issue_book_page/isuue_book_confirmation_page.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/student_picker_page.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_card.dart';
@@ -16,13 +16,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class IssueBookPage extends StatelessWidget {
-  User student;
-  Book book;
-  Timestamp timestamp = Timestamp.now();
-
   @override
   Widget build(BuildContext context) {
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
+    User student;
+    StudentDetail studentDetail;
+    Book book;
+    Timestamp timestamp = Timestamp.now();
 
     return Material(
       child: Scaffold(
@@ -38,17 +38,26 @@ class IssueBookPage extends StatelessWidget {
             } else if (timestamp == null) {
               Fluttertoast.showToast(msg: "Please select a date first");
             } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return IssueBookConfirmationPage(
-                      student: student,
-                      book: book,
-                      timestamp: timestamp,
-                    );
-                  },
-                ),
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Title"),
+                    content: Text("Content"),
+                    actions: [
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text("Yes"),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Cancel"),
+                      )
+                    ],
+                  );
+                },
               );
             }
           },
@@ -61,6 +70,7 @@ class IssueBookPage extends StatelessWidget {
                 (BuildContext context, AbstractIssueBookState issueBookState) {
               if (issueBookState is StudentPickedState) {
                 student = issueBookState.student;
+                studentDetail = issueBookState.studentDetail;
               }
               if (issueBookState is BookPickedState) {
                 book = issueBookState.book;
@@ -104,9 +114,8 @@ class IssueBookPage extends StatelessWidget {
                             )
                           : CustomCard(
                               child: ListTile(
-                                // Todo: fix
-//                                title: Text("ID: ${student.id}"),
-//                                subtitle: Text("Name: ${student.name}"),
+                                title: Text("ID: ${student.id}"),
+                                subtitle: Text("Name: ${studentDetail.name}"),
                                 trailing: IconButton(
                                   onPressed: () {
                                     issueBookBloc
@@ -138,9 +147,8 @@ class IssueBookPage extends StatelessWidget {
                             )
                           : CustomCard(
                               child: ListTile(
-                                // Todo: fix
-//                                title: Text("${book.bookName}"),
-//                                subtitle: Text("by ${book.authorName}"),
+                                title: Text("${book.title}"),
+                                subtitle: Text("by ${book.author}"),
                                 trailing: IconButton(
                                   onPressed: () {
                                     issueBookBloc.add(CloseSelectedBookEvent());

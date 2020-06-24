@@ -112,20 +112,16 @@ class _BookPickerPageState extends State<BookPickerPage> {
                     return ListView.separated(
                       itemBuilder: (BuildContext context, int index) {
                         Map<String, dynamic> data = snapshot.data[index].data;
+                        Book book = Book.fromJson(data);
+
                         return ListTile(
                           onTap: () {
-                            Book book = Book(
-                              title: data['book_name'],
-                              author: data['author_name'],
-                              subject: data['subject_name'],
-                            );
-
                             issueBookBloc.add(BookPickedEvent(book: book));
                             Navigator.pop(context);
                           },
-                          title: Text("${data['book_name']}"),
+                          title: Text("${book.title}"),
                           subtitle: Text(
-                              "by ${data['author_name']}\n Subject: ${data['subject_name']}"),
+                              "by ${book.author}\n Subject: ${book.subject}"),
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {

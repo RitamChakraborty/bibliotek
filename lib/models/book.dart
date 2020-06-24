@@ -33,9 +33,9 @@ class Book {
   factory Book.fromJson(Map<String, dynamic> data) {
     return Book(
       title: data['title'],
-      author: data['author_name'],
-      subject: data['subject_name'],
-      publisher: data['publisher_name'],
+      author: data['author'],
+      subject: data['subject'],
+      publisher: data['publisher'],
     );
   }
 

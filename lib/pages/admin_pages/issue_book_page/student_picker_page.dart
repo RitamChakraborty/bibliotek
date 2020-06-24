@@ -1,6 +1,7 @@
 import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
+import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,59 +91,55 @@ class _StudentPickerPageState extends State<StudentPickerPage> {
       child: Scaffold(
         appBar: AppBar(
           leading: leadingButton(),
-          actions: <Widget>[
-            filterListIcon,
-          ],
+//          actions: <Widget>[
+//            filterListIcon,
+//          ],
           title: searchBookField(setState: setState),
         ),
         body: SafeArea(
           child: BlocBuilder<IssueBookBloc, AbstractIssueBookState>(
-              bloc: issueBookBloc,
-              builder: (context, AbstractIssueBookState issueBookState) {
-                return StreamBuilder(
-                  stream: issueBookState.getStudents(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.separated(
-                        itemBuilder: (BuildContext context, int index) {
-                          Map<String, dynamic> data = snapshot.data[index].data;
+            bloc: issueBookBloc,
+            builder: (context, AbstractIssueBookState issueBookState) {
+              return StreamBuilder(
+                stream: issueBookState.getStudents(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.separated(
+                      itemBuilder: (BuildContext context, int index) {
+                        Map<String, dynamic> data = snapshot.data[index].data;
+                        User student = User.fromJson(data);
+                        StudentDetail studentDetail =
+                            StudentDetail.fromJson(student.detail);
 
-                          return ListTile(
-                            onTap: () {
-                              // Todo: fix
-                              User student = User(
-                                id: data['id'],
-                                password: data['password'],
-//                                name: data['name'],
-                                isAdmin: data['is_admin'],
-                                details: data['details'],
-                              );
-
-                              issueBookBloc
-                                  .add(StudentPickedEvent(student: student));
-                              Navigator.pop(context);
-                            },
-                            title: Text("${data['id']}"),
-                            subtitle: Text("${data['name']}"),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider();
-                        },
-                        itemCount: snapshot.data.length,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                      );
-                    } else if (snapshot.hasError) {
-                      print('Error: ${snapshot.error}');
-                    }
-
-                    return Center(
-                      child: CircularProgressIndicator(),
+                        return ListTile(
+                          onTap: () {
+                            issueBookBloc.add(StudentPickedEvent(
+                                student: student,
+                                studentDetail: studentDetail));
+                            Navigator.pop(context);
+                          },
+                          title: Text("ID: ${student.id}"),
+                          subtitle: Text("Name: ${studentDetail.name}"),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider();
+                      },
+                      itemCount: snapshot.data.length,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     );
-                  },
-                );
-              }),
+                  } else if (snapshot.hasError) {
+                    print('Error: ${snapshot.error}');
+                  }
+
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
