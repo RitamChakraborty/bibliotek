@@ -9,7 +9,7 @@ class UserProvider extends ChangeNotifier {
 
   UserProvider({@required User user}) : this._user = user;
 
-  void setUser(User user) {
+  set user(User user) {
     _user = user;
     notifyListeners();
   }

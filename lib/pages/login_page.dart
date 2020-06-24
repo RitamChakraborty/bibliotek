@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // Wait till widget building is complete
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-                userProvider.setUser(user);
+                userProvider.user = user;
               });
             }
 
