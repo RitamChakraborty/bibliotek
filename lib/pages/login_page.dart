@@ -47,16 +47,6 @@ class _LoginPageState extends State<LoginPage> {
         body: BlocBuilder<LoginBloc, AbstractLoginState>(
           bloc: _loginBloc,
           builder: (BuildContext context, AbstractLoginState loginState) {
-            if (loginState is LoginInitialState) {
-              print('initial');
-            } else if (loginState is LoginLoadingState) {
-              print('loading');
-            } else if (loginState is LoginSuccessState) {
-              print('login success');
-            } else if (loginState is LoginErrorState) {
-              print('error');
-            }
-
             if (loginState is LoginSuccessState) {
               User user = loginState.user;
               ID = "";

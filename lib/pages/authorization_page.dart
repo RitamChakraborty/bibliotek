@@ -15,7 +15,6 @@ class AuthorizationPage extends StatelessWidget {
 
     return Consumer(
       builder: (BuildContext context, UserProvider userProvider, Widget child) {
-        print('here');
         User user = userProvider.user;
 
         if (user == null) {
