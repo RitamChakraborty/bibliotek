@@ -82,4 +82,46 @@ class FirestoreServices {
         .where('is_admin', isEqualTo: false)
         .snapshots();
   }
+
+  issueBook(
+      {@required Book book,
+      @required User user,
+      @required Timestamp timestamp}) async {
+    Stream<QuerySnapshot> booksStream = _firestore
+        .collection('books')
+        .where('title', isEqualTo: book.title)
+        .snapshots();
+
+    DocumentReference bookReference;
+
+    await for (QuerySnapshot snapshot in booksStream) {
+      List<DocumentSnapshot> documents = snapshot.documents;
+
+      for (DocumentSnapshot documentSnapshot in documents) {
+        bookReference = documentSnapshot.reference;
+
+        break;
+      }
+      break;
+    }
+
+    Stream<QuerySnapshot> userStream = _firestore
+        .collection('users')
+        .where('id', isEqualTo: user.id)
+        .snapshots();
+
+    await for (QuerySnapshot snapshot in userStream) {
+      List<DocumentSnapshot> documents = snapshot.documents;
+
+      for (DocumentSnapshot documentSnapshot in documents) {
+        documentSnapshot.reference.updateData({
+          'issued_books': FieldValue.arrayUnion([bookReference.documentID])
+        });
+
+        break;
+      }
+
+      break;
+    }
+  }
 }
