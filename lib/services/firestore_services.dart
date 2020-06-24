@@ -139,4 +139,16 @@ class FirestoreServices {
   Stream<DocumentSnapshot> getBook({@required String refId}) {
     return _firestore.collection('books').document(refId).snapshots();
   }
+
+  Stream<List<User>> getPendingUsers() {
+    return _firestore
+        .collection('users')
+        .where('is_admin', isEqualTo: false)
+        .snapshots()
+        .map((event) => event.documents
+            .map((e) => e.data)
+            .map((e) => User.fromJson(e))
+            .where((element) => element.detail['issued_books'].isNotEmpty)
+            .toList());
+  }
 }
