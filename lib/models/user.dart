@@ -37,6 +37,10 @@ class User {
         details: map['detail']);
   }
 
+  factory User.fromJsonString(String string) {
+    return User.fromJson(jsonDecode(string));
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

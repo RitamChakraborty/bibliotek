@@ -6,16 +6,16 @@ import 'package:meta/meta.dart';
 class StudentDetail extends Detail {
   final String _stream;
   final int _sem;
-  final List<String> _issuedBooks;
-  final List<String> _passedIssuedBooks;
+  final List<dynamic> _issuedBooks;
+  final List<dynamic> _passedIssuedBooks;
 
   const StudentDetail({
     @required String name,
     @required String phNo,
     @required String stream,
     @required int sem,
-    @required List<String> issuedBooks,
-    @required List<String> passedIssuedBooks,
+    @required List<dynamic> issuedBooks,
+    @required List<dynamic> passedIssuedBooks,
   })  : this._stream = stream,
         this._sem = sem,
         this._issuedBooks = issuedBooks,
@@ -28,9 +28,9 @@ class StudentDetail extends Detail {
         assert(passedIssuedBooks != null),
         super(name: name, phNo: phNo);
 
-  List<String> get passedIssuedBooks => _passedIssuedBooks;
+  List<dynamic> get passedIssuedBooks => _passedIssuedBooks;
 
-  List<String> get issuedBooks => _issuedBooks;
+  List<dynamic> get issuedBooks => _issuedBooks;
 
   int get sem => _sem;
 

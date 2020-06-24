@@ -9,7 +9,22 @@ class SharedPreferencesService {
     return (await _sharedPreference).setString('user', user.toRawJson());
   }
 
-  Future<String> getUser() async {
+  Future<Map<String, dynamic>> getUser() async {
+    String userString = (await _sharedPreference).getString('user');
+    await Future.delayed(Duration(seconds: 2));
+
+    if (userString == null || userString.isEmpty) {
+      return {
+        'user': null,
+      };
+    }
+
+    return {
+      'user': User.fromJsonString(userString),
+    };
+  }
+
+  Future<String> getUserString() async {
     return (await _sharedPreference).getString('user');
   }
 

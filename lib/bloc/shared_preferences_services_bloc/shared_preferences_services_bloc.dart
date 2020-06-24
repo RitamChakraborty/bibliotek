@@ -29,7 +29,7 @@ class SharedPreferencesServicesBloc extends Bloc<
     } else if (event is SharedPreferencesServicesGetUserEvent) {
       yield SharedPreferencesServicesLoadingState();
 
-      String userJson = await _sharedPreferencesServices.getUser();
+      String userJson = await _sharedPreferencesServices.getUserString();
 
       if (userJson == null) {
         yield SharedPreferencesServicesUserUnavailableState();

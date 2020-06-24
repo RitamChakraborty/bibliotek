@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bibliotek/bloc/login_bloc/login_events/login_event.dart';
 import 'package:bibliotek/bloc/login_bloc/login_states/login_state.dart';
 import 'package:bibliotek/models/user.dart';
@@ -19,19 +17,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
 
   @override
   Stream<AbstractLoginState> mapEventToState(AbstractLoginEvent event) async* {
-    if (event is CheckLocalStorageEvent) {
-      yield LoginLoadingState();
-
-      await Future.delayed(Duration(seconds: 3));
-      String userRawJson = await _sharedPreferenceServices.getUser();
-
-      if (userRawJson == null || userRawJson.isEmpty) {
-        yield UserNotFoundState();
-      } else {
-        User user = User.fromJson(jsonDecode(userRawJson));
-        yield LoginSuccessState(user: user);
-      }
-    } else if (event is LoginEvent) {
+    if (event is LoginEvent) {
       String id = event.id;
       String password = event.password;
 
@@ -83,9 +69,6 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
           break;
         }
       }
-    } else if (event is LogoutEvent) {
-      await _sharedPreferenceServices.clearUser();
-      yield LoginInitialState();
     }
   }
 }

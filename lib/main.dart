@@ -1,22 +1,23 @@
 import 'package:bibliotek/bloc/books_bloc/books_bloc.dart';
 import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
-import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
-import 'package:bibliotek/pages/authorization.dart';
+import 'package:bibliotek/pages/home_page.dart';
 import 'package:bibliotek/providers/books_provider.dart';
 import 'package:bibliotek/providers/students_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp((MyApp()));
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LoginBloc>.value(value: LoginBloc()),
         BlocProvider<BookBloc>.value(value: BookBloc()),
         BlocProvider<IssueBookBloc>.value(value: IssueBookBloc()),
         BlocProvider<ChangePasswordBloc>.value(value: ChangePasswordBloc()),
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
               primaryColor: Colors.red,
               accentColor: Colors.pinkAccent,
               disabledColor: Colors.red[200]),
-          home: Authorization(),
+          home: HomePage(),
         ),
       ),
     );

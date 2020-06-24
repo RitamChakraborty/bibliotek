@@ -7,16 +7,17 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        AppLogo(),
-        SizedBox(
-          height: 48,
-        ),
-        AppName(),
-      ],
-    ));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AppLogo(),
+          SizedBox(height: 48),
+          AppName(),
+          SizedBox(height: 56),
+          CircularProgressIndicator(),
+        ],
+      ),
+    );
   }
 }
