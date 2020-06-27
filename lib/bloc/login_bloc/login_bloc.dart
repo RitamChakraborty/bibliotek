@@ -5,7 +5,6 @@ import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bibliotek/services/shared_preferences_services.dart';
 import 'package:bibliotek/utils/Sha256.dart';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
   SharedPreferencesService _sharedPreferenceServices =
@@ -17,7 +16,9 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
 
   @override
   Stream<AbstractLoginState> mapEventToState(AbstractLoginEvent event) async* {
-    if (event is LoginEvent) {
+    if (event is LoginBlocInvokeInitialEvent) {
+      yield LoginInitialState();
+    } else if (event is LoginEvent) {
       String id = event.id;
       String password = event.password;
 
@@ -37,36 +38,23 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
       } else {
         yield LoginLoadingState();
 
-        Stream<List<DocumentSnapshot>> userDocumentSnapshotListStream =
-            _firestoreServices.getUserDocuments(id: id);
+        User user = await _firestoreServices.getUserFromId(id: id);
 
-        await for (List<DocumentSnapshot> userDocumentSnapshotList
-            in userDocumentSnapshotListStream) {
-          if (userDocumentSnapshotList.isEmpty) {
+        if (user != null) {
+          String passwordHash = Sha256().convert(string: password);
+          String userPasswordHash = user.password;
+
+          if (passwordHash != userPasswordHash) {
             yield LoginErrorState(
-              idErrorMessage: "ID not found",
+              passwordErrorMessage: "Password does not match",
             );
-          } else {
-            for (DocumentSnapshot documentSnapshot
-                in userDocumentSnapshotList) {
-              Map<String, dynamic> data = documentSnapshot.data;
-              String passwordHash = Sha256().convert(string: password);
-
-              if (data['password'] == passwordHash) {
-                User user = User.fromJson(data);
-                await _sharedPreferenceServices.setUser(user: user);
-                yield LoginSuccessState(user: user);
-              } else {
-                yield LoginErrorState(
-                  passwordErrorMessage: "Password is incorrect",
-                );
-              }
-
-              break;
-            }
           }
 
-          break;
+          yield LoginSuccessState(user: user);
+        } else {
+          yield LoginErrorState(
+            idErrorMessage: "ID does not exists",
+          );
         }
       }
     }

@@ -8,7 +8,7 @@ class FirestoreServices {
   final Firestore _firestore = Firestore.instance;
 
   /// Get Stream of [User] object from its reference ID
-  Stream<User> getUser({@required String refId}) {
+  Stream<User> getUserFromReferenceId({@required String refId}) {
     if (refId != null) {
       CollectionReference collectionReference = _firestore.collection('users');
       return collectionReference
@@ -16,6 +16,29 @@ class FirestoreServices {
           .snapshots()
           .map((DocumentSnapshot snapshot) => snapshot.data)
           .map((Map<String, dynamic> map) => User.fromMap(map: map));
+    }
+
+    return null;
+  }
+
+  Future<User> getUserFromId({@required String id}) async {
+    CollectionReference collectionReference = _firestore.collection('users');
+    Stream<List<Map<String, dynamic>>> stream = collectionReference
+        .where('id', isEqualTo: id)
+        .snapshots()
+        .map((QuerySnapshot querySnapshot) => querySnapshot.documents
+            .map((DocumentSnapshot snapshot) => snapshot.data)
+            .toList());
+
+    await for (List<Map<String, dynamic>> list in stream) {
+      if (list.isNotEmpty) {
+        for (Map<String, dynamic> map in list) {
+          User user = User.fromMap(map: map);
+          return user;
+        }
+      }
+
+      break;
     }
 
     return null;

@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 abstract class AbstractLoginEvent {}
 
-class CheckLocalStorageEvent extends AbstractLoginEvent {}
+class LoginBlocInvokeInitialEvent extends AbstractLoginEvent {}
 
 class LoginEvent extends AbstractLoginEvent {
   final String _id;
@@ -18,5 +18,3 @@ class LoginEvent extends AbstractLoginEvent {
 
   String get id => _id;
 }
-
-class LogoutEvent extends AbstractLoginEvent {}

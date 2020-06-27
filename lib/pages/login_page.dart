@@ -20,13 +20,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   LoginBloc _loginBloc;
-  final TextEditingController _idController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController idController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loginBloc = BlocProvider.of<LoginBloc>(context);
+    _loginBloc.add(LoginBlocInvokeInitialEvent());
   }
 
   @override
@@ -39,15 +40,18 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
 
-    _idController.text = ID;
-    _passwordController.text = PASSWORD;
+    idController.text = ID;
+    passwordController.text = PASSWORD;
 
     return Material(
       child: Scaffold(
         body: BlocBuilder<LoginBloc, AbstractLoginState>(
           bloc: _loginBloc,
           builder: (BuildContext context, AbstractLoginState loginState) {
-            if (loginState is LoginSuccessState) {
+            if (loginState is LoginInitialState) {
+              ID = "";
+              PASSWORD = "";
+            } else if (loginState is LoginSuccessState) {
               User user = loginState.user;
               ID = "";
               PASSWORD = "";
@@ -74,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           children: <Widget>[
                             CustomTextField(
-                              controller: _idController,
+                              controller: idController,
                               labelText: "ID",
                               errorText: loginState is LoginErrorState
                                   ? loginState.idErrorMessage
@@ -83,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             SizedBox(height: 16),
                             CustomTextField(
-                              controller: _passwordController,
+                              controller: passwordController,
                               labelText: "Password",
                               errorText: loginState is LoginErrorState
                                   ? loginState.passwordErrorMessage
@@ -101,13 +105,13 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: loginState is LoginLoadingState
                             ? null
                             : () {
-                                ID = _idController.text;
-                                PASSWORD = _passwordController.text;
+                                ID = idController.text;
+                                PASSWORD = passwordController.text;
 
                                 _loginBloc.add(
                                   LoginEvent(
-                                    id: _idController.text,
-                                    password: _passwordController.text,
+                                    id: idController.text,
+                                    password: passwordController.text,
                                   ),
                                 );
                               },

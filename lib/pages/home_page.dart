@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
           String refId = snapshot.data['ref_id'];
 
           return StreamBuilder<User>(
-            stream: _firestoreServices.getUser(refId: refId),
+            stream: _firestoreServices.getUserFromReferenceId(refId: refId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 // Data fetched from Cloud Firestore
