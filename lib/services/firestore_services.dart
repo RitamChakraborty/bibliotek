@@ -7,6 +7,20 @@ import 'package:meta/meta.dart';
 class FirestoreServices {
   final Firestore _firestore = Firestore.instance;
 
+  /// Get Stream of [User] object from its reference ID
+  Stream<User> getUser({@required String refId}) {
+    if (refId != null) {
+      CollectionReference collectionReference = _firestore.collection('users');
+      return collectionReference
+          .document(refId)
+          .snapshots()
+          .map((DocumentSnapshot snapshot) => snapshot.data)
+          .map((Map<String, dynamic> map) => User.fromMap(map: map));
+    }
+
+    return null;
+  }
+
   Stream<List<DocumentSnapshot>> getUserDocuments({@required String id}) {
     CollectionReference userCollectionReference =
         _firestore.collection('users');
@@ -128,7 +142,7 @@ class FirestoreServices {
     }
   }
 
-  Stream<List<DocumentSnapshot>> getUser({@required User user}) {
+  Stream<List<DocumentSnapshot>> getUserFromObject({@required User user}) {
     return _firestore
         .collection('users')
         .where('id', isEqualTo: user.id)

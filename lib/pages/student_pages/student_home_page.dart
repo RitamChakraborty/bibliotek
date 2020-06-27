@@ -106,7 +106,7 @@ class StudentHomePage extends StatelessWidget {
         ),
         body: SafeArea(
           child: StreamBuilder<List<DocumentSnapshot>>(
-            stream: _firestoreServices.getUser(user: student),
+            stream: _firestoreServices.getUserFromObject(user: student),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 DocumentSnapshot studentDocumentSnapshot = snapshot.data[0];
