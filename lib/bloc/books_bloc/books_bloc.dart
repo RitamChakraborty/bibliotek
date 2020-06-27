@@ -6,48 +6,131 @@ import 'package:bloc/bloc.dart';
 
 class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
   final FirestoreServices _firestoreServices = FirestoreServices();
+  String _title = "";
+  String _author = "";
+  String _subject = "";
+  int _copies = 0;
+  String _bookRef = "";
 
   @override
-  AbstractBookBlocState get initialState => BookBlocInitialState();
+  AbstractBookBlocState get initialState => BookBlocInitialState(
+        title: _title,
+        author: _author,
+        subject: _subject,
+        copies: _copies,
+      );
 
   @override
   Stream<AbstractBookBlocState> mapEventToState(
       AbstractBookBlocEvent event) async* {
-    if (event is BookBlocAddBookEvent) {
-      String title = event.title;
-      String author = event.author;
-      String subject = event.subject;
-      String publisher = event.publisher;
-      int copies = event.copies;
+    if (event is BookBlocInvokeInitialEvent) {
+      yield BookBlocInitialState(
+        title: _title,
+        author: _author,
+        subject: _subject,
+        copies: _copies,
+      );
+    } else if (event is ChangeSubjectEvent) {
+      _title = event.title;
+      _author = event.author;
+      _subject = event.subject;
+      _copies = event.copies;
 
-      if (title.isEmpty || author.isEmpty || subject.isEmpty || copies < 1) {
+      yield SubjectChangedState(
+        title: _title,
+        author: _author,
+        subject: _subject,
+        copies: _copies,
+      );
+    } else if (event is BookBlocAddBookEvent) {
+      _title = event.title;
+      _author = event.author;
+      _subject = event.subject;
+      _copies = event.copies;
+
+      if (_title.isEmpty ||
+          _author.isEmpty ||
+          _subject.isEmpty ||
+          _copies < 1) {
         yield BookBlocErrorState(
-          bookErrorMessage: title.isEmpty ? "Book name can not be empty" : null,
+          title: _title,
+          author: _author,
+          subject: _subject,
+          copies: _copies,
+          bookErrorMessage:
+              _title.isEmpty ? "Book name can not be empty" : null,
           authorErrorMessage:
-              author.isEmpty ? "Author's name can not be empty" : null,
+              _author.isEmpty ? "Author's name can not be empty" : null,
           subjectErrorMessage:
-              subject.isEmpty ? "Subject can not be empty" : null,
-          publisherErrorMessage:
-              publisher.isEmpty ? "Publisher can not be empty" : null,
+              _subject.isEmpty ? "Subject can not be empty" : null,
           copiesErrorMessage:
-              copies < 1 ? "Number of copies has to be greater an 1" : null,
+              _copies < 1 ? "Number of copies has to be greater an 1" : null,
         );
       } else {
-        Book book = Book(
-            title: title,
-            author: author,
-            subject: subject,
-            publisher: publisher);
+        Book book = Book(title: _title, author: _author, copies: _copies);
 
-        yield BookBlocLoadingState();
-
-        await _firestoreServices.addBook(
-          book: book,
-          copies: copies,
+        yield BookBlocLoadingState(
+          title: _title,
+          author: _author,
+          subject: _subject,
+          copies: _copies,
         );
 
-        yield BookAddedState();
+        // Todo: First look if the book exists or not
+        Map<String, dynamic> data =
+            await _firestoreServices.getBookExistence(book: book);
+
+        if (data['book_exists']) {
+          _bookRef = data['book_ref'];
+          yield BookExistsState(
+            title: _title,
+            author: _author,
+            subject: _subject,
+            copies: _copies,
+          );
+        } else {
+          yield BookBlocAskForConfirmationState(
+            title: _title,
+            author: _author,
+            subject: _subject,
+            copies: _copies,
+          );
+        }
+
+        yield BookBlocSuccessState(
+          title: _title,
+          author: _author,
+          subject: _subject,
+          copies: _copies,
+        );
       }
+    } else if (event is BookBlocConfirmationEvent) {
+      yield BookBlocLoadingState(
+        title: _title,
+        author: _author,
+        subject: _subject,
+        copies: _copies,
+      );
+
+      Book book = Book(title: _title, author: _author, copies: _copies);
+
+      if (_bookRef.isNotEmpty) {
+        await _firestoreServices.updateBookByRefId(refId: _bookRef, book: book);
+      } else {
+        await _firestoreServices.addBook(book: book, subject: _subject);
+      }
+
+      _title = "";
+      _author = "";
+      _subject = "";
+      _copies = 0;
+
+      yield BookBlocSuccessState(
+        title: _title,
+        author: _author,
+        subject: _subject,
+        copies: _copies,
+      );
     }
   }
 }
