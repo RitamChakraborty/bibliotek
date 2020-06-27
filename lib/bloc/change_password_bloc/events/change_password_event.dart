@@ -1,3 +1,6 @@
+import 'package:bibliotek/models/user.dart';
+import 'package:meta/meta.dart';
+
 abstract class AbstractChangePasswordEvent {}
 
 class ChangePasswordInvokeInitial extends AbstractChangePasswordEvent {}
