@@ -1,18 +1,16 @@
 import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
+import 'package:bibliotek/bloc/change_password_bloc/events/change_password_event.dart';
+import 'package:bibliotek/bloc/change_password_bloc/states/change_password_state.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class ChangePasswordPage extends StatefulWidget {
-  final UserProvider userProvider;
-
-  const ChangePasswordPage(this.userProvider);
-
   @override
   _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
@@ -29,8 +27,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   void initState() {
-    changePasswordBloc = BlocProvider.of<ChangePasswordBloc>(context);
     super.initState();
+    changePasswordBloc = BlocProvider.of<ChangePasswordBloc>(context);
   }
 
   @override
@@ -41,7 +39,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider = widget.userProvider;
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     User user = userProvider.user;
 
     return BlocBuilder<ChangePasswordBloc, AbstractChangePasswordState>(
@@ -51,7 +49,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         if (changePasswordState is ChangePasswordSuccessState) {
           Fluttertoast.showToast(msg: "Password changed successfully");
 
-          SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
             await userProvider.logOut();
             Navigator.pop(context);
           });

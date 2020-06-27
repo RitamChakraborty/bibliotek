@@ -27,14 +27,18 @@ class FirestoreServices {
     Stream<List<Map<String, dynamic>>> stream = collectionReference
         .where('id', isEqualTo: id)
         .snapshots()
-        .map((QuerySnapshot querySnapshot) => querySnapshot.documents
-            .map((DocumentSnapshot snapshot) => snapshot.data)
-            .toList());
+        .map((QuerySnapshot querySnapshot) =>
+            querySnapshot.documents.map((DocumentSnapshot snapshot) {
+              Map<String, dynamic> data = snapshot.data;
+              data['ref_id'] = snapshot.documentID;
+              return data;
+            }).toList());
 
     await for (List<Map<String, dynamic>> list in stream) {
       if (list.isNotEmpty) {
         for (Map<String, dynamic> map in list) {
           User user = User.fromMap(map: map);
+          user.refId = map['ref_id'];
           return user;
         }
       }
@@ -76,16 +80,11 @@ class FirestoreServices {
   }
 
   Future<void> changePassword(
-      {@required User user, @required String password}) async {
-    CollectionReference userCollectionReference =
-        _firestore.collection('users');
-    return userCollectionReference
-        .where('id', isEqualTo: user.id)
-        .snapshots()
-        .map((event) => event.documents)
-        .listen((event) {
-      event[0].reference.updateData({'password': password});
-    });
+      {@required String refId, @required String newPassword}) {
+    CollectionReference collectionReference = _firestore.collection('users');
+    return collectionReference
+        .document(refId)
+        .setData({'password': newPassword});
   }
 
   Future<void> addBook({@required Book book, @required int copies}) async {

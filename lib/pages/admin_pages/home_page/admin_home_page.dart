@@ -49,7 +49,7 @@ class AdminHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return ChangePasswordPage(userProvider);
+                    return ChangePasswordPage();
                   }),
                 );
               },
