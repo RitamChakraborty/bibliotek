@@ -1,5 +1,6 @@
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/student_detail.dart';
+import 'package:bibliotek/models/subject.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
@@ -42,6 +43,24 @@ class FirestoreServices {
     }
 
     return null;
+  }
+
+  Stream<List<Subject>> getSubjects() {
+    CollectionReference collectionReference = _firestore.collection('subjects');
+    return collectionReference.snapshots().map((QuerySnapshot querySnapshot) =>
+        querySnapshot.documents
+            .map((DocumentSnapshot snapshot) => snapshot.data)
+            .map((Map<String, dynamic> map) => Subject.fromMap(map: map))
+            .toList());
+  }
+
+  Stream<Book> getBookByRefId({@required String refId}) {
+    CollectionReference collectionReference = _firestore.collection('books');
+    return collectionReference
+        .document(refId)
+        .snapshots()
+        .map((DocumentSnapshot snapshot) => snapshot.data)
+        .map((Map<String, dynamic> map) => Book.fromMap(map: map));
   }
 
   Stream<List<DocumentSnapshot>> getUserDocuments({@required String id}) {

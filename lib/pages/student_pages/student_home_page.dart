@@ -2,7 +2,7 @@ import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
-import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
+import 'package:bibliotek/pages/admin_pages/home_page/library.dart';
 import 'package:bibliotek/pages/change_password_page.dart';
 import 'package:bibliotek/pages/student_pages/search_book_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
@@ -34,7 +34,7 @@ class StudentHomePage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => ShowAllBooksPage(),
+                builder: (BuildContext context) => Library(),
               ),
             );
           },

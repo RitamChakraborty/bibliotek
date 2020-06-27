@@ -1,7 +1,6 @@
-import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/add_book_page/add_books_page.dart';
-import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
+import 'package:bibliotek/pages/admin_pages/home_page/library.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/issue_book_page.dart';
 import 'package:bibliotek/pages/admin_pages/submit_book_page/submit_book_page.dart';
 import 'package:bibliotek/pages/change_password_page.dart';
@@ -11,7 +10,6 @@ import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class AdminHomePage extends StatelessWidget {
@@ -39,7 +37,7 @@ class AdminHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return ShowAllBooksPage();
+                    return Library();
                   }),
                 );
               },
@@ -51,10 +49,7 @@ class AdminHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return BlocProvider.value(
-                      value: ChangePasswordBloc(),
-                      child: ChangePasswordPage(userProvider),
-                    );
+                    return ChangePasswordPage(userProvider);
                   }),
                 );
               },

@@ -1,4 +1,5 @@
 import 'package:bibliotek/bloc/books_bloc/books_bloc.dart';
+import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
 import 'package:bibliotek/pages/home_page.dart';
@@ -18,9 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LoginBloc>.value(
-          value: LoginBloc(),
-        ),
+        BlocProvider<LoginBloc>.value(value: LoginBloc()),
+        BlocProvider<ChangePasswordBloc>.value(value: ChangePasswordBloc()),
         BlocProvider<IssueBookBloc>.value(value: IssueBookBloc()),
         BlocProvider<BookBloc>.value(value: BookBloc()),
       ],
