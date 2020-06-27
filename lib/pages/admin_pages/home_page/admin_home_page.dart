@@ -1,5 +1,4 @@
 import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
-import 'package:bibliotek/models/admin_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/add_book_page/add_books_page.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/show_all_books_page.dart';
@@ -11,7 +10,6 @@ import 'package:bibliotek/services/shared_preferences_services.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +22,6 @@ class AdminHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
     User admin = userProvider.user;
-    AdminDetail adminDetail = AdminDetail.fromJson(admin.detail);
 
     return Material(
       child: Scaffold(
@@ -32,7 +29,7 @@ class AdminHomePage extends StatelessWidget {
           title: Text("Home"),
         ),
         drawer: CustomDrawer(
-          name: adminDetail.name,
+          name: admin.name,
           id: admin.id,
           children: [
             ListTile(
@@ -62,34 +59,17 @@ class AdminHomePage extends StatelessWidget {
                 );
               },
             ),
-            Divider(
-              indent: 16,
-              endIndent: 16,
-            ),
+            Divider(indent: 16, endIndent: 16),
             ListTile(
               leading: Icon(Icons.power_settings_new),
               title: Text("Logout"),
               onTap: () {
-                SchedulerBinding.instance
-                    .addPostFrameCallback((timeStamp) async {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
                   await userProvider.logOut();
                 });
               },
-            )
+            ),
           ],
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return AddBooksPage();
-                },
-              ),
-            );
-          },
-          label: Text("Add Books"),
         ),
         body: SafeArea(
           child: Container(
@@ -97,6 +77,20 @@ class AdminHomePage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                CustomButton(
+                  label: "Add Books",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return AddBooksPage();
+                        },
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 16),
                 CustomButton(
                   label: "Issue Book",
                   onPressed: () {
@@ -108,9 +102,7 @@ class AdminHomePage extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(
-                  height: 16.0,
-                ),
+                SizedBox(height: 16.0),
                 CustomButton(
                   label: "Submit Book",
                   onPressed: () {
