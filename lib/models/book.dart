@@ -3,52 +3,42 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 
 class Book {
+  String _refId;
   final String _title;
   final String _author;
-  final String _subject;
-  final String _publisher;
+  final int _copies;
 
-  const Book(
-      {@required String title,
-      @required String author,
-      @required String subject,
-      @required String publisher})
+  Book({@required String title, @required String author, @required int copies})
       : this._title = title,
         this._author = author,
-        this._subject = subject,
-        this._publisher = publisher,
+        this._copies = copies,
         assert(title != null),
         assert(author != null),
-        assert(subject != null),
-        assert(publisher != null);
+        assert(copies != null);
 
-  String get title => _title;
+  factory Book.fromMap({@required Map<String, dynamic> map}) =>
+      Book(title: map['title'], author: map['author'], copies: map['copies']);
+
+  factory Book.fromJson({@required String json}) =>
+      Book.fromMap(map: jsonDecode(json));
+
+  set refId(String value) {
+    _refId = value;
+  }
+
+  int get copies => _copies;
 
   String get author => _author;
 
-  String get subject => _subject;
+  String get title => _title;
 
-  String get publisher => _publisher;
+  String get refId => _refId;
 
-  factory Book.fromJson(Map<String, dynamic> data) {
-    return Book(
-      title: data['title'],
-      author: data['author'],
-      subject: data['subject'],
-      publisher: data['publisher'],
-    );
-  }
+  Map<String, dynamic> get map => {
+        'title': _title,
+        'author': _author,
+        'copies': _copies,
+      };
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'author': author,
-      'subject': subject,
-      'publisher': publisher,
-    };
-  }
-
-  String toRawJson() {
-    return json.encode(toJson());
-  }
+  String get json => jsonEncode(map);
 }

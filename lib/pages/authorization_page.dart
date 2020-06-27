@@ -10,22 +10,16 @@ import 'package:provider/provider.dart';
 class AuthorizationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    User user = userProvider.user;
 
-    return Consumer(
-      builder: (BuildContext context, UserProvider userProvider, Widget child) {
-        User user = userProvider.user;
-
-        if (user == null) {
-          return BlocProvider<LoginBloc>.value(
-            value: LoginBloc(),
-            child: LoginPage(),
-          );
-        } else {
-          return RoleBasedAuthorization();
-        }
-      },
-    );
+    if (user == null) {
+      return BlocProvider<LoginBloc>.value(
+        value: LoginBloc(),
+        child: LoginPage(),
+      );
+    } else {
+      return RoleBasedAuthorization();
+    }
   }
 }

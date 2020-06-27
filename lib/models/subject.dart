@@ -3,31 +3,36 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 
 class Subject {
+  String _refId;
   final String _subject;
   final List<String> _books;
 
-  const Subject({
-    @required String subject,
-    @required List<String> books,
-  })  : this._subject = subject,
-        this._books = books;
+  Subject({@required String subject, @required List<String> books})
+      : this._subject = subject,
+        this._books = books,
+        assert(subject != null),
+        assert(books != null);
+
+  factory Subject.fromMap({@required Map<String, dynamic> map}) =>
+      Subject(subject: map['subject'], books: map['books']);
+
+  factory Subject.fromJson({@required String json}) =>
+      Subject.fromMap(map: jsonDecode(json));
+
+  set refId(String value) {
+    _refId = value;
+  }
 
   List<String> get books => _books;
 
   String get subject => _subject;
 
-  factory Subject.fromJson(Map<String, dynamic> data) {
-    return Subject(
-      subject: data['subject'],
-      books: data['books'],
-    );
-  }
+  String get refId => _refId;
 
-  Map<String, dynamic> toJson() {
-    return {'subject': subject, 'books': books};
-  }
+  Map<String, dynamic> get map => {
+        'subject': _subject,
+        'books': _books,
+      };
 
-  String toRawJson() {
-    return jsonEncode(toJson());
-  }
+  String get json => jsonEncode(map);
 }

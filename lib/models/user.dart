@@ -3,54 +3,63 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 
 class User {
+  String _refId;
   final String _id;
   final String _password;
+  final String _name;
   final bool _isAdmin;
-  final Map<String, dynamic> _detail;
+  final List<String> _issuedBooks;
 
-  const User({
-    @required String id,
-    @required String password,
-    @required bool isAdmin,
-    @required Map<String, dynamic> details,
-  })  : this._id = id,
+  User(
+      {@required String id,
+      @required String password,
+      @required String name,
+      @required bool isAdmin,
+      @required List<String> issuedBooks})
+      : this._id = id,
         this._password = password,
+        this._name = name,
         this._isAdmin = isAdmin,
-        this._detail = details,
+        this._issuedBooks = issuedBooks,
         assert(id != null),
         assert(password != null),
-        assert(isAdmin != null);
+        assert(name != null),
+        assert(isAdmin != null),
+        assert(issuedBooks != null);
 
-  String get id => _id;
+  factory User.fromMap({@required Map<String, dynamic> map}) => User(
+      id: map['id'],
+      password: map['password'],
+      name: map['name'],
+      isAdmin: map['is_admin'],
+      issuedBooks: map['issued_books']);
 
-  String get password => _password;
+  factory User.fromJson({@required String json}) =>
+      User.fromMap(map: jsonDecode(json));
+
+  set refId(String refId) {
+    this._refId = refId;
+  }
+
+  List<String> get issuedBooks => _issuedBooks;
 
   bool get isAdmin => _isAdmin;
 
-  Map<String, dynamic> get detail => _detail;
+  String get name => _name;
 
-  factory User.fromJson(Map<String, dynamic> map) {
-    return User(
-        id: map['id'],
-        password: map['password'],
-        isAdmin: map['is_admin'],
-        details: map['detail']);
-  }
+  String get password => _password;
 
-  factory User.fromJsonString(String string) {
-    return User.fromJson(jsonDecode(string));
-  }
+  String get id => _id;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'password': password,
-      'is_admin': isAdmin,
-      'detail': detail
-    };
-  }
+  String get refId => _refId;
 
-  String toRawJson() {
-    return json.encode(toJson());
-  }
+  Map<String, dynamic> get map => {
+        'id': _id,
+        'password': _password,
+        'name': _name,
+        'is_admin': _isAdmin,
+        'issued_books': _issuedBooks,
+      };
+
+  String get json => jsonEncode(map);
 }

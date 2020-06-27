@@ -19,9 +19,7 @@ class HomePage extends StatelessWidget {
 
           return ChangeNotifierProvider<UserProvider>.value(
             value: UserProvider(user: user),
-            builder: (BuildContext context, Widget child) {
-              return AuthorizationPage();
-            },
+            child: AuthorizationPage(),
           );
         }
 
