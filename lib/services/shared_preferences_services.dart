@@ -8,6 +8,7 @@ class SharedPreferencesService {
   /// Get the [User] refId from [SharedPreferences]
   /// Send the data in a map
   Future<Map<String, dynamic>> getData() async {
+    await Future.delayed(Duration(seconds: 2));
     return {
       'ref_id': (await _sharedPreference).getString('user_ref'),
     };

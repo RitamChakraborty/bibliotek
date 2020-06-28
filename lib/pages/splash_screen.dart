@@ -12,10 +12,8 @@ class SplashScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           AppLogo(),
-          SizedBox(height: 48),
-          AppName(),
           SizedBox(height: 56),
-          CircularProgressIndicator(),
+          AppName(),
         ],
       ),
     );

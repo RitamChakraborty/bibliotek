@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                     userProvider.user = user;
                   });
 
-                  return Material();
+                  return SplashScreen();
                 }
 
                 return SplashScreen();
