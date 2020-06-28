@@ -27,12 +27,10 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _loginBloc = BlocProvider.of<LoginBloc>(context);
-    _loginBloc.add(LoginBlocInvokeInitialEvent());
   }
 
   @override
   void dispose() {
-    _loginBloc.close();
     super.dispose();
   }
 
@@ -60,6 +58,8 @@ class _LoginPageState extends State<LoginPage> {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
                 userProvider.user = user;
               });
+
+              _loginBloc.add(LoginBlocInvokeInitialEvent());
             }
 
             return Container(

@@ -3,8 +3,10 @@ import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
 import 'package:bibliotek/pages/home_page.dart';
+import 'package:bibliotek/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,13 +23,16 @@ class MyApp extends StatelessWidget {
         BlocProvider<IssueBookBloc>.value(value: IssueBookBloc()),
         BlocProvider<BookBloc>.value(value: BookBloc()),
       ],
-      child: MaterialApp(
-        title: 'Bibliotek',
-        theme: ThemeData(
-            primaryColor: Colors.red,
-            accentColor: Colors.pinkAccent,
-            disabledColor: Colors.red[200]),
-        home: HomePage(),
+      child: ChangeNotifierProvider<UserProvider>.value(
+        value: UserProvider(user: null),
+        child: MaterialApp(
+          title: 'Bibliotek',
+          theme: ThemeData(
+              primaryColor: Colors.red,
+              accentColor: Colors.pinkAccent,
+              disabledColor: Colors.red[200]),
+          home: HomePage(),
+        ),
       ),
     );
   }

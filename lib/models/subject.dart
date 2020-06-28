@@ -5,9 +5,9 @@ import 'package:meta/meta.dart';
 class Subject {
   String _refId;
   final String _subject;
-  final List<String> _books;
+  final List<dynamic> _books;
 
-  Subject({@required String subject, @required List<String> books})
+  Subject({@required String subject, @required List<dynamic> books})
       : this._subject = subject,
         this._books = books,
         assert(subject != null),
@@ -23,7 +23,7 @@ class Subject {
     _refId = value;
   }
 
-  List<String> get books => _books;
+  List<dynamic> get books => _books;
 
   String get subject => _subject;
 

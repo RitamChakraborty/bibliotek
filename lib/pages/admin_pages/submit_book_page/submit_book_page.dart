@@ -38,7 +38,7 @@ class SubmitBookPage extends StatelessWidget {
                         title: Text(student.id),
                         subtitle: Text(student.name),
                         children: student.issuedBooks
-                            .map((String bookRef) => StreamBuilder<Book>(
+                            .map((dynamic bookRef) => StreamBuilder<Book>(
                                   stream: _firestoreServices.getBookByRefId(
                                       refId: bookRef),
                                   builder: (BuildContext context,

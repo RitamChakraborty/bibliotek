@@ -8,14 +8,14 @@ class User {
   final String _password;
   final String _name;
   final bool _isAdmin;
-  final List<String> _issuedBooks;
+  final List<dynamic> _issuedBooks;
 
   User(
       {@required String id,
       @required String password,
       @required String name,
       @required bool isAdmin,
-      @required List<String> issuedBooks})
+      @required List<dynamic> issuedBooks})
       : this._id = id,
         this._password = password,
         this._name = name,
@@ -41,7 +41,7 @@ class User {
     this._refId = refId;
   }
 
-  List<String> get issuedBooks => _issuedBooks;
+  List<dynamic> get issuedBooks => _issuedBooks;
 
   bool get isAdmin => _isAdmin;
 

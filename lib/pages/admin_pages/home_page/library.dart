@@ -31,7 +31,7 @@ class Library extends StatelessWidget {
 
                       return ExpansionTile(
                         title: Text(subject.subject),
-                        children: subject.books.map((String bookRef) {
+                        children: subject.books.map((dynamic bookRef) {
                           return StreamBuilder<Book>(
                             stream: _firestoreServices.getBookByRefId(
                                 refId: bookRef),
