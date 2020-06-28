@@ -30,8 +30,8 @@ class _AddBooksPageState extends State<AddBooksPage> {
 
   @override
   void dispose() {
-    bookBloc.close();
     super.dispose();
+    bookBloc.close();
   }
 
   @override
@@ -158,25 +158,31 @@ class _AddBooksPageState extends State<AddBooksPage> {
                       SizedBox(
                         height: 16,
                       ),
-                      ListTile(
-                        title: Text("Subject"),
-                        trailing: DropdownButton<String>(
-                            value: subject,
-                            onChanged: (String value) {
-                              bookBloc.add(ChangeSubjectEvent(
-                                title: title,
-                                author: author,
-                                subject: subject,
-                                copies: copies,
-                              ));
-                            },
-                            items: SUBJECTS
-                                .map((String subject) =>
-                                    DropdownMenuItem<String>(
-                                      value: subject,
-                                      child: Text(subject),
-                                    ))
-                                .toList()),
+                      Material(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            side: BorderSide(
+                                color: Theme.of(context).accentColor)),
+                        child: ListTile(
+                          title: Text("Subject"),
+                          trailing: DropdownButton<String>(
+                              value: subject,
+                              onChanged: (String value) {
+                                bookBloc.add(ChangeSubjectEvent(
+                                  title: title,
+                                  author: author,
+                                  subject: value,
+                                  copies: copies,
+                                ));
+                              },
+                              items: SUBJECTS
+                                  .map((String subject) =>
+                                      DropdownMenuItem<String>(
+                                        value: subject,
+                                        child: Text(subject),
+                                      ))
+                                  .toList()),
+                        ),
                       ),
                       SizedBox(
                         height: 16,

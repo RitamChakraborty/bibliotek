@@ -1,5 +1,6 @@
 import 'package:bibliotek/bloc/books_bloc/book_bloc_events/book_bloc_event.dart';
 import 'package:bibliotek/bloc/books_bloc/book_bloc_states/book_bloc_state.dart';
+import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bloc/bloc.dart';
@@ -8,7 +9,7 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
   final FirestoreServices _firestoreServices = FirestoreServices();
   String _title = "";
   String _author = "";
-  String _subject = "";
+  String _subject = SUBJECTS[0];
   int _copies = 0;
   String _bookRef = "";
 
