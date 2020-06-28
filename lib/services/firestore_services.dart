@@ -146,18 +146,21 @@ class FirestoreServices {
     return _booksCollection.document(refId).updateData(book.map);
   }
 
-  Stream<QuerySnapshot> getBooks() {
-    CollectionReference booksCollectionReference =
-        _firestore.collection('books');
-    return booksCollectionReference.snapshots();
-  }
-
-  Stream<QuerySnapshot> getStudents() {
-    CollectionReference usersCollectionReference =
-        _firestore.collection('users');
-    return usersCollectionReference
+  Stream<List<User>> getStudents() {
+    return _usersCollection
         .where('is_admin', isEqualTo: false)
-        .snapshots();
+        .snapshots()
+        .map((event) => event.documents.map((e) {
+              Map<String, dynamic> map = e.data;
+              map['ref_id'] = e.documentID;
+
+              return map;
+            }).map((e) {
+              User user = User.fromMap(map: e);
+              user.refId = e['ref_id'];
+
+              return user;
+            }).toList());
   }
 
   Future<void> issueBook(

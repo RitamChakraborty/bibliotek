@@ -1,78 +1,26 @@
 import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
-import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
-import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
+import 'package:bibliotek/services/firestore_services.dart';
+import 'package:bibliotek/widgets/value_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum Filter { Name, ID }
-
-class StudentPickerPage extends StatefulWidget {
-  @override
-  _StudentPickerPageState createState() => _StudentPickerPageState();
-}
-
-class _StudentPickerPageState extends State<StudentPickerPage> {
+class StudentPickerPage extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
-  Filter currentValue = Filter.Name;
+  final FirestoreServices _firestoreServices = FirestoreServices();
 
   @override
   Widget build(BuildContext context) {
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
-
-    Widget leadingButton() {
-      if (_controller.text.isEmpty) {
-        return BackButton();
-      } else {
-        return IconButton(
-          onPressed: () {
-            setState(() {
-              _controller.text = "";
-            });
-          },
-          icon: Icon(Icons.close),
-        );
-      }
-    }
-
-    Widget filterListIcon = IconButton(
-      icon: Icon(Icons.filter_list),
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return AlertDialog(
-                  content: SingleChildScrollView(
-                    child: Column(
-                      children: Filter.values.map((Filter value) {
-                        return RadioListTile<Filter>(
-                          onChanged: (Filter value) {
-                            setState(() {
-                              currentValue = value;
-                            });
-                          },
-                          value: value,
-                          groupValue: currentValue,
-                          title: Text("${value.toString().split("\.")[1]}"),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
+    String filter = "";
 
     Widget searchBookField({@required StateSetter setState}) {
       return TextField(
         onChanged: (String value) {
-          setState(() {});
+          setState(() {
+            filter = value;
+          });
         },
         controller: _controller,
         cursorColor: Colors.white,
@@ -88,60 +36,62 @@ class _StudentPickerPageState extends State<StudentPickerPage> {
     }
 
     return Material(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: leadingButton(),
-//          actions: <Widget>[
-//            filterListIcon,
-//          ],
-          title: searchBookField(setState: setState),
-        ),
-        body: SafeArea(
-          child: BlocBuilder<IssueBookBloc, AbstractIssueBookState>(
-            bloc: issueBookBloc,
-            builder: (context, AbstractIssueBookState issueBookState) {
-              return StreamBuilder(
-                stream: issueBookState.getStudents(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.separated(
-                      itemBuilder: (BuildContext context, int index) {
-                        Map<String, dynamic> data = snapshot.data[index].data;
-                        User student = User.fromJson(data);
-                        StudentDetail studentDetail =
-                            StudentDetail.fromJson(student.detail);
+      child: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+        return Scaffold(
+          appBar: AppBar(
+            title: searchBookField(setState: setState),
+          ),
+          body: SafeArea(
+            child: StreamBuilder<List<User>>(
+              stream: _firestoreServices.getStudents(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<User> users = snapshot.data;
 
-                        return ListTile(
-                          onTap: () {
+                  if (users.isNotEmpty) {
+                    List<User> filteredUsers = users
+                        .where((element) => element.id.startsWith(filter))
+                        .toList();
+
+                    return ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: filteredUsers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return MaterialButton(
+                          onPressed: () {
                             issueBookBloc.add(StudentPickedEvent(
-                                student: student,
-                                studentDetail: studentDetail));
+                              student: filteredUsers[index],
+                            ));
                             Navigator.pop(context);
                           },
-                          title: Text("ID: ${student.id}"),
-                          subtitle: Text("Name: ${studentDetail.name}"),
+                          child: Column(
+                            children: [
+                              ValueTile(
+                                label: "ID",
+                                value: filteredUsers[index].id,
+                              ),
+                              ValueTile(
+                                label: "Name",
+                                value: filteredUsers[index].name,
+                              ),
+                            ],
+                          ),
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return Divider();
                       },
-                      itemCount: snapshot.data.length,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     );
-                  } else if (snapshot.hasError) {
-                    print('Error: ${snapshot.error}');
                   }
+                }
 
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              );
-            },
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

@@ -5,21 +5,7 @@ import 'package:bibliotek/services/firestore_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
-class AbstractIssueBookState {
-  FirestoreServices _firestoreServices = FirestoreServices();
-
-  Stream<List<DocumentSnapshot>> getBooks() {
-    return _firestoreServices
-        .getBooks()
-        .map((QuerySnapshot event) => event.documents);
-  }
-
-  Stream<List<DocumentSnapshot>> getStudents() {
-    return _firestoreServices
-        .getStudents()
-        .map((QuerySnapshot event) => event.documents);
-  }
-}
+class AbstractIssueBookState {}
 
 class IssueBookInitialState extends AbstractIssueBookState {}
 

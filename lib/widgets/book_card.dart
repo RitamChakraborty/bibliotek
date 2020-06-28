@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 class BookCard extends StatelessWidget {
   final Book _book;
+  final bool _showCopies;
 
-  const BookCard({@required Book book})
+  const BookCard({@required Book book, bool showCopies = true})
       : this._book = book,
+        this._showCopies = showCopies,
         assert(book != null);
 
   @override
@@ -20,8 +22,10 @@ class BookCard extends StatelessWidget {
             children: [
               ValueTile(label: "Title", value: _book.title),
               ValueTile(label: "Author", value: _book.author),
-              ValueTile(
-                  label: "Number of copies", value: _book.copies.toString()),
+              _showCopies
+                  ? ValueTile(
+                      label: "Number of copies", value: _book.copies.toString())
+                  : Container(),
             ],
           ),
         ),

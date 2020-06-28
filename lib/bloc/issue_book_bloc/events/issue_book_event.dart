@@ -10,18 +10,13 @@ class IssueBookInvokeInitialEvent extends AbstractIssueBookEvent {}
 
 class StudentPickedEvent extends AbstractIssueBookEvent {
   final User _student;
-  final StudentDetail _studentDetail;
 
-  StudentPickedEvent(
-      {@required User student, @required StudentDetail studentDetail})
-      : this._student = student,
-        this._studentDetail = studentDetail,
-        assert(student != null),
-        assert(studentDetail != null);
+  StudentPickedEvent({
+    @required User student,
+  })  : this._student = student,
+        assert(student != null);
 
   User get student => _student;
-
-  StudentDetail get studentDetail => _studentDetail;
 }
 
 class BookPickedEvent extends AbstractIssueBookEvent {
