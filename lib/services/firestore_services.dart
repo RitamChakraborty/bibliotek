@@ -1,6 +1,5 @@
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/issued_book.dart';
-import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/subject.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -126,10 +125,7 @@ class FirestoreServices {
     await for (List<DocumentSnapshot> snapshots in stream) {
       if (snapshots.isNotEmpty) {
         for (DocumentSnapshot snapshot in snapshots) {
-          bool bookExists = true;
-          String refId = snapshot.documentID;
-
-          return {'book_exists': true, 'book_ref': refId};
+          return {'book_exists': true, 'book_ref': snapshot.documentID};
         }
       }
 

@@ -50,6 +50,8 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
             );
           }
 
+          await _sharedPreferenceServices.setData(userRef: user.refId);
+
           yield LoginSuccessState(user: user);
         } else {
           yield LoginErrorState(
