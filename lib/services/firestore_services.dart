@@ -168,10 +168,6 @@ class FirestoreServices {
         .map((event) => event.documents);
   }
 
-  Stream<DocumentSnapshot> getBook({@required String refId}) {
-    return _firestore.collection('books').document(refId).snapshots();
-  }
-
   Stream<List<User>> getStudentsWithPendingBooks() {
     return _firestore
         .collection('users')
