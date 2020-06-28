@@ -1,6 +1,6 @@
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/admin_home_page.dart';
-import 'package:bibliotek/pages/login_page.dart';
+import 'package:bibliotek/pages/login_pages/login_page.dart';
 import 'package:bibliotek/pages/splash_screen.dart';
 import 'package:bibliotek/pages/student_pages/student_home_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';

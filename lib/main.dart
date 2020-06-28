@@ -2,7 +2,7 @@ import 'package:bibliotek/bloc/books_bloc/books_bloc.dart';
 import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
-import 'package:bibliotek/pages/home_page.dart';
+import 'package:bibliotek/pages/login_pages/home_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
