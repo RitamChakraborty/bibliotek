@@ -3,11 +3,11 @@ import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
 import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
-import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/subject.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/book_picker_page.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/student_picker_page.dart';
+import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_card.dart';
 import 'package:bibliotek/widgets/value_tile.dart';
@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class IssueBookPage extends StatefulWidget {
   @override
@@ -24,6 +25,7 @@ class IssueBookPage extends StatefulWidget {
 
 class _IssueBookPageState extends State<IssueBookPage> {
   IssueBookBloc issueBookBloc;
+  User admin;
   User student;
   Book book;
   Subject subject;
@@ -38,6 +40,9 @@ class _IssueBookPageState extends State<IssueBookPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    admin = userProvider.user;
+
     return BlocBuilder<IssueBookBloc, AbstractIssueBookState>(
       bloc: issueBookBloc,
       builder: (BuildContext context, AbstractIssueBookState issueBookState) {
@@ -51,7 +56,7 @@ class _IssueBookPageState extends State<IssueBookPage> {
           student = null;
           book = null;
           subject = null;
-          timestamp = null;
+          timestamp = Timestamp.now();
 
           issueBookBloc.add(IssueBookInvokeInitialEvent());
         }
@@ -112,6 +117,7 @@ class _IssueBookPageState extends State<IssueBookPage> {
                                 ? null
                                 : () {
                                     issueBookBloc.add(IssueBookEvent(
+                                      admin: admin,
                                       student: student,
                                       book: book,
                                       timestamp: timestamp,
@@ -133,7 +139,7 @@ class _IssueBookPageState extends State<IssueBookPage> {
                   );
                 }
               },
-              label: Text("Next"),
+              label: Text("Issue"),
             ),
             body: SafeArea(
               child: Builder(

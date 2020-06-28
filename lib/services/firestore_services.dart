@@ -1,4 +1,5 @@
 import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/models/issued_book.dart';
 import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/subject.dart';
 import 'package:bibliotek/models/user.dart';
@@ -163,50 +164,6 @@ class FirestoreServices {
             }).toList());
   }
 
-  Future<void> issueBook(
-      {@required Book book,
-      @required User user,
-      @required Timestamp timestamp}) async {
-    Stream<QuerySnapshot> booksStream = _firestore
-        .collection('books')
-        .where('title', isEqualTo: book.title)
-        .snapshots();
-
-    DocumentReference bookReference;
-
-    await for (QuerySnapshot snapshot in booksStream) {
-      List<DocumentSnapshot> documents = snapshot.documents;
-
-      for (DocumentSnapshot documentSnapshot in documents) {
-        bookReference = documentSnapshot.reference;
-
-        break;
-      }
-      break;
-    }
-
-    Stream<QuerySnapshot> userStream = _firestore
-        .collection('users')
-        .where('id', isEqualTo: user.id)
-        .snapshots();
-
-    StudentDetail studentDetail = StudentDetail.fromJson(user.detail);
-    studentDetail.issuedBooks.add(bookReference.documentID);
-
-    await for (QuerySnapshot snapshot in userStream) {
-      List<DocumentSnapshot> documents = snapshot.documents;
-
-      for (DocumentSnapshot documentSnapshot in documents) {
-        await documentSnapshot.reference
-            .updateData({'detail': studentDetail.toJson()});
-
-        break;
-      }
-
-      break;
-    }
-  }
-
   Stream<List<DocumentSnapshot>> getUserFromObject({@required User user}) {
     return _firestore
         .collection('users')
@@ -219,16 +176,40 @@ class FirestoreServices {
     return _firestore.collection('books').document(refId).snapshots();
   }
 
-  Stream<List<User>> getPendingUsers() {
+  Stream<List<User>> getStudentsWithPendingBooks() {
     return _firestore
         .collection('users')
         .where('is_admin', isEqualTo: false)
         .snapshots()
-        .map((event) => event.documents
-            .map((e) => e.data)
-            .map((e) => User.fromJson(e))
-            .where((element) => element.detail['issued_books'].isNotEmpty)
-            .toList());
+        .map((QuerySnapshot querySnapshot) =>
+            querySnapshot.documents.map((DocumentSnapshot snapshot) {
+              Map<String, dynamic> map = snapshot.data;
+              map['ref_id'] = snapshot.documentID;
+
+              return map;
+            }).map((Map<String, dynamic> map) {
+              User user = User.fromMap(map: map);
+              user.refId = map['ref_id'];
+
+              return user;
+            }).toList());
+  }
+
+  Future<void> issueBook({@required IssuedBook issuedBook}) async {
+    await _issuedBooksCollection.add(issuedBook.map).then((value) {
+      issuedBook.refId = value.documentID;
+    });
+
+    dynamic issuedBookRef = issuedBook.refId;
+    String adminRef = issuedBook.issuedBy;
+    String studentRef = issuedBook.issuedTo;
+
+    await _usersCollection
+        .document(adminRef)
+        .updateData({'issued_books': FieldValue.arrayUnion(issuedBookRef)});
+    await _usersCollection
+        .document(studentRef)
+        .updateData({'issued_books': FieldValue.arrayUnion(issuedBookRef)});
   }
 
   Future<void> submitBook(

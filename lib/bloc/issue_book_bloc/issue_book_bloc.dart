@@ -1,6 +1,7 @@
 import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
 import 'package:bibliotek/models/book.dart';
+import 'package:bibliotek/models/issued_book.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bloc/bloc.dart';
@@ -31,14 +32,22 @@ class IssueBookBloc
     } else if (event is CloseSelectedDateEvent) {
       yield CloseSelectedDateState();
     } else if (event is IssueBookEvent) {
+      User admin = event.admin;
       User student = event.student;
       Book book = event.book;
       Timestamp timestamp = event.timestamp;
 
+      IssuedBook issuedBook = IssuedBook(
+        book: book.refId,
+        dueDate: timestamp.toDate(),
+        issuedBy: admin.refId,
+        issuedTo: student.refId,
+        issuedOn: DateTime.now(),
+      );
+
       yield IssueBookLoadingState();
 
-      await _firestoreServices.issueBook(
-          book: book, user: student, timestamp: timestamp);
+      await _firestoreServices.issueBook(issuedBook: issuedBook);
 
       yield IssueBookSuccessState();
     }

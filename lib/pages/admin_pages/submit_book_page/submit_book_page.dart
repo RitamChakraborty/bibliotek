@@ -1,5 +1,4 @@
 import 'package:bibliotek/models/book.dart';
-import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/services/firestore_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class SubmitBookPage extends StatelessWidget {
-  FirestoreServices _firestoreServices = FirestoreServices();
+  final FirestoreServices _firestoreServices = FirestoreServices();
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +27,7 @@ class SubmitBookPage extends StatelessWidget {
                   itemCount: users.length,
                   itemBuilder: (BuildContext context, int index) {
                     User student = users[index];
-                    StudentDetail studentDetail =
-                        StudentDetail.fromJson(student.detail);
+                    S
 
                     List<Widget> issuedBooks = studentDetail.issuedBooks
                         .map(
