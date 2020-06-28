@@ -1,17 +1,13 @@
-import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/models/book.dart';
-import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/library.dart';
 import 'package:bibliotek/pages/change_password_page.dart';
-import 'package:bibliotek/pages/student_pages/search_book_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/services/firestore_services.dart';
+import 'package:bibliotek/widgets/book_card.dart';
 import 'package:bibliotek/widgets/custom_drawer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class StudentHomePage extends StatelessWidget {
@@ -21,11 +17,10 @@ class StudentHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
     User student = userProvider.user;
-    StudentDetail studentDetail = StudentDetail.fromJson(student.detail);
 
     Widget drawer = CustomDrawer(
       id: student.id,
-      name: studentDetail.name,
+      name: student.name,
       children: [
         ListTile(
           leading: Icon(Icons.book),
@@ -46,10 +41,7 @@ class StudentHomePage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (BuildContext context) {
-                return BlocProvider.value(
-                  value: ChangePasswordBloc(),
-                  child: ChangePasswordPage(userProvider),
-                );
+                return ChangePasswordPage();
               }),
             );
           },
@@ -94,44 +86,36 @@ class StudentHomePage extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (BuildContext context) {
-                return SearchBookPage();
-              },
-            ));
-          },
-          label: Text("Find Books"),
-        ),
         body: SafeArea(
-          child: StreamBuilder<List<DocumentSnapshot>>(
-            stream: _firestoreServices.getUserFromObject(user: student),
+          child: StreamBuilder<User>(
+            stream:
+                _firestoreServices.getUserFromReferenceId(refId: student.refId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                DocumentSnapshot studentDocumentSnapshot = snapshot.data[0];
-                StudentDetail modifiedDetail = StudentDetail.fromJson(
-                    studentDocumentSnapshot.data['detail']);
-                List<dynamic> bookRefs = modifiedDetail.issuedBooks;
+                student = snapshot.data;
+                List<String> pendingBookRefs = student.issuedBooks;
 
                 return ListView.separated(
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: bookRefs.length,
+                  itemCount: pendingBookRefs.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return StreamBuilder<DocumentSnapshot>(
-                      stream:
-                          _firestoreServices.getBook(refId: bookRefs[index]),
+                    String bookRef = pendingBookRefs[index];
+
+                    return StreamBuilder<Book>(
+                      stream: _firestoreServices.getBookByRefId(refId: bookRef),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData) {
-                          Book book = Book.fromJson(snapshot.data.data);
+                          Book book = snapshot.data;
 
-                          return ListTile(
-                            title: Text("${book.title}"),
-                            subtitle: Text("${book.author}"),
+                          return BookCard(
+                            book: book,
+                            showCopies: false,
                           );
                         }
 
-                        return ListTile();
+                        return ListTile(
+                          title: Text("Loading..."),
+                        );
                       },
                     );
                   },
@@ -141,7 +125,7 @@ class StudentHomePage extends StatelessWidget {
                 );
               }
 
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             },
           ),
         ),
