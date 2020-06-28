@@ -42,6 +42,11 @@ class ChangePasswordBloc
       } else if (originalPassword != currentPasswordHash) {
         yield ChangePasswordErrorState(
             currentPasswordErrorMessage: "Current Password did not match");
+      } else if (currentPassword == newPassword) {
+        yield ChangePasswordErrorState(
+          newPasswordErrorMessage:
+              "New password can not be same with current password",
+        );
       } else if (newPassword.length < 8) {
         yield ChangePasswordErrorState(
           newPasswordErrorMessage: "New password has to be 8 characters long",

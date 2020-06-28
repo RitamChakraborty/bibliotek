@@ -19,14 +19,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginBloc _loginBloc;
+  LoginBloc loginBloc;
   final TextEditingController idController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _loginBloc = BlocProvider.of<LoginBloc>(context);
+    loginBloc = BlocProvider.of<LoginBloc>(context);
   }
 
   @override
@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     return Material(
       child: Scaffold(
         body: BlocBuilder<LoginBloc, AbstractLoginState>(
-          bloc: _loginBloc,
+          bloc: loginBloc,
           builder: (BuildContext context, AbstractLoginState loginState) {
             if (loginState is LoginInitialState) {
               ID = "";
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                 userProvider.user = user;
               });
 
-              _loginBloc.add(LoginBlocInvokeInitialEvent());
+              loginBloc.add(LoginBlocInvokeInitialEvent());
             }
 
             return Container(
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ID = idController.text;
                                 PASSWORD = passwordController.text;
 
-                                _loginBloc.add(
+                                loginBloc.add(
                                   LoginEvent(
                                     id: idController.text,
                                     password: passwordController.text,

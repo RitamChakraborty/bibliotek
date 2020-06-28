@@ -33,8 +33,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   void dispose() {
-    changePasswordBloc.close();
     super.dispose();
+    changePasswordBloc.close();
   }
 
   @override
@@ -53,6 +53,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             await userProvider.logOut();
             Navigator.pop(context);
           });
+
+          changePasswordBloc.add(ChangePasswordInvokeInitial());
         }
 
         return Material(

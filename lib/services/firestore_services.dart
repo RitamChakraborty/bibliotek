@@ -84,7 +84,9 @@ class FirestoreServices {
 
   Future<void> changePassword(
       {@required String refId, @required String newPassword}) {
-    return _usersCollection.document(refId).setData({'password': newPassword});
+    return _usersCollection
+        .document(refId)
+        .updateData({'password': newPassword});
   }
 
   Future<Subject> getSubjectByName({@required String subject}) async {

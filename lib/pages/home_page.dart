@@ -37,6 +37,8 @@ class HomePage extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   User user = snapshot.data;
+                  user.refId = refId;
+
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     userProvider.user = user;
                   });

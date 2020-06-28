@@ -48,11 +48,11 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
             yield LoginErrorState(
               passwordErrorMessage: "Password does not match",
             );
+          } else {
+            await _sharedPreferenceServices.setData(userRef: user.refId);
+
+            yield LoginSuccessState(user: user);
           }
-
-          await _sharedPreferenceServices.setData(userRef: user.refId);
-
-          yield LoginSuccessState(user: user);
         } else {
           yield LoginErrorState(
             idErrorMessage: "ID does not exists",
