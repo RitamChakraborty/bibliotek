@@ -118,6 +118,7 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
       _author = "";
       _subject = SUBJECTS[0];
       _copies = 0;
+      _bookRef = "";
 
       yield BookBlocSuccessState(
         title: _title,
@@ -126,7 +127,6 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
         copies: _copies,
       );
     } else if (event is IncreaseBookConfirmationEvent) {
-      print('here');
       yield BookBlocLoadingState(
         title: _title,
         author: _author,
@@ -141,6 +141,7 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
       _author = "";
       _subject = SUBJECTS[0];
       _copies = 0;
+      _bookRef = "";
 
       yield BookBlocSuccessState(
         title: _title,
