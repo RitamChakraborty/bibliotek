@@ -31,7 +31,6 @@ class _AddBooksPageState extends State<AddBooksPage> {
   @override
   void dispose() {
     super.dispose();
-    bookBloc.close();
   }
 
   @override
@@ -51,79 +50,80 @@ class _AddBooksPageState extends State<AddBooksPage> {
         copiesController.text = copies.toString();
 
         if (bookBlocState is BookExistsState) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Book already exists"),
-                  content: Text(
-                      "Do you want to increase the number of books in the Library?"),
-                  actions: [
-                    FlatButton(
-                      onPressed: bookBlocState is BookBlocLoadingState
-                          ? null
-                          : () {
-                              Navigator.pop(context);
-                            },
-                      child: Text("Cancel"),
-                    ),
-                    FlatButton(
-                      onPressed: bookBlocState is BookBlocLoadingState
-                          ? null
-                          : () {
-                              bookBloc.add(BookBlocConfirmationEvent());
-                            },
-                      child: Text("Yes"),
-                    )
-                  ],
-                );
-              });
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Book already exists"),
+                    content: Text(
+                        "Do you want to increase the number of books in the Library?"),
+                    actions: [
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Cancel"),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          bookBloc.add(IncreaseBookConfirmationEvent());
+                        },
+                        child: Text("Yes"),
+                      )
+                    ],
+                  );
+                });
+          });
         } else if (bookBlocState is BookBlocAskForConfirmationState) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Do you want to add this book"),
-                  content: Column(children: [
-                    ValueTile(
-                      label: "Title",
-                      value: title,
-                    ),
-                    ValueTile(
-                      label: "Author",
-                      value: author,
-                    ),
-                    ValueTile(
-                      label: "Subject",
-                      value: subject,
-                    ),
-                    ValueTile(
-                      label: "Number of copies",
-                      value: copies.toString(),
-                    ),
-                  ]),
-                  actions: [
-                    FlatButton(
-                      onPressed: bookBlocState is BookBlocLoadingState
-                          ? null
-                          : () {
-                              Navigator.pop(context);
-                            },
-                      child: Text("Cancel"),
-                    ),
-                    FlatButton(
-                      onPressed: bookBlocState is BookBlocLoadingState
-                          ? null
-                          : () {
-                              bookBloc.add(BookBlocConfirmationEvent());
-                            },
-                      child: Text("Yes"),
-                    )
-                  ],
-                );
-              });
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Do you want to add this book"),
+                    content: Wrap(children: [
+                      ValueTile(
+                        label: "Title",
+                        value: title,
+                      ),
+                      ValueTile(
+                        label: "Author",
+                        value: author,
+                      ),
+                      ValueTile(
+                        label: "Subject",
+                        value: subject,
+                      ),
+                      ValueTile(
+                        label: "Number of copies",
+                        value: copies.toString(),
+                      ),
+                    ]),
+                    actions: [
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Cancel"),
+                      ),
+                      FlatButton(
+                        disabledColor: Theme.of(context).disabledColor,
+                        onPressed: () {
+                          bookBloc.add(AddBookConfirmationEvent());
+                        },
+                        child: Text("Yes"),
+                      )
+                    ],
+                  );
+                });
+          });
         } else if (bookBlocState is BookBlocSuccessState) {
           Fluttertoast.showToast(msg: "Book added successfully");
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            Navigator.pop(context);
+          });
+          bookBloc.add(BookBlocInvokeInitialEvent());
         }
 
         return Material(
@@ -169,10 +169,10 @@ class _AddBooksPageState extends State<AddBooksPage> {
                               value: subject,
                               onChanged: (String value) {
                                 bookBloc.add(ChangeSubjectEvent(
-                                  title: title,
-                                  author: author,
+                                  title: titleController.text,
+                                  author: authorController.text,
                                   subject: value,
-                                  copies: copies,
+                                  copies: int.parse(copiesController.text),
                                 ));
                               },
                               items: SUBJECTS
@@ -199,23 +199,19 @@ class _AddBooksPageState extends State<AddBooksPage> {
                         height: 32,
                       ),
                       CustomButton(
-                        label: bookBloc is BookBlocLoadingState
-                            ? "Loading"
-                            : "Add",
-                        onPressed: bookBlocState is BookBlocLoadingState
-                            ? null
-                            : () {
-                                bookBloc.add(
-                                  BookBlocAddBookEvent(
-                                    title: titleController.text,
-                                    author: authorController.text,
-                                    subject: subject,
-                                    copies: copiesController.text.isEmpty
-                                        ? 0
-                                        : int.parse(copiesController.text),
-                                  ),
-                                );
-                              },
+                        label: "Add",
+                        onPressed: () {
+                          bookBloc.add(
+                            BookBlocAddBookEvent(
+                              title: titleController.text,
+                              author: authorController.text,
+                              subject: subject,
+                              copies: copiesController.text.isEmpty
+                                  ? 0
+                                  : int.parse(copiesController.text),
+                            ),
+                          );
+                        },
                       )
                     ],
                   ),

@@ -68,7 +68,6 @@ class BookBlocLoadingState extends AbstractBookBlocState {
 class BookBlocErrorState extends AbstractBookBlocState {
   String bookErrorMessage;
   String authorErrorMessage;
-  String subjectErrorMessage;
   String copiesErrorMessage;
 
   BookBlocErrorState({
@@ -78,7 +77,6 @@ class BookBlocErrorState extends AbstractBookBlocState {
     @required int copies,
     this.bookErrorMessage,
     this.authorErrorMessage,
-    this.subjectErrorMessage,
     this.copiesErrorMessage,
   })  : assert(title != null),
         assert(author != null),

@@ -25,6 +25,13 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
   Stream<AbstractBookBlocState> mapEventToState(
       AbstractBookBlocEvent event) async* {
     if (event is BookBlocInvokeInitialEvent) {
+      // Set to default value on invoke initial event
+      _title = "";
+      _author = "";
+      _subject = SUBJECTS[0];
+      _copies = 0;
+      _bookRef = "";
+
       yield BookBlocInitialState(
         title: _title,
         author: _author,
@@ -62,8 +69,6 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
               _title.isEmpty ? "Book name can not be empty" : null,
           authorErrorMessage:
               _author.isEmpty ? "Author's name can not be empty" : null,
-          subjectErrorMessage:
-              _subject.isEmpty ? "Subject can not be empty" : null,
           copiesErrorMessage:
               _copies < 1 ? "Number of copies has to be greater an 1" : null,
         );
@@ -96,15 +101,8 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
             copies: _copies,
           );
         }
-
-        yield BookBlocSuccessState(
-          title: _title,
-          author: _author,
-          subject: _subject,
-          copies: _copies,
-        );
       }
-    } else if (event is BookBlocConfirmationEvent) {
+    } else if (event is AddBookConfirmationEvent) {
       yield BookBlocLoadingState(
         title: _title,
         author: _author,
@@ -114,15 +112,34 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
 
       Book book = Book(title: _title, author: _author, copies: _copies);
 
-      if (_bookRef.isNotEmpty) {
-        await _firestoreServices.updateBookByRefId(refId: _bookRef, book: book);
-      } else {
-        await _firestoreServices.addBook(book: book, subject: _subject);
-      }
+      await _firestoreServices.addBook(book: book, subject: _subject);
 
       _title = "";
       _author = "";
-      _subject = "";
+      _subject = SUBJECTS[0];
+      _copies = 0;
+
+      yield BookBlocSuccessState(
+        title: _title,
+        author: _author,
+        subject: _subject,
+        copies: _copies,
+      );
+    } else if (event is IncreaseBookConfirmationEvent) {
+      print('here');
+      yield BookBlocLoadingState(
+        title: _title,
+        author: _author,
+        subject: _subject,
+        copies: _copies,
+      );
+
+      await _firestoreServices.updateBookByRefId(
+          refId: _bookRef, copies: _copies);
+
+      _title = "";
+      _author = "";
+      _subject = SUBJECTS[0];
       _copies = 0;
 
       yield BookBlocSuccessState(

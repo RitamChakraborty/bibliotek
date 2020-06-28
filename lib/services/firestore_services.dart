@@ -114,8 +114,15 @@ class FirestoreServices {
     return null;
   }
 
-  Future<void> addBook({@required Book book, @required String subject}) {
-    return _booksCollection.document().setData(book.map);
+  Future<void> addBook({@required Book book, @required String subject}) async {
+    Subject subjectObj = await getSubjectByName(subject: subject);
+
+    return _booksCollection.add(book.map).then((value) async {
+      String bookRef = value.documentID;
+      await _subjectsCollection.document(subjectObj.refId).updateData({
+        'books': FieldValue.arrayUnion([bookRef])
+      });
+    });
   }
 
   Future<Map<String, dynamic>> getBookExistence({@required Book book}) async {
@@ -141,8 +148,10 @@ class FirestoreServices {
   }
 
   Future<void> updateBookByRefId(
-      {@required String refId, @required Book book}) {
-    return _booksCollection.document(refId).updateData(book.map);
+      {@required String refId, @required int copies}) {
+    return _booksCollection
+        .document(refId)
+        .updateData({'copies': FieldValue.increment(copies)});
   }
 
   Stream<List<User>> getStudents() {

@@ -62,4 +62,6 @@ class BookBlocAddBookEvent extends AbstractBookBlocEvent {
   String get title => _title;
 }
 
-class BookBlocConfirmationEvent extends AbstractBookBlocEvent {}
+class AddBookConfirmationEvent extends AbstractBookBlocEvent {}
+
+class IncreaseBookConfirmationEvent extends AbstractBookBlocEvent {}
