@@ -1,7 +1,5 @@
 import 'package:bibliotek/models/book.dart';
-import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
-import 'package:bibliotek/services/firestore_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
@@ -13,18 +11,12 @@ class IssueBookLoadingState extends AbstractIssueBookState {}
 
 class StudentPickedState extends AbstractIssueBookState {
   final User _student;
-  final StudentDetail _studentDetail;
 
-  StudentPickedState(
-      {@required User student, @required StudentDetail studentDetail})
+  StudentPickedState({@required User student})
       : this._student = student,
-        this._studentDetail = studentDetail,
-        assert(student != null),
-        assert(studentDetail != null);
+        assert(student != null);
 
   User get student => _student;
-
-  StudentDetail get studentDetail => _studentDetail;
 }
 
 class BookPickedState extends AbstractIssueBookState {

@@ -19,8 +19,7 @@ class IssueBookBloc
     if (event is IssueBookInvokeInitialEvent) {
       yield IssueBookInitialState();
     } else if (event is StudentPickedEvent) {
-      yield StudentPickedState(
-          student: event.student, studentDetail: event.studentDetail);
+      yield StudentPickedState(student: event.student);
     } else if (event is BookPickedEvent) {
       yield BookPickedState(book: event.book);
     } else if (event is DatePickedEvent) {

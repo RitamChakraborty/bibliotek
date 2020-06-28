@@ -1,5 +1,4 @@
 import 'package:bibliotek/models/book.dart';
-import 'package:bibliotek/models/student_detail.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
