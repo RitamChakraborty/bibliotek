@@ -1,15 +1,20 @@
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/user.dart';
+import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/services/firestore_services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bibliotek/widgets/book_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class SubmitBookPage extends StatelessWidget {
   final FirestoreServices _firestoreServices = FirestoreServices();
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    User admin = userProvider.user;
+
     return Material(
       child: Scaffold(
         appBar: AppBar(
@@ -17,89 +22,60 @@ class SubmitBookPage extends StatelessWidget {
         ),
         body: SafeArea(
           child: StreamBuilder<List<User>>(
-            stream: _firestoreServices.getPendingUsers(),
+            stream: _firestoreServices.getStudentsWithPendingBooks(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                List<User> users = snapshot.data;
+                List<User> students = snapshot.data;
 
-                return ListView.separated(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: users.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    User student = users[index];
-                    S
+                if (students.isNotEmpty) {
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: students.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      User student = students[index];
 
-                    List<Widget> issuedBooks = studentDetail.issuedBooks
-                        .map(
-                          (e) => StreamBuilder<DocumentSnapshot>(
-                            stream: _firestoreServices.getBook(refId: e),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                Book book = Book.fromJson(snapshot.data.data);
+                      return ExpansionTile(
+                        title: Text(student.id),
+                        subtitle: Text(student.name),
+                        children: student.issuedBooks
+                            .map((String bookRef) => StreamBuilder<Book>(
+                                  stream: _firestoreServices.getBookByRefId(
+                                      refId: bookRef),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      Book book = snapshot.data;
 
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Card(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: ListTile(
-                                        title: Text("${book.title}"),
-                                        subtitle: Text("by ${book.author}"),
-                                        trailing: IconButton(
-                                          icon: Icon(Icons.assignment_returned),
-                                          onPressed: () async {
-                                            String id = student.id;
-                                            String bookRef = e;
-
-                                            await _firestoreServices.submitBook(
-                                              id: id,
-                                              bookRef: bookRef,
-                                            );
-                                          },
+                                      return MaterialButton(
+                                        onPressed: () async {
+                                          await _firestoreServices.submitBook(
+                                              adminRef: admin.refId,
+                                              studentRef: student.refId,
+                                              bookRef: bookRef);
+                                        },
+                                        child: BookCard(
+                                          book: book,
+                                          showCopies: false,
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
+                                      );
+                                    }
 
-                              return ListTile(title: Text("Loading"));
-                            },
-                          ),
-                        )
-                        .toList();
+                                    return Text("Loading...");
+                                  },
+                                ))
+                            .toList(),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider();
+                    },
+                  );
+                }
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                  title: Text("ID: ${student.id}"),
-                                  subtitle:
-                                      Text("Name: ${studentDetail.name}")),
-                              ExpansionTile(
-                                title: Text("Borrowed books"),
-                                children: issuedBooks,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider();
-                  },
-                );
+                return Center(child: Text("No pending books"));
               }
 
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return Center(child: CircularProgressIndicator());
             },
           ),
         ),

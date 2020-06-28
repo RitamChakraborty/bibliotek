@@ -212,25 +212,19 @@ class FirestoreServices {
         .updateData({'issued_books': FieldValue.arrayUnion(issuedBookRef)});
   }
 
-  Future<void> submitBook(
-      {@required String id, @required String bookRef}) async {
-    Stream<List<DocumentSnapshot>> stream = _firestore
-        .collection('users')
-        .where('id', isEqualTo: id)
-        .snapshots()
-        .map((event) => event.documents);
+  Future<void> submitBook({
+    @required String adminRef,
+    @required String studentRef,
+    @required String bookRef,
+  }) async {
+    dynamic ref = bookRef;
 
-    await for (List<DocumentSnapshot> list in stream) {
-      for (DocumentSnapshot snapshot in list) {
-        User student = User.fromJson(snapshot.data);
-        (student.detail['issued_books'] as List<dynamic>).remove(bookRef);
-
-        await snapshot.reference.updateData(student.toJson());
-
-        break;
-      }
-
-      break;
-    }
+    await _usersCollection
+        .document(adminRef)
+        .updateData({'issued_book': FieldValue.arrayRemove(ref)});
+    await _usersCollection
+        .document(studentRef)
+        .updateData({'issued_book': FieldValue.arrayRemove(ref)});
+    await _issuedBooksCollection.document(bookRef).delete();
   }
 }
