@@ -76,7 +76,6 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
           copies: _copies,
         );
 
-        // Todo: First look if the book exists or not
         Map<String, dynamic> data =
             await _firestoreServices.getBookExistence(book: book);
 

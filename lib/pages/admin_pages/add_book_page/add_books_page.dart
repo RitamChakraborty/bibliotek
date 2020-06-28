@@ -71,7 +71,7 @@ class _AddBooksPageState extends State<AddBooksPage> {
                       onPressed: bookBlocState is BookBlocLoadingState
                           ? null
                           : () {
-                              // Todo: Increase the number of copies for the book
+                              bookBloc.add(BookBlocConfirmationEvent());
                             },
                       child: Text("Yes"),
                     )
@@ -115,7 +115,7 @@ class _AddBooksPageState extends State<AddBooksPage> {
                       onPressed: bookBlocState is BookBlocLoadingState
                           ? null
                           : () {
-                              bookBloc.add(BookBookConfirmationEvent());
+                              bookBloc.add(BookBlocConfirmationEvent());
                             },
                       child: Text("Yes"),
                     )

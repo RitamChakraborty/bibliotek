@@ -6,13 +6,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 class FirestoreServices {
-  final Firestore _firestore = Firestore.instance;
+  Firestore _firestore;
+  CollectionReference _usersCollection;
+  CollectionReference _subjectsCollection;
+  CollectionReference _booksCollection;
+  CollectionReference _issuedBooksCollection;
+
+  FirestoreServices() {
+    _firestore = Firestore.instance;
+    _usersCollection = _firestore.collection('users');
+    _subjectsCollection = _firestore.collection('subjects');
+    _booksCollection = _firestore.collection('books');
+    _issuedBooksCollection = _firestore.collection('issued_books');
+  }
 
   /// Get Stream of [User] object from its reference ID
   Stream<User> getUserFromReferenceId({@required String refId}) {
     if (refId != null) {
-      CollectionReference collectionReference = _firestore.collection('users');
-      return collectionReference
+      return _usersCollection
           .document(refId)
           .snapshots()
           .map((DocumentSnapshot snapshot) => snapshot.data)
@@ -23,8 +34,7 @@ class FirestoreServices {
   }
 
   Future<User> getUserFromId({@required String id}) async {
-    CollectionReference collectionReference = _firestore.collection('users');
-    Stream<List<Map<String, dynamic>>> stream = collectionReference
+    Stream<List<Map<String, dynamic>>> stream = _usersCollection
         .where('id', isEqualTo: id)
         .snapshots()
         .map((QuerySnapshot querySnapshot) =>
@@ -50,8 +60,7 @@ class FirestoreServices {
   }
 
   Stream<List<Subject>> getSubjects() {
-    CollectionReference collectionReference = _firestore.collection('subjects');
-    return collectionReference.snapshots().map((QuerySnapshot querySnapshot) =>
+    return _subjectsCollection.snapshots().map((QuerySnapshot querySnapshot) =>
         querySnapshot.documents
             .map((DocumentSnapshot snapshot) => snapshot.data)
             .map((Map<String, dynamic> map) => Subject.fromMap(map: map))
@@ -59,8 +68,7 @@ class FirestoreServices {
   }
 
   Stream<Book> getBookByRefId({@required String refId}) {
-    CollectionReference collectionReference = _firestore.collection('books');
-    return collectionReference
+    return _booksCollection
         .document(refId)
         .snapshots()
         .map((DocumentSnapshot snapshot) => snapshot.data)
@@ -68,28 +76,19 @@ class FirestoreServices {
   }
 
   Stream<List<DocumentSnapshot>> getUserDocuments({@required String id}) {
-    CollectionReference userCollectionReference =
-        _firestore.collection('users');
-    Stream<List<DocumentSnapshot>> userDocumentSnapshotListStream =
-        userCollectionReference
-            .where('id', isEqualTo: id)
-            .snapshots()
-            .map((event) => event.documents);
-
-    return userDocumentSnapshotListStream;
+    return _usersCollection
+        .where('id', isEqualTo: id)
+        .snapshots()
+        .map((event) => event.documents);
   }
 
   Future<void> changePassword(
       {@required String refId, @required String newPassword}) {
-    CollectionReference collectionReference = _firestore.collection('users');
-    return collectionReference
-        .document(refId)
-        .setData({'password': newPassword});
+    return _usersCollection.document(refId).setData({'password': newPassword});
   }
 
   Future<Subject> getSubjectByName({@required String subject}) async {
-    CollectionReference collectionReference = _firestore.collection('subjects');
-    Stream<List<Subject>> stream = collectionReference
+    Stream<List<Subject>> stream = _subjectsCollection
         .where('subject', isEqualTo: subject)
         .snapshots()
         .map((event) => event.documents.map((e) {
@@ -113,49 +112,29 @@ class FirestoreServices {
     return null;
   }
 
-  Future<void> addBook({@required Book book, @required String subject}) async {
-    CollectionReference collectionReference = _firestore.collection('books');
-    return collectionReference.document().setData(book.map);
-
-//    CollectionReference booksCollectionReference =
-//        _firestore.collection('books');
-//
-//    Stream<QuerySnapshot> booksQuerySnapshotStream = booksCollectionReference
-//        .where('title', isEqualTo: book.title)
-//        .snapshots();
-//
-//    bool bookFound = false;
-//    DocumentReference bookDocumentReference;
-//
-//    await for (QuerySnapshot bookQuerySnapshot in booksQuerySnapshotStream) {
-//      List<DocumentSnapshot> bookDocumentReferenceList =
-//          bookQuerySnapshot.documents;
-//      if (bookDocumentReferenceList.isNotEmpty) {
-//        bookFound = true;
-//
-//        for (DocumentSnapshot bookDocumentSnapshot
-//            in bookDocumentReferenceList) {
-//          copies += bookDocumentSnapshot.data['copies'];
-//          bookDocumentReference = bookDocumentSnapshot.reference;
-//
-//          break;
-//        }
-//      }
-//
-//      break;
-//    }
-//
-//    if (bookFound) {
-//      bookDocumentReference.updateData({'copies': copies});
-//    } else {
-//      Map<String, dynamic> bookData = book.toJson();
-//      bookData.putIfAbsent('copies', () => copies);
-//      await booksCollectionReference.document().setData(bookData);
-//    }
+  Future<void> addBook({@required Book book, @required String subject}) {
+    return _booksCollection.document().setData(book.map);
   }
 
   Future<Map<String, dynamic>> getBookExistence({@required Book book}) async {
-    // Todo: Complete
+    Stream<List<DocumentSnapshot>> stream = _booksCollection
+        .where('title', isEqualTo: book.title)
+        .snapshots()
+        .map((event) => event.documents);
+
+    await for (List<DocumentSnapshot> snapshots in stream) {
+      if (snapshots.isNotEmpty) {
+        for (DocumentSnapshot snapshot in snapshots) {
+          bool bookExists = true;
+          String refId = snapshot.documentID;
+
+          return {'book_exists': true, 'book_ref': refId};
+        }
+      }
+
+      break;
+    }
+
     return {
       'book_exists': false,
       'book_ref': null,
@@ -163,8 +142,8 @@ class FirestoreServices {
   }
 
   Future<void> updateBookByRefId(
-      {@required String refId, @required Book book}) async {
-    // Todo: complete
+      {@required String refId, @required Book book}) {
+    return _booksCollection.document(refId).updateData(book.map);
   }
 
   Stream<QuerySnapshot> getBooks() {
