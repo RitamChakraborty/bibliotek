@@ -93,36 +93,42 @@ class StudentHomePage extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 student = snapshot.data;
-                List<String> pendingBookRefs = student.issuedBooks;
+                List<dynamic> pendingBookRefs = student.issuedBooks;
 
-                return ListView.separated(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: pendingBookRefs.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    String bookRef = pendingBookRefs[index];
+                if (pendingBookRefs.isNotEmpty) {
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: pendingBookRefs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String bookRef = pendingBookRefs[index];
 
-                    return StreamBuilder<Book>(
-                      stream: _firestoreServices.getBookByRefId(refId: bookRef),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          Book book = snapshot.data;
+                      return StreamBuilder<Book>(
+                        stream:
+                            _firestoreServices.getBookByRefId(refId: bookRef),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            Book book = snapshot.data;
 
-                          return BookCard(
-                            book: book,
-                            showCopies: false,
+                            return BookCard(
+                              book: book,
+                              showCopies: false,
+                            );
+                          }
+
+                          return ListTile(
+                            title: Text("Loading..."),
                           );
-                        }
+                        },
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider();
+                    },
+                  );
+                }
 
-                        return ListTile(
-                          title: Text("Loading..."),
-                        );
-                      },
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider();
-                  },
-                );
+                return Center(child: Text("No pending books"));
               }
 
               return Center(child: CircularProgressIndicator());
