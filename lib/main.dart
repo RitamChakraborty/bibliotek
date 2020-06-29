@@ -2,6 +2,7 @@ import 'package:bibliotek/bloc/books_bloc/books_bloc.dart';
 import 'package:bibliotek/bloc/change_password_bloc/change_password_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/login_bloc/login_bloc.dart';
+import 'package:bibliotek/bloc/submit_book_bloc/submit_book_bloc.dart';
 import 'package:bibliotek/pages/login_pages/home_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChangePasswordBloc>.value(value: ChangePasswordBloc()),
         BlocProvider<IssueBookBloc>.value(value: IssueBookBloc()),
         BlocProvider<BookBloc>.value(value: BookBloc()),
+        BlocProvider<SubmitBookBloc>.value(value: SubmitBookBloc()),
       ],
       child: ChangeNotifierProvider<UserProvider>.value(
         value: UserProvider(user: null),

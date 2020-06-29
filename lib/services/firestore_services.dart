@@ -164,23 +164,33 @@ class FirestoreServices {
             }).toList());
   }
 
-  Stream<List<User>> getStudentsWithPendingBooks() {
-    return _firestore
-        .collection('users')
-        .where('is_admin', isEqualTo: false)
-        .snapshots()
-        .map((QuerySnapshot querySnapshot) =>
+  Stream<List<IssuedBook>> getIssuedBooks() {
+    return _issuedBooksCollection.snapshots().map(
+        (QuerySnapshot querySnapshot) =>
             querySnapshot.documents.map((DocumentSnapshot snapshot) {
+              String issuedBookRef = snapshot.documentID;
               Map<String, dynamic> map = snapshot.data;
-              map['ref_id'] = snapshot.documentID;
+              map['ref_id'] = issuedBookRef;
 
               return map;
             }).map((Map<String, dynamic> map) {
-              User user = User.fromMap(map: map);
-              user.refId = map['ref_id'];
+              IssuedBook issuedBook = IssuedBook.fromMap(map: map);
+              issuedBook.refId = map['ref_id'];
 
-              return user;
+              return issuedBook;
             }).toList());
+  }
+
+  Stream<List<User>> getStudentsWithPendingBooks(
+      {@required List<dynamic> issuedBookRefs}) {
+    return _usersCollection
+        .where('is_admin', isEqualTo: false)
+        .where('issued_books', arrayContainsAny: issuedBookRefs)
+        .snapshots()
+        .map((event) => event.documents
+            .map((e) => e.data)
+            .map((e) => User.fromMap(map: e))
+            .toList());
   }
 
   Future<void> issueBook({@required IssuedBook issuedBook}) async {
@@ -200,12 +210,11 @@ class FirestoreServices {
     });
   }
 
-  Future<void> submitBook({
-    @required String adminRef,
-    @required String studentRef,
-    @required String bookRef,
-  }) async {
-    dynamic ref = bookRef;
+  Future<void> submitBook({@required IssuedBook issuedBook}) async {
+    dynamic ref = issuedBook.refId;
+    dynamic adminRef = issuedBook.issuedBy;
+    dynamic studentRef = issuedBook.issuedTo;
+    dynamic bookRef = issuedBook.book;
 
     await _usersCollection
         .document(adminRef)
