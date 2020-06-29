@@ -220,12 +220,12 @@ class FirestoreServices {
     dynamic studentRef = issuedBook.issuedTo;
     dynamic bookRef = issuedBook.book;
 
-    await _usersCollection
-        .document(adminRef)
-        .updateData({'issued_book': FieldValue.arrayRemove(ref)});
-    await _usersCollection
-        .document(studentRef)
-        .updateData({'issued_book': FieldValue.arrayRemove(ref)});
+    await _usersCollection.document(adminRef).updateData({
+      'issued_books': FieldValue.arrayRemove([ref])
+    });
+    await _usersCollection.document(studentRef).updateData({
+      'issued_books': FieldValue.arrayRemove([ref])
+    });
     await _issuedBooksCollection.document(bookRef).delete();
   }
 
@@ -249,6 +249,8 @@ class FirestoreServices {
       issuedBook = data;
       break;
     }
+
+    issuedBook.refId = issuedBookRef;
 
     Book book;
     Stream<Book> bookStream = getBookByRefId(refId: issuedBook.book);
