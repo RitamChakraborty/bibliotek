@@ -24,12 +24,13 @@ class StudentPickerPage extends StatelessWidget {
         },
         controller: _controller,
         cursorColor: Colors.white,
+        keyboardType: TextInputType.number,
         style: TextStyle(
           color: Colors.white,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: "Find student",
+          hintText: "Find student by ID",
           hintStyle: TextStyle(color: Colors.white),
         ),
       );
@@ -55,7 +56,8 @@ class StudentPickerPage extends StatelessWidget {
                         .toList();
 
                     return ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       itemCount: filteredUsers.length,
                       itemBuilder: (BuildContext context, int index) {
                         return MaterialButton(
@@ -65,17 +67,22 @@ class StudentPickerPage extends StatelessWidget {
                             ));
                             Navigator.pop(context);
                           },
-                          child: Column(
-                            children: [
-                              ValueTile(
-                                label: "ID",
-                                value: filteredUsers[index].id,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  ValueTile(
+                                    label: "ID",
+                                    value: filteredUsers[index].id,
+                                  ),
+                                  ValueTile(
+                                    label: "Name",
+                                    value: filteredUsers[index].name,
+                                  ),
+                                ],
                               ),
-                              ValueTile(
-                                label: "Name",
-                                value: filteredUsers[index].name,
-                              ),
-                            ],
+                            ),
                           ),
                         );
                       },

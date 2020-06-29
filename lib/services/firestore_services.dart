@@ -21,7 +21,7 @@ class FirestoreServices {
   }
 
   /// Get Stream of [User] object from its reference ID
-  Stream<User> getUserFromReferenceId({@required String refId}) {
+  Stream<User> getUserById({@required String refId}) {
     if (refId != null) {
       return _usersCollection
           .document(refId)
@@ -73,13 +73,6 @@ class FirestoreServices {
         .snapshots()
         .map((DocumentSnapshot snapshot) => snapshot.data)
         .map((Map<String, dynamic> map) => Book.fromMap(map: map));
-  }
-
-  Stream<List<DocumentSnapshot>> getUserDocuments({@required String id}) {
-    return _usersCollection
-        .where('id', isEqualTo: id)
-        .snapshots()
-        .map((event) => event.documents);
   }
 
   Future<void> changePassword(
@@ -171,14 +164,6 @@ class FirestoreServices {
             }).toList());
   }
 
-  Stream<List<DocumentSnapshot>> getUserFromObject({@required User user}) {
-    return _firestore
-        .collection('users')
-        .where('id', isEqualTo: user.id)
-        .snapshots()
-        .map((event) => event.documents);
-  }
-
   Stream<List<User>> getStudentsWithPendingBooks() {
     return _firestore
         .collection('users')
@@ -207,12 +192,12 @@ class FirestoreServices {
     String adminRef = issuedBook.issuedBy;
     String studentRef = issuedBook.issuedTo;
 
-    await _usersCollection
-        .document(adminRef)
-        .updateData({'issued_books': FieldValue.arrayUnion(issuedBookRef)});
-    await _usersCollection
-        .document(studentRef)
-        .updateData({'issued_books': FieldValue.arrayUnion(issuedBookRef)});
+    await _usersCollection.document(adminRef).updateData({
+      'issued_books': FieldValue.arrayUnion([issuedBookRef])
+    });
+    await _usersCollection.document(studentRef).updateData({
+      'issued_books': FieldValue.arrayUnion([issuedBookRef])
+    });
   }
 
   Future<void> submitBook({
@@ -229,5 +214,35 @@ class FirestoreServices {
         .document(studentRef)
         .updateData({'issued_book': FieldValue.arrayRemove(ref)});
     await _issuedBooksCollection.document(bookRef).delete();
+  }
+
+  Stream<IssuedBook> getIssuedBookById({@required String refId}) {
+    return _issuedBooksCollection
+        .document(refId)
+        .snapshots()
+        .map((DocumentSnapshot snapshot) => snapshot.data)
+        .map((Map<String, dynamic> map) => IssuedBook.fromMap(map: map));
+  }
+
+  Future<Map<String, dynamic>> getIssuedBookAsFutureById(
+      {@required String issuedBookRef}) async {
+    IssuedBook issuedBook;
+    Stream<IssuedBook> issuedBookStream =
+        getIssuedBookById(refId: issuedBookRef);
+
+    await for (IssuedBook data in issuedBookStream) {
+      issuedBook = data;
+      break;
+    }
+
+    Book book;
+    Stream<Book> bookStream = getBookByRefId(refId: issuedBook.book);
+
+    await for (Book data in bookStream) {
+      book = data;
+      break;
+    }
+
+    return {'issued_book': issuedBook, 'book': book};
   }
 }

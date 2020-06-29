@@ -3,7 +3,6 @@ import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/states/issue_book_state.dart';
 import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
-import 'package:bibliotek/models/subject.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/book_picker_page.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/student_picker_page.dart';
@@ -28,7 +27,6 @@ class _IssueBookPageState extends State<IssueBookPage> {
   User admin;
   User student;
   Book book;
-  Subject subject;
   Timestamp timestamp = Timestamp.now();
 
   @override
@@ -55,8 +53,7 @@ class _IssueBookPageState extends State<IssueBookPage> {
 
           student = null;
           book = null;
-          subject = null;
-          timestamp = Timestamp.now();
+          timestamp = Timestamp.fromDate(DateTime.now().add(Duration(days: 1)));
 
           issueBookBloc.add(IssueBookInvokeInitialEvent());
         }
@@ -80,7 +77,7 @@ class _IssueBookPageState extends State<IssueBookPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text("Are you sure?"),
-                        content: Column(
+                        content: Wrap(
                           children: [
                             ExpansionTile(
                               title: Text("Book"),
@@ -88,10 +85,6 @@ class _IssueBookPageState extends State<IssueBookPage> {
                               children: [
                                 ValueTile(label: "Title", value: book.title),
                                 ValueTile(label: "Author", value: book.author),
-                                ValueTile(
-                                  label: "Subject",
-                                  value: subject.subject,
-                                ),
                               ],
                             ),
                             ExpansionTile(
@@ -189,8 +182,8 @@ class _IssueBookPageState extends State<IssueBookPage> {
                                 )
                               : CustomCard(
                                   child: ListTile(
-                                    title: Text("${student.id}"),
-                                    subtitle: Text("Name: ${student.name}"),
+                                    title: Text("ID: ${student.id}"),
+                                    subtitle: Text("${student.name}"),
                                     trailing: IconButton(
                                       onPressed: () {
                                         issueBookBloc
@@ -239,8 +232,9 @@ class _IssueBookPageState extends State<IssueBookPage> {
                           onPressed: () {
                             showDatePicker(
                               context: context,
-                              firstDate: DateTime(2016),
-                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now().add(Duration(days: 1)),
+                              initialDate:
+                                  DateTime.now().add(Duration(days: 1)),
                               lastDate: DateTime(2021),
                             ).then((value) {
                               if (value != null) {

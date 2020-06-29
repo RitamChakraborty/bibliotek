@@ -24,11 +24,12 @@ class IssuedBook {
 
   factory IssuedBook.fromMap({@required Map<String, dynamic> map}) =>
       IssuedBook(
-          issuedBy: map['issued_by'],
-          issuedTo: map['issued_to'],
-          book: map['book'],
-          issuedOn: map['issued_on'],
-          dueDate: map['due_date']);
+        issuedBy: map['issued_by'],
+        issuedTo: map['issued_to'],
+        book: map['book'],
+        issuedOn: DateTime.parse(map['issued_on']),
+        dueDate: DateTime.parse(map['due_date']),
+      );
 
   factory IssuedBook.fromJson({@required String json}) =>
       IssuedBook.fromMap(map: jsonDecode(json));
@@ -53,8 +54,8 @@ class IssuedBook {
         'issued_by': _issuedBy,
         'issued_to': _issuedTo,
         'book': _book,
-        'issued_on': _issuedOn,
-        'due_date': _dueDate,
+        'issued_on': _issuedOn.toString(),
+        'due_date': _dueDate.toString(),
       };
 
   String get json => jsonEncode(map);

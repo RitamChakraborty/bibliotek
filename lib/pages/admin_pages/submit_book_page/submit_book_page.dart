@@ -60,7 +60,7 @@ class SubmitBookPage extends StatelessWidget {
                                       );
                                     }
 
-                                    return Text("Loading...");
+                                    return Center(child: Text("Loading..."));
                                   },
                                 ))
                             .toList(),

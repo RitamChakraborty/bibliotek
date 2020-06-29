@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
           String refId = snapshot.data['ref_id'];
           if (refId != null) {
             return StreamBuilder<User>(
-              stream: _firestoreServices.getUserFromReferenceId(refId: refId),
+              stream: _firestoreServices.getUserById(refId: refId),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   User user = snapshot.data;
