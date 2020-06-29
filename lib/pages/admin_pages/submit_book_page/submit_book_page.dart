@@ -1,4 +1,5 @@
 import 'package:bibliotek/bloc/submit_book_bloc/submit_book_bloc.dart';
+import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/issued_book.dart';
 import 'package:bibliotek/models/user.dart';
@@ -58,17 +59,17 @@ class _SubmitBookPageState extends State<SubmitBookPage> {
                                   horizontal: 16, vertical: 8),
                               itemCount: users.length,
                               itemBuilder: (BuildContext context, int index) {
-                                User user = users[index];
+                                User student = users[index];
 
                                 return Card(
                                   child: Wrap(
                                     children: [
-                                      ValueTile(label: "ID", value: user.id),
+                                      ValueTile(label: "ID", value: student.id),
                                       ValueTile(
-                                          label: "Name", value: user.name),
+                                          label: "Name", value: student.name),
                                       ExpansionTile(
                                         title: Text("Issued Books"),
-                                        children: user.issuedBooks
+                                        children: student.issuedBooks
                                             .map((dynamic issuedBookRef) {
                                           return FutureBuilder<
                                               Map<String, dynamic>>(
@@ -85,9 +86,99 @@ class _SubmitBookPageState extends State<SubmitBookPage> {
                                                     map['issued_book'];
                                                 Book book = map['book'];
 
-                                                return IssuedBookCard(
-                                                  book: book,
-                                                  issuedBook: issuedBook,
+                                                return MaterialButton(
+                                                  onPressed: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              "Are you sure?"),
+                                                          content: Wrap(
+                                                            children: [
+                                                              ExpansionTile(
+                                                                title: Text(
+                                                                    "Book"),
+                                                                initiallyExpanded:
+                                                                    true,
+                                                                children: [
+                                                                  ValueTile(
+                                                                      label:
+                                                                          "Title",
+                                                                      value: book
+                                                                          .title),
+                                                                  ValueTile(
+                                                                      label:
+                                                                          "Author",
+                                                                      value: book
+                                                                          .author),
+                                                                ],
+                                                              ),
+                                                              ExpansionTile(
+                                                                title: Text(
+                                                                    "Student"),
+                                                                initiallyExpanded:
+                                                                    true,
+                                                                children: [
+                                                                  ValueTile(
+                                                                    label: "ID",
+                                                                    value:
+                                                                        student
+                                                                            .id,
+                                                                  ),
+                                                                  ValueTile(
+                                                                      label:
+                                                                          "Name",
+                                                                      value: student
+                                                                          .name),
+                                                                ],
+                                                              ),
+                                                              ValueTile(
+                                                                label:
+                                                                    "Issue Date",
+                                                                value: DATE_FORMAT
+                                                                    .format(issuedBook
+                                                                        .issuedOn),
+                                                              ),
+                                                              ValueTile(
+                                                                label:
+                                                                    "Due Date",
+                                                                value: DATE_FORMAT
+                                                                    .format(issuedBook
+                                                                        .dueDate),
+                                                              ),
+                                                              ValueTile(
+                                                                label: "Today",
+                                                                value: DATE_FORMAT
+                                                                    .format(DateTime
+                                                                        .now()),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          actions: [
+                                                            FlatButton(
+                                                              onPressed: () {},
+                                                              child:
+                                                                  Text("Yes"),
+                                                            ),
+                                                            FlatButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  "Cancel"),
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: IssuedBookCard(
+                                                    book: book,
+                                                    issuedBook: issuedBook,
+                                                  ),
                                                 );
                                               }
 
