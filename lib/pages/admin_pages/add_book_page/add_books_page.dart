@@ -8,7 +8,6 @@ import 'package:bibliotek/widgets/value_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AddBooksPage extends StatefulWidget {
   @override
@@ -35,112 +34,120 @@ class _AddBooksPageState extends State<AddBooksPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookBloc, AbstractBookBlocState>(
-      bloc: bookBloc,
-      builder:
-          (BuildContext buildContext, AbstractBookBlocState bookBlocState) {
-        // Get the values from the state
-        String title = bookBlocState.title;
-        String author = bookBlocState.author;
-        String subject = bookBlocState.subject;
-        int copies = bookBlocState.copies;
+    return Material(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Add Books"),
+        ),
+        body: BlocConsumer<BookBloc, AbstractBookBlocState>(
+          bloc: bookBloc,
+          listener:
+              (BuildContext context, AbstractBookBlocState bookBlocState) {
+            String title = bookBlocState.title;
+            String author = bookBlocState.author;
+            String subject = bookBlocState.subject;
+            int copies = bookBlocState.copies;
 
-        // Set the values for the controller
-        titleController.text = title;
-        authorController.text = author;
-        copiesController.text = copies.toString();
+            if (bookBlocState is BookBlocLoadingState) {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content: Text("Processing..."),
+                ));
+            } else if (bookBlocState is BookExistsState) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Book already exists"),
+                        content: Text(
+                            "Do you want to increase the number of books in the Library?"),
+                        actions: [
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel"),
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              bookBloc.add(IncreaseBookConfirmationEvent());
+                              Navigator.pop(context);
+                            },
+                            child: Text("Yes"),
+                          )
+                        ],
+                      );
+                    });
+              });
+            } else if (bookBlocState is BookBlocAskForConfirmationState) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Do you want to add this book"),
+                        content: Wrap(children: [
+                          ValueTile(
+                            label: "Title",
+                            value: title,
+                          ),
+                          ValueTile(
+                            label: "Author",
+                            value: author,
+                          ),
+                          ValueTile(
+                            label: "Subject",
+                            value: subject,
+                          ),
+                          ValueTile(
+                            label: "Number of copies",
+                            value: copies.toString(),
+                          ),
+                        ]),
+                        actions: [
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel"),
+                          ),
+                          FlatButton(
+                            disabledColor: Theme.of(context).disabledColor,
+                            onPressed: () {
+                              bookBloc.add(AddBookConfirmationEvent());
+                              Navigator.pop(context);
+                            },
+                            child: Text("Yes"),
+                          )
+                        ],
+                      );
+                    });
+              });
+            } else if (bookBlocState is BookBlocSuccessState) {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content: Text("Book successfully"),
+                ));
+              bookBloc.add(BookBlocInvokeInitialEvent());
+            }
+          },
+          builder:
+              (BuildContext buildContext, AbstractBookBlocState bookBlocState) {
+            // Get the values from the state
+            String title = bookBlocState.title;
+            String author = bookBlocState.author;
+            String subject = bookBlocState.subject;
+            int copies = bookBlocState.copies;
 
-        if (bookBlocState is BookExistsState) {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            showDialog(
-                context: buildContext,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Book already exists"),
-                    content: Text(
-                        "Do you want to increase the number of books in the Library?"),
-                    actions: [
-                      bookBlocState is BookBlocLoadingState
-                          ? Container()
-                          : FlatButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Cancel"),
-                            ),
-                      bookBlocState is BookBlocLoadingState
-                          ? Text("Loading")
-                          : FlatButton(
-                              onPressed: () {
-                                bookBloc.add(IncreaseBookConfirmationEvent());
-                              },
-                              child: Text("Yes"),
-                            )
-                    ],
-                  );
-                });
-          });
-        } else if (bookBlocState is BookBlocAskForConfirmationState) {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            showDialog(
-                context: buildContext,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Do you want to add this book"),
-                    content: Wrap(children: [
-                      ValueTile(
-                        label: "Title",
-                        value: title,
-                      ),
-                      ValueTile(
-                        label: "Author",
-                        value: author,
-                      ),
-                      ValueTile(
-                        label: "Subject",
-                        value: subject,
-                      ),
-                      ValueTile(
-                        label: "Number of copies",
-                        value: copies.toString(),
-                      ),
-                    ]),
-                    actions: [
-                      bookBlocState is BookBlocLoadingState
-                          ? Container()
-                          : FlatButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Cancel"),
-                            ),
-                      bookBlocState is BookBlocLoadingState
-                          ? Text("Loading")
-                          : FlatButton(
-                              disabledColor: Theme.of(context).disabledColor,
-                              onPressed: () {
-                                bookBloc.add(AddBookConfirmationEvent());
-                              },
-                              child: Text("Yes"),
-                            )
-                    ],
-                  );
-                });
-          });
-        } else if (bookBlocState is BookBlocSuccessState) {
-          Fluttertoast.showToast(msg: "Book added successfully");
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            Navigator.pop(buildContext);
-          });
-          bookBloc.add(BookBlocInvokeInitialEvent());
-        }
+            // Set the values for the controller
+            titleController.text = title;
+            authorController.text = author;
+            copiesController.text = copies > 0 ? copies.toString() : "";
 
-        return Material(
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text("Add Books"),
-            ),
-            body: SafeArea(
+            return SafeArea(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 32),
                 alignment: Alignment.center,
@@ -228,10 +235,10 @@ class _AddBooksPageState extends State<AddBooksPage> {
                   ),
                 ),
               ),
-            ),
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -7,4 +7,5 @@ final DateFormat DATE_FORMAT = DateFormat.yMd();
 const List<String> SUBJECTS = [
   "Programming in C",
   "Mathematics",
+  "Data Structure and Algorithm",
 ];
