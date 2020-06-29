@@ -221,7 +221,9 @@ class FirestoreServices {
         .document(refId)
         .snapshots()
         .map((DocumentSnapshot snapshot) => snapshot.data)
-        .map((Map<String, dynamic> map) => IssuedBook.fromMap(map: map));
+        .map((Map<String, dynamic> map) {
+      return IssuedBook.fromMap(map: map);
+    });
   }
 
   Future<Map<String, dynamic>> getIssuedBookAsFutureById(

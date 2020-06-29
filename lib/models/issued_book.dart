@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 class IssuedBook {
@@ -27,8 +28,8 @@ class IssuedBook {
         issuedBy: map['issued_by'],
         issuedTo: map['issued_to'],
         book: map['book'],
-        issuedOn: DateTime.parse(map['issued_on']),
-        dueDate: DateTime.parse(map['due_date']),
+        issuedOn: (map['issued_on'] as Timestamp).toDate(),
+        dueDate: (map['due_date'] as Timestamp).toDate(),
       );
 
   factory IssuedBook.fromJson({@required String json}) =>
@@ -54,8 +55,8 @@ class IssuedBook {
         'issued_by': _issuedBy,
         'issued_to': _issuedTo,
         'book': _book,
-        'issued_on': _issuedOn.toString(),
-        'due_date': _dueDate.toString(),
+        'issued_on': Timestamp.fromDate(_issuedOn),
+        'due_date': Timestamp.fromDate(_dueDate),
       };
 
   String get json => jsonEncode(map);
