@@ -183,14 +183,18 @@ class FirestoreServices {
 
   Stream<List<User>> getStudentsWithPendingBooks(
       {@required List<dynamic> issuedBookRefs}) {
-    return _usersCollection
-        .where('is_admin', isEqualTo: false)
-        .where('issued_books', arrayContainsAny: issuedBookRefs)
-        .snapshots()
-        .map((event) => event.documents
-            .map((e) => e.data)
-            .map((e) => User.fromMap(map: e))
-            .toList());
+    if (issuedBookRefs.isNotEmpty) {
+      return _usersCollection
+          .where('is_admin', isEqualTo: false)
+          .where('issued_books', arrayContainsAny: issuedBookRefs)
+          .snapshots()
+          .map((event) => event.documents
+              .map((e) => e.data)
+              .map((e) => User.fromMap(map: e))
+              .toList());
+    }
+
+    return null;
   }
 
   Future<void> issueBook({@required IssuedBook issuedBook}) async {

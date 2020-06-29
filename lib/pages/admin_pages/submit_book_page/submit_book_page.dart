@@ -33,84 +33,102 @@ class _SubmitBookPageState extends State<SubmitBookPage> {
           title: Text("Submit Book"),
         ),
         body: SafeArea(
-            child: StreamBuilder<List<IssuedBook>>(
-          stream: _firestoreServices.getIssuedBooks(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              List<IssuedBook> issuedBooks = snapshot.data;
-              List<dynamic> issuedBookRefs =
-                  issuedBooks.map((e) => e.refId).toList();
+          child: BlocConsumer<SubmitBookBloc, AbstractSubmitBookState>(
+              bloc: submitBookBloc,
+              builder: (BuildContext context,
+                  AbstractSubmitBookState submitBookState) {
+                return StreamBuilder<List<IssuedBook>>(
+                  stream: _firestoreServices.getIssuedBooks(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<IssuedBook> issuedBooks = snapshot.data;
+                      List<dynamic> issuedBookRefs =
+                          issuedBooks.map((e) => e.refId).toList();
 
-              return StreamBuilder(
-                stream: _firestoreServices.getStudentsWithPendingBooks(
-                    issuedBookRefs: issuedBookRefs),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    List<User> users = snapshot.data;
+                      return StreamBuilder(
+                        stream: _firestoreServices.getStudentsWithPendingBooks(
+                            issuedBookRefs: issuedBookRefs),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<User> users = snapshot.data;
 
-                    if (users.isNotEmpty) {
-                      return ListView.separated(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        itemCount: users.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          User user = users[index];
+                            return ListView.separated(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              itemCount: users.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                User user = users[index];
 
-                          return Card(
-                            child: Wrap(
-                              children: [
-                                ValueTile(label: "ID", value: user.id),
-                                ValueTile(label: "Name", value: user.name),
-                                ExpansionTile(
-                                  title: Text("Issued Books"),
-                                  children: user.issuedBooks
-                                      .map((dynamic issuedBookRef) {
-                                    return FutureBuilder<Map<String, dynamic>>(
-                                      future: _firestoreServices
-                                          .getIssuedBookAsFutureById(
-                                              issuedBookRef: issuedBookRef),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot snapshot) {
-                                        if (snapshot.hasData) {
-                                          Map<String, dynamic> map =
-                                              snapshot.data;
-                                          IssuedBook issuedBook =
-                                              map['issued_book'];
-                                          Book book = map['book'];
+                                return Card(
+                                  child: Wrap(
+                                    children: [
+                                      ValueTile(label: "ID", value: user.id),
+                                      ValueTile(
+                                          label: "Name", value: user.name),
+                                      ExpansionTile(
+                                        title: Text("Issued Books"),
+                                        children: user.issuedBooks
+                                            .map((dynamic issuedBookRef) {
+                                          return FutureBuilder<
+                                              Map<String, dynamic>>(
+                                            future: _firestoreServices
+                                                .getIssuedBookAsFutureById(
+                                                    issuedBookRef:
+                                                        issuedBookRef),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot snapshot) {
+                                              if (snapshot.hasData) {
+                                                Map<String, dynamic> map =
+                                                    snapshot.data;
+                                                IssuedBook issuedBook =
+                                                    map['issued_book'];
+                                                Book book = map['book'];
 
-                                          return IssuedBookCard(
-                                            book: book,
-                                            issuedBook: issuedBook,
+                                                return IssuedBookCard(
+                                                  book: book,
+                                                  issuedBook: issuedBook,
+                                                );
+                                              }
+
+                                              return LoadingIssuedBook();
+                                            },
                                           );
-                                        }
+                                        }).toList(),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Divider();
+                              },
+                            );
+                          }
 
-                                        return LoadingIssuedBook();
-                                      },
-                                    );
-                                  }).toList(),
-                                )
-                              ],
-                            ),
+                          return Center(
+                            child: Text("No books pending"),
                           );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider();
                         },
                       );
                     }
 
-                    return Center(
-                      child: Text("No books pending"),
-                    );
-                  }
-                  return Container();
-                },
-              );
-            }
-
-            return Center(child: CircularProgressIndicator());
-          },
-        )),
+                    return Center(child: CircularProgressIndicator());
+                  },
+                );
+              },
+              listener: (BuildContext context,
+                  AbstractSubmitBookState submitBookState) {
+                if (submitBookState is SubmitBookSuccessState) {
+                  Scaffold.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: Text("Book submitted successfully."),
+                    ));
+                }
+              }),
+        ),
       ),
     );
   }
