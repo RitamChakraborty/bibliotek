@@ -19,8 +19,8 @@ class Subject {
   factory Subject.fromJson({@required String json}) =>
       Subject.fromMap(map: jsonDecode(json));
 
-  set refId(String value) {
-    _refId = value;
+  set refId(String refId) {
+    this._refId = refId;
   }
 
   List<dynamic> get books => _books;

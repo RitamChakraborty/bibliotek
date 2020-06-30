@@ -109,9 +109,12 @@ class FirestoreServices {
 
   Future<void> addBook({@required Book book, @required String subject}) async {
     Subject subjectObj = await getSubjectByName(subject: subject);
+    print(subjectObj.json);
+    print(subjectObj.refId);
 
     return _booksCollection.add(book.map).then((value) async {
       String bookRef = value.documentID;
+
       await _subjectsCollection.document(subjectObj.refId).updateData({
         'books': FieldValue.arrayUnion([bookRef])
       });
@@ -205,6 +208,7 @@ class FirestoreServices {
     dynamic issuedBookRef = issuedBook.refId;
     String adminRef = issuedBook.issuedBy;
     String studentRef = issuedBook.issuedTo;
+    String bookRef = issuedBook.book;
 
     await _usersCollection.document(adminRef).updateData({
       'issued_books': FieldValue.arrayUnion([issuedBookRef])

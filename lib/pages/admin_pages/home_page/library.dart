@@ -2,6 +2,7 @@ import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/subject.dart';
 import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bibliotek/widgets/book_card.dart';
+import 'package:bibliotek/widgets/loading_book.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -32,9 +33,10 @@ class Library extends StatelessWidget {
                       return ExpansionTile(
                         title: Text(subject.subject),
                         children: subject.books.map((dynamic bookRef) {
-                          return StreamBuilder<Book>(
-                            stream: _firestoreServices.getBookByRefId(
-                                refId: bookRef),
+                          return FutureBuilder<Book>(
+                            future: _firestoreServices
+                                .getBookByRefId(refId: bookRef)
+                                .first,
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
@@ -42,7 +44,7 @@ class Library extends StatelessWidget {
                                 return BookCard(book: book);
                               }
 
-                              return Text("Loading");
+                              return LoadingBook();
                             },
                           );
                         }).toList(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LoadingIssuedBook extends StatelessWidget {
+class LoadingBook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -9,14 +9,13 @@ class LoadingIssuedBook extends StatelessWidget {
         child: Wrap(
           children: [
             ListTile(
-              title: Text("Book"),
-              subtitle: Container(
+              title: Text("Title"),
+              trailing: Container(
                 height: 16,
-                width: 48,
+                width: 64,
                 margin: EdgeInsets.only(top: 8),
                 color: Colors.grey[100],
               ),
-              trailing: Icon(Icons.expand_more),
             ),
             ListTile(
               title: Text("Issue Date"),
@@ -27,10 +26,10 @@ class LoadingIssuedBook extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text("Issue Date"),
+              title: Text("Number of copies"),
               trailing: Container(
                 height: 16,
-                width: 80,
+                width: 32,
                 color: Colors.grey[100],
               ),
             ),
@@ -38,5 +37,6 @@ class LoadingIssuedBook extends StatelessWidget {
         ),
       ),
     );
+    ;
   }
 }

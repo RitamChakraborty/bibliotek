@@ -48,7 +48,9 @@ class _AddBooksPageState extends State<AddBooksPage> {
             String subject = bookBlocState.subject;
             int copies = bookBlocState.copies;
 
-            if (bookBlocState is BookBlocLoadingState) {
+            if (bookBlocState is BookBlocInitialState) {
+              Scaffold.of(context).hideCurrentSnackBar();
+            } else if (bookBlocState is BookBlocLoadingState) {
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
@@ -188,7 +190,11 @@ class _AddBooksPageState extends State<AddBooksPage> {
                                   title: titleController.text,
                                   author: authorController.text,
                                   subject: value,
-                                  copies: int.parse(copiesController.text),
+                                  copies: int.parse(
+                                      copiesController.text == null ||
+                                              copiesController.text.isEmpty
+                                          ? "0"
+                                          : copiesController.text),
                                 ));
                               },
                               items: SUBJECTS
