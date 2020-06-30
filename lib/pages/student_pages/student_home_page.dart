@@ -63,21 +63,6 @@ class StudentHomePage extends StatelessWidget {
       ],
     );
 
-    Widget bookTile({
-      @required String title,
-      @required String author,
-      @required String publisher,
-      @required bool isAvailable,
-    }) {
-      return ListTile(
-        title: Text("$title"),
-        subtitle: Text("by $author \npublished by $publisher"),
-        trailing: Text(
-          isAvailable ? "Available" : "Unavailable",
-        ),
-      );
-    }
-
     return Material(
       child: Scaffold(
         drawer: drawer,

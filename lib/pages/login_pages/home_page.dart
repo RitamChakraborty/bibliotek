@@ -4,18 +4,17 @@ import 'package:bibliotek/pages/login_pages/login_page.dart';
 import 'package:bibliotek/pages/splash_screen.dart';
 import 'package:bibliotek/pages/student_pages/student_home_page.dart';
 import 'package:bibliotek/providers/firestore_provider.dart';
+import 'package:bibliotek/providers/local_storeage_provider.dart';
 import 'package:bibliotek/providers/user_provider.dart';
-import 'package:bibliotek/services/shared_preferences_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  final SharedPreferencesService _sharedPreferencesService =
-      SharedPreferencesService();
-
   Widget build(BuildContext context) {
-    FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
     UserProvider userProvider = Provider.of<UserProvider>(context);
+    FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
+    LocalStorageProvider localStorage =
+        Provider.of<LocalStorageProvider>(context);
     User user = userProvider.user;
 
     if (user != null) {
@@ -27,7 +26,7 @@ class HomePage extends StatelessWidget {
     }
 
     return FutureBuilder<Map<String, dynamic>>(
-      future: _sharedPreferencesService.getData(),
+      future: localStorage.getData(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           String refId = snapshot.data['ref_id'];
