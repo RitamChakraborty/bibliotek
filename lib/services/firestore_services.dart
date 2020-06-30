@@ -213,9 +213,14 @@ class FirestoreServices {
     await _usersCollection.document(adminRef).updateData({
       'issued_books': FieldValue.arrayUnion([issuedBookRef])
     });
+
     await _usersCollection.document(studentRef).updateData({
       'issued_books': FieldValue.arrayUnion([issuedBookRef])
     });
+
+    await _booksCollection
+        .document(bookRef)
+        .updateData({'copies': FieldValue.increment(-1)});
   }
 
   Future<void> submitBook({@required IssuedBook issuedBook}) async {
@@ -227,10 +232,16 @@ class FirestoreServices {
     await _usersCollection.document(adminRef).updateData({
       'issued_books': FieldValue.arrayRemove([ref])
     });
+
     await _usersCollection.document(studentRef).updateData({
       'issued_books': FieldValue.arrayRemove([ref])
     });
-    await _issuedBooksCollection.document(bookRef).delete();
+
+    await _booksCollection
+        .document(bookRef)
+        .updateData({'copies': FieldValue.increment(1)});
+
+    await _issuedBooksCollection.document(ref).delete();
   }
 
   Stream<IssuedBook> getIssuedBookById({@required String refId}) {
