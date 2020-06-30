@@ -47,9 +47,16 @@ class IssueBookBloc
 
       yield IssueBookLoadingState();
 
-      await _firestoreServices.issueBook(issuedBook: issuedBook);
+      List<Book> books =
+          await _firestoreServices.getBooksIssuedByStudent(student: student);
+      List<dynamic> bookRefs = books.map((e) => e.refId).toList();
 
-      yield IssueBookSuccessState();
+      if (bookRefs.contains(book.refId)) {
+        yield BookAlreadyIssuedState();
+      } else {
+//        await _firestoreServices.issueBook(issuedBook: issuedBook);
+        yield IssueBookSuccessState();
+      }
     }
   }
 }

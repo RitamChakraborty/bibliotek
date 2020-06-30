@@ -61,6 +61,26 @@ class _IssueBookPageState extends State<IssueBookPage> {
                 ..showSnackBar(SnackBar(
                   content: Text("Processing..."),
                 ));
+            } else if (issueBookState is BookAlreadyIssuedState) {
+              Scaffold.of(context).hideCurrentSnackBar();
+
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title:
+                          Text("This books is already issued to the student"),
+                      content: Text("This please select another book"),
+                      actions: [
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("OK"),
+                        )
+                      ],
+                    );
+                  });
             } else if (issueBookState is IssueBookSuccessState) {
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
@@ -96,202 +116,208 @@ class _IssueBookPageState extends State<IssueBookPage> {
             if (issueBookState is CloseSelectedDateState) {
               timestamp = null;
             }
+            if (issueBookState is BookAlreadyIssuedState) {
+              book = null;
+            }
 
             return Container(
               alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CustomButton(
-                    label: "Pick Student",
-                    onPressed: issueBookState is IssueBookLoadingState
-                        ? null
-                        : () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return StudentPickerPage();
-                                },
-                              ),
-                            );
-                          },
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: student == null
-                        ? SizedBox(
-                            height: 16,
-                          )
-                        : CustomCard(
-                            child: ListTile(
-                              title: Text("ID: ${student.id}"),
-                              subtitle: Text("${student.name}"),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  issueBookBloc
-                                      .add(CloseSelectedStudentEvent());
-                                },
-                                icon: Icon(Icons.close),
-                              ),
-                            ),
-                          ),
-                  ),
-                  CustomButton(
-                    label: "Pick Book",
-                    onPressed: issueBookState is IssueBookLoadingState
-                        ? null
-                        : () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return BookPickerPage();
-                                },
-                              ),
-                            );
-                          },
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: book == null
-                        ? SizedBox(
-                            height: 16,
-                          )
-                        : CustomCard(
-                            child: ListTile(
-                              title: Text("${book.title}"),
-                              subtitle: Text("by ${book.author}"),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  issueBookBloc.add(CloseSelectedBookEvent());
-                                },
-                                icon: Icon(Icons.close),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CustomButton(
+                      label: "Pick Student",
+                      onPressed: issueBookState is IssueBookLoadingState
+                          ? null
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return StudentPickerPage();
+                                  },
+                                ),
+                              );
+                            },
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 32),
+                      child: student == null
+                          ? SizedBox(
+                              height: 16,
+                            )
+                          : CustomCard(
+                              child: ListTile(
+                                title: Text("ID: ${student.id}"),
+                                subtitle: Text("${student.name}"),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    issueBookBloc
+                                        .add(CloseSelectedStudentEvent());
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
                               ),
                             ),
-                          ),
-                  ),
-                  CustomButton(
-                    label: "Pick Date",
-                    onPressed: issueBookState is IssueBookLoadingState
-                        ? null
-                        : () {
-                            showDatePicker(
-                              context: context,
-                              firstDate: DateTime.now().add(Duration(days: 1)),
-                              initialDate:
-                                  DateTime.now().add(Duration(days: 1)),
-                              lastDate: DateTime(2021),
-                            ).then((value) {
-                              if (value != null) {
-                                issueBookBloc
-                                    .add(DatePickedEvent(dateTime: value));
-                              }
-                            });
-                          },
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: timestamp == null
-                        ? SizedBox(
-                            height: 16,
-                          )
-                        : CustomCard(
-                            child: ListTile(
-                              title: Text(
-                                "${DATE_FORMAT.format(timestamp.toDate())}",
-                              ),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  issueBookBloc.add(CloseSelectedDateEvent());
-                                },
-                                icon: Icon(Icons.close),
+                    ),
+                    CustomButton(
+                      label: "Pick Book",
+                      onPressed: issueBookState is IssueBookLoadingState
+                          ? null
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return BookPickerPage();
+                                  },
+                                ),
+                              );
+                            },
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 32),
+                      child: book == null
+                          ? SizedBox(
+                              height: 16,
+                            )
+                          : CustomCard(
+                              child: ListTile(
+                                title: Text("${book.title}"),
+                                subtitle: Text("by ${book.author}"),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    issueBookBloc.add(CloseSelectedBookEvent());
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
                               ),
                             ),
-                          ),
-                  ),
-                  CustomButton(
-                    label: "Issue",
-                    onPressed: issueBookState is IssueBookLoadingState
-                        ? null
-                        : () {
-                            if (student == null) {
-                              Fluttertoast.showToast(
-                                  msg: "Please pick a student first");
-                            } else if (book == null) {
-                              Fluttertoast.showToast(
-                                  msg: "Please pick a book first");
-                            } else if (timestamp == null) {
-                              Fluttertoast.showToast(
-                                  msg: "Please select a date first");
-                            } else {
-                              showDialog(
+                    ),
+                    CustomButton(
+                      label: "Pick Date",
+                      onPressed: issueBookState is IssueBookLoadingState
+                          ? null
+                          : () {
+                              showDatePicker(
                                 context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text("Are you sure?"),
-                                    content: Wrap(
-                                      children: [
-                                        ExpansionTile(
-                                          title: Text("Book"),
-                                          initiallyExpanded: true,
-                                          children: [
-                                            ValueTile(
-                                                label: "Title",
-                                                value: book.title),
-                                            ValueTile(
-                                                label: "Author",
-                                                value: book.author),
-                                          ],
+                                firstDate:
+                                    DateTime.now().add(Duration(days: 1)),
+                                initialDate:
+                                    DateTime.now().add(Duration(days: 1)),
+                                lastDate: DateTime(2021),
+                              ).then((value) {
+                                if (value != null) {
+                                  issueBookBloc
+                                      .add(DatePickedEvent(dateTime: value));
+                                }
+                              });
+                            },
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 32),
+                      child: timestamp == null
+                          ? SizedBox(
+                              height: 16,
+                            )
+                          : CustomCard(
+                              child: ListTile(
+                                title: Text(
+                                  "${DATE_FORMAT.format(timestamp.toDate())}",
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    issueBookBloc.add(CloseSelectedDateEvent());
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
+                              ),
+                            ),
+                    ),
+                    CustomButton(
+                      label: "Issue",
+                      onPressed: issueBookState is IssueBookLoadingState
+                          ? null
+                          : () {
+                              if (student == null) {
+                                Fluttertoast.showToast(
+                                    msg: "Please pick a student first");
+                              } else if (book == null) {
+                                Fluttertoast.showToast(
+                                    msg: "Please pick a book first");
+                              } else if (timestamp == null) {
+                                Fluttertoast.showToast(
+                                    msg: "Please select a date first");
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Are you sure?"),
+                                      content: Wrap(
+                                        children: [
+                                          ExpansionTile(
+                                            title: Text("Book"),
+                                            initiallyExpanded: true,
+                                            children: [
+                                              ValueTile(
+                                                  label: "Title",
+                                                  value: book.title),
+                                              ValueTile(
+                                                  label: "Author",
+                                                  value: book.author),
+                                            ],
+                                          ),
+                                          ExpansionTile(
+                                            title: Text("Student"),
+                                            initiallyExpanded: true,
+                                            children: [
+                                              ValueTile(
+                                                label: "ID",
+                                                value: student.id,
+                                              ),
+                                              ValueTile(
+                                                  label: "Name",
+                                                  value: student.name),
+                                            ],
+                                          ),
+                                          ValueTile(
+                                            label: "Due Date",
+                                            value: DATE_FORMAT
+                                                .format(timestamp.toDate()),
+                                          )
+                                        ],
+                                      ),
+                                      actions: [
+                                        FlatButton(
+                                          onPressed: () {
+                                            issueBookBloc.add(IssueBookEvent(
+                                              admin: admin,
+                                              student: student,
+                                              book: book,
+                                              timestamp: timestamp,
+                                            ));
+
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Yes"),
                                         ),
-                                        ExpansionTile(
-                                          title: Text("Student"),
-                                          initiallyExpanded: true,
-                                          children: [
-                                            ValueTile(
-                                              label: "ID",
-                                              value: student.id,
-                                            ),
-                                            ValueTile(
-                                                label: "Name",
-                                                value: student.name),
-                                          ],
-                                        ),
-                                        ValueTile(
-                                          label: "Due Date",
-                                          value: DATE_FORMAT
-                                              .format(timestamp.toDate()),
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Cancel"),
                                         )
                                       ],
-                                    ),
-                                    actions: [
-                                      FlatButton(
-                                        onPressed: () {
-                                          issueBookBloc.add(IssueBookEvent(
-                                            admin: admin,
-                                            student: student,
-                                            book: book,
-                                            timestamp: timestamp,
-                                          ));
-
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Yes"),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Cancel"),
-                                      )
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          },
-                  )
-                ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                    )
+                  ],
+                ),
               ),
             );
           },

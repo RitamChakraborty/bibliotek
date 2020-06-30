@@ -200,6 +200,21 @@ class FirestoreServices {
     return null;
   }
 
+  Future<List<Book>> getBooksIssuedByStudent({@required User student}) async {
+    List<dynamic> issuedBooksRefs = student.issuedBooks;
+    List<Book> books = [];
+
+    for (String ref in issuedBooksRefs) {
+      Map<String, dynamic> data =
+          await getIssuedBookAsFutureById(issuedBookRef: ref);
+
+      Book book = data['book'];
+      books.add(book);
+    }
+
+    return books;
+  }
+
   Future<void> issueBook({@required IssuedBook issuedBook}) async {
     await _issuedBooksCollection.add(issuedBook.map).then((value) {
       issuedBook.refId = value.documentID;
@@ -268,12 +283,15 @@ class FirestoreServices {
     issuedBook.refId = issuedBookRef;
 
     Book book;
+
     Stream<Book> bookStream = getBookByRefId(refId: issuedBook.book);
 
     await for (Book data in bookStream) {
       book = data;
       break;
     }
+
+    book.refId = issuedBook.book;
 
     return {'issued_book': issuedBook, 'book': book};
   }
