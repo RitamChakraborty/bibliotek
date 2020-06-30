@@ -3,8 +3,8 @@ import 'package:bibliotek/models/issued_book.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/home_page/library.dart';
 import 'package:bibliotek/pages/login_pages/change_password_page.dart';
+import 'package:bibliotek/providers/firestore_provider.dart';
 import 'package:bibliotek/providers/user_provider.dart';
-import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bibliotek/widgets/custom_drawer.dart';
 import 'package:bibliotek/widgets/issued_book_card.dart';
 import 'package:bibliotek/widgets/loading_issued_book.dart';
@@ -13,10 +13,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 class StudentHomePage extends StatelessWidget {
-  final FirestoreServices _firestoreServices = FirestoreServices();
-
   @override
   Widget build(BuildContext context) {
+    FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
     UserProvider userProvider = Provider.of<UserProvider>(context);
     User student = userProvider.user;
 
@@ -90,7 +89,7 @@ class StudentHomePage extends StatelessWidget {
         ),
         body: SafeArea(
           child: StreamBuilder<User>(
-            stream: _firestoreServices.getUserById(refId: student.refId),
+            stream: firestore.getUserById(refId: student.refId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 User user = snapshot.data;
@@ -104,7 +103,7 @@ class StudentHomePage extends StatelessWidget {
                       String issuedBookRef = issuedBooks[index];
 
                       return FutureBuilder<Map<String, dynamic>>(
-                        future: _firestoreServices.getIssuedBookAsFutureById(
+                        future: firestore.getIssuedBookAsFutureById(
                             issuedBookRef: issuedBookRef),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {

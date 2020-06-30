@@ -5,7 +5,6 @@ import 'package:bibliotek/pages/admin_pages/issue_book_page/issue_book_page.dart
 import 'package:bibliotek/pages/admin_pages/submit_book_page/submit_book_page.dart';
 import 'package:bibliotek/pages/login_pages/change_password_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
-import 'package:bibliotek/services/shared_preferences_services.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
 import 'package:bibliotek/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +12,6 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class AdminHomePage extends StatelessWidget {
-  final SharedPreferencesService _sharedPreferencesService =
-      SharedPreferencesService();
-
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);

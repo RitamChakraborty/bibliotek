@@ -2,16 +2,16 @@ import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/subject.dart';
-import 'package:bibliotek/services/firestore_services.dart';
+import 'package:bibliotek/providers/firestore_provider.dart';
 import 'package:bibliotek/widgets/book_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class BookPickerPage extends StatelessWidget {
-  final FirestoreServices _firestoreServices = FirestoreServices();
-
   @override
   Widget build(BuildContext context) {
+    FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
 
     return Material(
@@ -21,7 +21,7 @@ class BookPickerPage extends StatelessWidget {
         ),
         body: SafeArea(
           child: StreamBuilder<List<Subject>>(
-            stream: _firestoreServices.getSubjects(),
+            stream: firestore.getSubjects(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 List<Subject> subjects = snapshot.data;
@@ -37,8 +37,7 @@ class BookPickerPage extends StatelessWidget {
                         title: Text(subject.subject),
                         children: subject.books.map((dynamic bookRef) {
                           return StreamBuilder<Book>(
-                            stream: _firestoreServices.getBookByRefId(
-                                refId: bookRef),
+                            stream: firestore.getBookByRefId(refId: bookRef),
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {

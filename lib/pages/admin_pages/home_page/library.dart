@@ -1,16 +1,17 @@
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/subject.dart';
-import 'package:bibliotek/services/firestore_services.dart';
+import 'package:bibliotek/providers/firestore_provider.dart';
 import 'package:bibliotek/widgets/book_card.dart';
 import 'package:bibliotek/widgets/loading_book.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class Library extends StatelessWidget {
-  final FirestoreServices _firestoreServices = FirestoreServices();
-
   @override
   Widget build(BuildContext context) {
+    FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
+
     return Material(
       child: Scaffold(
         appBar: AppBar(
@@ -18,7 +19,7 @@ class Library extends StatelessWidget {
         ),
         body: SafeArea(
           child: StreamBuilder<List<Subject>>(
-            stream: _firestoreServices.getSubjects(),
+            stream: firestore.getSubjects(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 List<Subject> subjects = snapshot.data;
@@ -34,9 +35,8 @@ class Library extends StatelessWidget {
                         title: Text(subject.subject),
                         children: subject.books.map((dynamic bookRef) {
                           return FutureBuilder<Book>(
-                            future: _firestoreServices
-                                .getBookByRefId(refId: bookRef)
-                                .first,
+                            future:
+                                firestore.getBookByRefId(refId: bookRef).first,
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {

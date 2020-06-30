@@ -3,13 +3,14 @@ import 'package:bibliotek/data/constants.dart';
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/issued_book.dart';
 import 'package:bibliotek/models/user.dart';
-import 'package:bibliotek/services/firestore_services.dart';
+import 'package:bibliotek/providers/firestore_provider.dart';
 import 'package:bibliotek/widgets/issued_book_card.dart';
 import 'package:bibliotek/widgets/loading_issued_book.dart';
 import 'package:bibliotek/widgets/value_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class SubmitBookPage extends StatefulWidget {
   @override
@@ -17,12 +18,13 @@ class SubmitBookPage extends StatefulWidget {
 }
 
 class _SubmitBookPageState extends State<SubmitBookPage> {
-  final FirestoreServices _firestoreServices = FirestoreServices();
+  FireStoreProvider firestore;
   SubmitBookBloc submitBookBloc;
 
   @override
   void initState() {
     super.initState();
+    firestore = Provider.of<FireStoreProvider>(context);
     submitBookBloc = BlocProvider.of<SubmitBookBloc>(context);
   }
 
@@ -39,7 +41,7 @@ class _SubmitBookPageState extends State<SubmitBookPage> {
               builder: (BuildContext context,
                   AbstractSubmitBookState submitBookState) {
                 return StreamBuilder<List<IssuedBook>>(
-                  stream: _firestoreServices.getIssuedBooks(),
+                  stream: firestore.getIssuedBooks(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       List<IssuedBook> issuedBooks = snapshot.data;
@@ -47,7 +49,7 @@ class _SubmitBookPageState extends State<SubmitBookPage> {
                           issuedBooks.map((e) => e.refId).toList();
 
                       return StreamBuilder(
-                        stream: _firestoreServices.getStudentsWithPendingBooks(
+                        stream: firestore.getStudentsWithPendingBooks(
                             issuedBookRefs: issuedBookRefs),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
@@ -75,7 +77,7 @@ class _SubmitBookPageState extends State<SubmitBookPage> {
                                               .map((dynamic issuedBookRef) {
                                             return FutureBuilder<
                                                 Map<String, dynamic>>(
-                                              future: _firestoreServices
+                                              future: firestore
                                                   .getIssuedBookAsFutureById(
                                                       issuedBookRef:
                                                           issuedBookRef),

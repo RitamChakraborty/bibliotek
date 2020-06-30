@@ -3,8 +3,8 @@ import 'package:bibliotek/pages/admin_pages/home_page/admin_home_page.dart';
 import 'package:bibliotek/pages/login_pages/login_page.dart';
 import 'package:bibliotek/pages/splash_screen.dart';
 import 'package:bibliotek/pages/student_pages/student_home_page.dart';
+import 'package:bibliotek/providers/firestore_provider.dart';
 import 'package:bibliotek/providers/user_provider.dart';
-import 'package:bibliotek/services/firestore_services.dart';
 import 'package:bibliotek/services/shared_preferences_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   final SharedPreferencesService _sharedPreferencesService =
       SharedPreferencesService();
-  final FirestoreServices _firestoreServices = FirestoreServices();
 
   Widget build(BuildContext context) {
+    FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
     UserProvider userProvider = Provider.of<UserProvider>(context);
     User user = userProvider.user;
 
@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
           String refId = snapshot.data['ref_id'];
           if (refId != null) {
             return StreamBuilder<User>(
-              stream: _firestoreServices.getUserById(refId: refId),
+              stream: firestore.getUserById(refId: refId),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   User user = snapshot.data;

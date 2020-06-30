@@ -1,17 +1,18 @@
 import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/models/user.dart';
-import 'package:bibliotek/services/firestore_services.dart';
+import 'package:bibliotek/providers/firestore_provider.dart';
 import 'package:bibliotek/widgets/value_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class StudentPickerPage extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
-  final FirestoreServices _firestoreServices = FirestoreServices();
 
   @override
   Widget build(BuildContext context) {
+    FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
     String filter = "";
 
@@ -45,7 +46,7 @@ class StudentPickerPage extends StatelessWidget {
           ),
           body: SafeArea(
             child: StreamBuilder<List<User>>(
-              stream: _firestoreServices.getStudents(),
+              stream: firestore.getStudents(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<User> users = snapshot.data;
