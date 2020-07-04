@@ -23,6 +23,9 @@ class FireStoreProvider {
   Stream<Book> getBookByRefId({@required String refId}) =>
       _firestoreServices.getBookByRefId(refId: refId);
 
+  Stream<Book> getAvailableBookByRefId({@required String refId}) =>
+      _firestoreServices.getAvailableBookByRefId(refId: refId);
+
   Future<void> changePassword(
           {@required String refId, @required String newPassword}) =>
       _firestoreServices.changePassword(refId: refId, newPassword: newPassword);

@@ -45,15 +45,18 @@ class BookPickerPage extends StatelessWidget {
                                 book.refId = bookRef;
 
                                 return MaterialButton(
-                                  onPressed: () {
-                                    issueBookBloc.add(BookPickedEvent(
-                                      book: book,
-                                    ));
-                                    Navigator.pop(context);
-                                  },
+                                  onPressed: book.copies > 0
+                                      ? () {
+                                          issueBookBloc.add(BookPickedEvent(
+                                            book: book,
+                                          ));
+                                          Navigator.pop(context);
+                                        }
+                                      : null,
                                   child: BookCard(
                                     book: book,
                                     showCopies: false,
+                                    showAvailability: true,
                                   ),
                                 );
                               }

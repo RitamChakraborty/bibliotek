@@ -34,9 +34,8 @@ class Library extends StatelessWidget {
                       return ExpansionTile(
                         title: Text(subject.subject),
                         children: subject.books.map((dynamic bookRef) {
-                          return FutureBuilder<Book>(
-                            future:
-                                firestore.getBookByRefId(refId: bookRef).first,
+                          return StreamBuilder<Book>(
+                            stream: firestore.getBookByRefId(refId: bookRef),
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {

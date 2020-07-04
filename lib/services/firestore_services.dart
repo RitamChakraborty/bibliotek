@@ -86,6 +86,9 @@ class FirestoreServices {
         .map((Map<String, dynamic> map) => Book.fromMap(map: map));
   }
 
+  Stream<Book> getAvailableBookByRefId({@required String refId}) =>
+      getBookByRefId(refId: refId).where((event) => event.copies > 0);
+
   Future<void> changePassword(
       {@required String refId, @required String newPassword}) {
     return _usersCollection
