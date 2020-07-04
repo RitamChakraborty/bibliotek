@@ -57,8 +57,9 @@ class _AddBooksPageState extends State<AddBooksPage> {
                   content: Text("Processing..."),
                 ));
             } else if (bookBlocState is BookExistsState) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                showDialog(
+              WidgetsBinding.instance.addPostFrameCallback(
+                (timeStamp) {
+                  showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -81,8 +82,10 @@ class _AddBooksPageState extends State<AddBooksPage> {
                           )
                         ],
                       );
-                    });
-              });
+                    },
+                  );
+                },
+              );
             } else if (bookBlocState is BookBlocAskForConfirmationState) {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 showDialog(

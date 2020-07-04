@@ -16,8 +16,11 @@ class Book {
         assert(author != null),
         assert(copies != null);
 
-  factory Book.fromMap({@required Map<String, dynamic> map}) =>
-      Book(title: map['title'], author: map['author'], copies: map['copies']);
+  factory Book.fromMap({@required Map<String, dynamic> map}) => Book(
+        title: map['title'],
+        author: map['author'],
+        copies: map['copies'],
+      );
 
   factory Book.fromJson({@required String json}) =>
       Book.fromMap(map: jsonDecode(json));

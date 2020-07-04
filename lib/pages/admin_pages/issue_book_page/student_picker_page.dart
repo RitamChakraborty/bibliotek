@@ -2,6 +2,7 @@ import 'package:bibliotek/bloc/issue_book_bloc/events/issue_book_event.dart';
 import 'package:bibliotek/bloc/issue_book_bloc/issue_book_bloc.dart';
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/providers/firestore_provider.dart';
+import 'package:bibliotek/widgets/search_field.dart';
 import 'package:bibliotek/widgets/value_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,33 +17,32 @@ class StudentPickerPage extends StatelessWidget {
     IssueBookBloc issueBookBloc = BlocProvider.of<IssueBookBloc>(context);
     String filter = "";
 
-    Widget searchBookField({@required StateSetter setState}) {
-      return TextField(
-        onChanged: (String value) {
-          setState(() {
-            filter = value;
-          });
-        },
-        controller: _controller,
-        cursorColor: Colors.white,
-        keyboardType: TextInputType.number,
-        style: TextStyle(
-          color: Colors.white,
-        ),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: "Find student by ID",
-          hintStyle: TextStyle(color: Colors.white),
-        ),
-      );
-    }
-
     return Material(
       child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
         return Scaffold(
           appBar: AppBar(
-            title: searchBookField(setState: setState),
+            title: SearchField(
+              controller: _controller,
+              onChanged: (String value) {
+                setState(() {
+                  filter = value;
+                });
+              },
+            ),
+            actions: [
+              filter.isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          filter = "";
+                          _controller.text = "";
+                        });
+                      },
+                      icon: Icon(Icons.clear),
+                    )
+                  : Container(),
+            ],
           ),
           body: SafeArea(
             child: StreamBuilder<List<User>>(

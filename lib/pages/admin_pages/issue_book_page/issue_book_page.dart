@@ -199,8 +199,8 @@ class _IssueBookPageState extends State<IssueBookPage> {
                       label: "Pick Date",
                       onPressed: issueBookState is IssueBookLoadingState
                           ? null
-                          : () {
-                              showDatePicker(
+                          : () async {
+                              await showDatePicker(
                                 context: context,
                                 firstDate:
                                     DateTime.now().add(Duration(days: 1)),

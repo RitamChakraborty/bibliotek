@@ -54,7 +54,7 @@ class IssueBookBloc
       if (bookRefs.contains(book.refId)) {
         yield BookAlreadyIssuedState();
       } else {
-//        await _firestoreServices.issueBook(issuedBook: issuedBook);
+        await _firestoreServices.issueBook(issuedBook: issuedBook);
         yield IssueBookSuccessState();
       }
     }

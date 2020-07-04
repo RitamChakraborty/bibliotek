@@ -16,6 +16,7 @@ dependencies:
   fluttertoast: any
   intl: any
   crypto: any
+  bloc_test: any
 
 dev_dependencies:
   flutter_test:

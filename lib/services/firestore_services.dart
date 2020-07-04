@@ -18,6 +18,17 @@ class FirestoreServices {
     _subjectsCollection = _firestore.collection('subjects');
     _booksCollection = _firestore.collection('books');
     _issuedBooksCollection = _firestore.collection('issued_books');
+
+    Stream<List<User>> user = Firestore.instance
+        .collection('user')
+        .where('department', isEqualTo: 'Computer Science')
+        .where('age', isGreaterThanOrEqualTo: 18)
+        .where('id', arrayContains: [18, 21, 34, 36])
+        .snapshots()
+        .map((QuerySnapshot querySnapshot) => querySnapshot.documents
+            .map((DocumentSnapshot documentSnapshot) => documentSnapshot.data)
+            .map((Map<String, dynamic> map) => User.fromMap(map: map))
+            .toList());
   }
 
   /// Get Stream of [User] object from its reference ID
@@ -109,8 +120,6 @@ class FirestoreServices {
 
   Future<void> addBook({@required Book book, @required String subject}) async {
     Subject subjectObj = await getSubjectByName(subject: subject);
-    print(subjectObj.json);
-    print(subjectObj.refId);
 
     return _booksCollection.add(book.map).then((value) async {
       String bookRef = value.documentID;
@@ -153,6 +162,7 @@ class FirestoreServices {
   Stream<List<User>> getStudents() {
     return _usersCollection
         .where('is_admin', isEqualTo: false)
+        .orderBy('id')
         .snapshots()
         .map((event) => event.documents.map((e) {
               Map<String, dynamic> map = e.data;
@@ -190,6 +200,7 @@ class FirestoreServices {
       return _usersCollection
           .where('is_admin', isEqualTo: false)
           .where('issued_books', arrayContainsAny: issuedBookRefs)
+          .orderBy('id')
           .snapshots()
           .map((event) => event.documents
               .map((e) => e.data)
