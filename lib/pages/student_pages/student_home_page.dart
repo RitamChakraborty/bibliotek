@@ -25,7 +25,7 @@ class StudentHomePage extends StatelessWidget {
       children: [
         ListTile(
           leading: Icon(Icons.book),
-          title: Text("All Books"),
+          title: Text("Library"),
           onTap: () {
             Navigator.push(
               context,
@@ -70,7 +70,6 @@ class StudentHomePage extends StatelessWidget {
           title: Text(
             "Issued Books",
           ),
-          centerTitle: true,
         ),
         body: SafeArea(
           child: StreamBuilder<User>(

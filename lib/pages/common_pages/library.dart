@@ -1,6 +1,8 @@
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/subject.dart';
+import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/providers/firestore_provider.dart';
+import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/widgets/book_card.dart';
 import 'package:bibliotek/widgets/loading_book.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,8 @@ class Library extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FireStoreProvider firestore = Provider.of<FireStoreProvider>(context);
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    User user = userProvider.user;
 
     return Material(
       child: Scaffold(
@@ -40,7 +44,11 @@ class Library extends StatelessWidget {
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
                                 Book book = snapshot.data;
-                                return BookCard(book: book);
+                                return BookCard(
+                                  book: book,
+                                  showCopies: user.isAdmin,
+                                  showAvailability: !user.isAdmin,
+                                );
                               }
 
                               return LoadingBook();

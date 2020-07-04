@@ -28,7 +28,7 @@ class AdminHomePage extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(Icons.book),
-              title: Text("All Books"),
+              title: Text("Library"),
               onTap: () {
                 Navigator.push(
                   context,
