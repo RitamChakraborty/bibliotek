@@ -1,7 +1,7 @@
 import 'package:bibliotek/models/book.dart';
 import 'package:bibliotek/models/issued_book.dart';
 import 'package:bibliotek/models/user.dart';
-import 'package:bibliotek/pages/admin_pages/home_page/library.dart';
+import 'package:bibliotek/pages/common_pages/library.dart';
 import 'package:bibliotek/pages/login_pages/change_password_page.dart';
 import 'package:bibliotek/providers/firestore_provider.dart';
 import 'package:bibliotek/providers/user_provider.dart';

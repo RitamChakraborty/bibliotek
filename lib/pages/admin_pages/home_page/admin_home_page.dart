@@ -1,8 +1,8 @@
 import 'package:bibliotek/models/user.dart';
 import 'package:bibliotek/pages/admin_pages/add_book_page/add_books_page.dart';
-import 'package:bibliotek/pages/admin_pages/home_page/library.dart';
 import 'package:bibliotek/pages/admin_pages/issue_book_page/issue_book_page.dart';
 import 'package:bibliotek/pages/admin_pages/submit_book_page/submit_book_page.dart';
+import 'package:bibliotek/pages/common_pages/library.dart';
 import 'package:bibliotek/pages/login_pages/change_password_page.dart';
 import 'package:bibliotek/providers/user_provider.dart';
 import 'package:bibliotek/widgets/custom_button.dart';
