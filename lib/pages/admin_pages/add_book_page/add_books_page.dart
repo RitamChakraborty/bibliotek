@@ -134,7 +134,7 @@ class _AddBooksPageState extends State<AddBooksPage> {
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
-                  content: Text("Book successfully"),
+                  content: Text("Book added successfully"),
                 ));
               bookBloc.add(BookBlocInvokeInitialEvent());
             }
