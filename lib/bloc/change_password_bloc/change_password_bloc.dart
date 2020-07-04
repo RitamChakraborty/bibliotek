@@ -9,8 +9,7 @@ class ChangePasswordBloc
     extends Bloc<AbstractChangePasswordEvent, AbstractChangePasswordState> {
   final FirestoreServices _firestoreServices = FirestoreServices();
 
-  @override
-  AbstractChangePasswordState get initialState => ChangePasswordInitialState();
+  ChangePasswordBloc() : super(ChangePasswordInitialState());
 
   @override
   Stream<AbstractChangePasswordState> mapEventToState(

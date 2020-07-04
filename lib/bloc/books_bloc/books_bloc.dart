@@ -13,13 +13,13 @@ class BookBloc extends Bloc<AbstractBookBlocEvent, AbstractBookBlocState> {
   int _copies = 0;
   String _bookRef = "";
 
-  @override
-  AbstractBookBlocState get initialState => BookBlocInitialState(
-        title: _title,
-        author: _author,
-        subject: _subject,
-        copies: _copies,
-      );
+  BookBloc()
+      : super(BookBlocInitialState(
+          title: "",
+          author: "",
+          subject: SUBJECTS[0],
+          copies: 0,
+        ));
 
   @override
   Stream<AbstractBookBlocState> mapEventToState(

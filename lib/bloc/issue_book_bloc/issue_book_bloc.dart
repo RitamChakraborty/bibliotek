@@ -11,8 +11,7 @@ class IssueBookBloc
     extends Bloc<AbstractIssueBookEvent, AbstractIssueBookState> {
   final FirestoreServices _firestoreServices = FirestoreServices();
 
-  @override
-  AbstractIssueBookState get initialState => IssueBookInitialState();
+  IssueBookBloc() : super(IssueBookInitialState());
 
   @override
   Stream<AbstractIssueBookState> mapEventToState(

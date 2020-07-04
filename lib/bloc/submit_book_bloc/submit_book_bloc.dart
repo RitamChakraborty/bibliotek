@@ -29,8 +29,7 @@ class SubmitBookBloc
     extends Bloc<AbstractSubmitBookEvent, AbstractSubmitBookState> {
   FirestoreServices _firestoreServices = FirestoreServices();
 
-  @override
-  AbstractSubmitBookState get initialState => SubmitBookInitialState();
+  SubmitBookBloc() : super(SubmitBookInitialState());
 
   @override
   Stream<AbstractSubmitBookState> mapEventToState(

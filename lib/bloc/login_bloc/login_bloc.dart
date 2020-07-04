@@ -11,8 +11,7 @@ class LoginBloc extends Bloc<AbstractLoginEvent, AbstractLoginState> {
       SharedPreferencesService();
   FirestoreServices _firestoreServices = FirestoreServices();
 
-  @override
-  AbstractLoginState get initialState => LoginInitialState();
+  LoginBloc() : super(LoginInitialState());
 
   @override
   Stream<AbstractLoginState> mapEventToState(AbstractLoginEvent event) async* {
