@@ -1,16 +1,16 @@
-# bibliotek
+# Bibliotek
 
-A collage libray app.
+A collage library management application using *Flutter* and *Firebase*.
 
-## Getting Started
+## Demo
+<p align="center">
+    <img src="assets/pictures/splash screen.jpg" height="480" width="270" hspace="10">
+    <img src="assets/pictures/admin home.jpg" height="480" width="270" hspace="10">
+    <img src="assets/pictures/student home.jpg" height="480" width="270" hspace="10">
+</p>
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<p align="center">
+    <img src="assets/pictures/add book.jpg" height="480" width="270" hspace="10">
+    <img src="assets/pictures/issue book.jpg" height="480" width="270" hspace="10">
+    <img src="assets/pictures/submit book.jpg" height="480" width="270" hspace="10">
+</p>
